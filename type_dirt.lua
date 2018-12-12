@@ -559,7 +559,7 @@ local function register_dirts(readname)
 
 	minetest.register_node(itemstr_coniferous, {
 		description = readname .. " Dirt with Coniferous Litter",
-		tiles = {"default_coniferous_litter.png", tilestr, tilestr .. "^default_coniferous_litter_side.png"},
+		tiles = {"lib_materials_litter_coniferous.png", tilestr, tilestr .. "^lib_materials_litter_coniferous_side.png"},
 		is_ground_content = true,
 		groups = {crumbly=3,soil=1},
 		drop = itemstr_dirt,
@@ -568,7 +568,7 @@ local function register_dirts(readname)
 
 	minetest.register_node(itemstr_rain, {
 		description = readname .. " Dirt with Rainforest Litter",
-		tiles = {"default_rainforest_litter.png", tilestr, tilestr .. "^default_rainforest_litter_side.png"},
+		tiles = {"lib_materials_litter_rainforest.png", tilestr, tilestr .. "^lib_materials_litter_rainforest_side.png"},
 		is_ground_content = true,
 		groups = {crumbly=3,soil=1},
 		drop = itemstr_dirt,
