@@ -8,18 +8,18 @@ local S = lib_materials.gettext
 local NS = lib_materials.ngettext
 
 
+
+
+
+
+
 dofile(lib_materials.path.."/lib_materials_utils.lua")
-
-dofile(lib_materials.path.."/lib_materials_water.lua")
-
-dofile(lib_materials.path.."/type_dirt.lua")
-
-dofile(lib_materials.path.."/type_sand.lua")
-
-dofile(lib_materials.path.."/type_ore.lua")
-
+dofile(lib_materials.path.."/lib_materials_fluids.lua")
 dofile(lib_materials.path.."/type_stone.lua")
-
+dofile(lib_materials.path.."/type_stone_deco.lua")
+dofile(lib_materials.path.."/type_dirt.lua")
+dofile(lib_materials.path.."/type_sand.lua")
+dofile(lib_materials.path.."/type_ore.lua")
 dofile(lib_materials.path.."/lib_materials_ore_defs.lua")
 
 
