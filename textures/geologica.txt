@@ -1,0 +1,19 @@
+Theese files were copied from minecraft PFAA Geologica mod.
+
+rocks_Andesite.png
+rocks_Basalt.png
+rocks_Diorite.png
+rocks_Gabbro.png
+rocks_Gneiss.png
+rocks_Granite.png
+rocks_Mudstone.png
+rocks_Peridotite.png
+rocks_Rhyolite.png
+rocks_Schist.png
+rocks_Slate.png
+rocks_Skarn.png
+rocks_laterite.png
+rocks_claystone.png
+rocks_conglomerate.png
+rocks_anthracite.png
+rocks_lignite.png

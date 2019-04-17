@@ -1,0 +1,17 @@
+Theese files were copied from minetest decoblocks mod. Original files were 
+in "default/textures" and with "default_" prefix instead of "rocks_".
+
+rocks_bb.png
+rocks_blkgr.png
+rocks_brgr.png
+rocks_gls.png
+rocks_mrbrownstone.png
+rocks_obs.png
+rocks_pgr.png
+rocks_rss.png
+rocks_serp.png
+rocks_sod.png
+rocks_trav.png
+rocks_wgr.png
+rocks_wm.png
+rocks_yss.png
