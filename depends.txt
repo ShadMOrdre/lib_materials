@@ -1,2 +1,2 @@
 default?
-carpathian_mapgen?
+stairs?
