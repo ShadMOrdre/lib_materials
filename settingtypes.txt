@@ -1,0 +1,17 @@
+#lib_materials settings
+
+#[mgv7 Mapgen Scale Factor (Integer.  Recommended Values between 1 and 8) - Defines the scale factor for mgv7 based maps.]
+#Scales mgv7 Terrain_Base and Terrain_Alt spread values.
+
+lib_materials_mgv7_mapgen_scale_factor (mgv7 Mapgen Scale Factor (Integer.  Recommended Values between 1 and 8) - Defines the scale factor for mgv7 based maps.) int 8
+
+
+
+#[Biome Altitude Range (Integer.  Recommended Value greater than +10) - Defines the height range for biomes based on altitude.]
+#Each Temperature/Humidy range is subdivided by altitude, (height), to further refine biome definitions.  This value is used to determine
+#the altitude range for these biomes.
+
+lib_materials_biome_altitude_range (Biome Altitude Range (Integer.  Recommended Value greater than +10) - Defines the height range for biomes based on altitude.) int 40
+
+
+

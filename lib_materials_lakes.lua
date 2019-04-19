@@ -61,8 +61,18 @@ minetest.register_on_generated(function(minp, maxp, seed)
 				for y=maxp.y,minp.y,-1 do
 					local nn = minetest.get_node({x=x,y=y,z=z}).name
 					if nn ~= "air" and nn~= "ignore" then
+						--local is_leaves = minetest.registered_nodes[nn].groups.leaves
+						--if is_leaves == nil or is_leaves == 0 then
+						--	ground_y = y
+						--	break
+						--end
 						local is_leaves = minetest.registered_nodes[nn].groups.leaves
-						if is_leaves == nil or is_leaves == 0 then
+						local is_plant = minetest.registered_nodes[nn].groups.plant
+						local is_le_plant = minetest.registered_nodes[nn].groups.lib_ecology_plant
+						local is_flora = minetest.registered_nodes[nn].groups.flora
+						local is_flower = minetest.registered_nodes[nn].groups.flower
+						local is_growing = minetest.registered_nodes[nn].groups.growing
+						if is_leaves == nil or is_leaves == 0 or is_plant == nil or is_plant == 0 or is_le_plant == nil or is_le_plant == 0 or is_flora == nil or is_flora == 0  or is_flower == nil or is_flower == 0  or is_growing == nil or is_growing == 0  then
 							ground_y = y
 							break
 						end
@@ -78,9 +88,9 @@ minetest.register_on_generated(function(minp, maxp, seed)
 					if string.match(node_name, "lib_materials:dirt_sandy") then
 						c_fluid_id = c_quick_source
 					end
-					if string.match(node_name, "lib_materials:sand") then
-						c_fluid_id = c_quick
-					end
+					--if string.match(node_name, "lib_materials:sand") then
+					--	c_fluid_id = c_quick
+					--end
 					if string.match(node_name, "lib_materials:dirt_with_rainforest_litter") then
 						c_fluid_id = c_murky
 					end
@@ -114,7 +124,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 					if string.match(node_name, "snow") then
 						c_fluid_id = c_ice
 					end
-					if ground_y >= 120 then
+					if ground_y >= lib_materials.minheight_snow then
 						c_fluid_id = c_ice
 					end
 					-- if c_water == "" then

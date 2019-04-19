@@ -71,7 +71,6 @@ minetest.register_node("lib_materials:fluid_liquid_source", {
 		},
 	},
 	paramtype = "light",
-	light_source = default.LIGHT_MAX - 1,
 	walkable = false,
 	pointable = false,
 	diggable = false,
@@ -86,7 +85,7 @@ minetest.register_node("lib_materials:fluid_liquid_source", {
 	liquid_renewable = false,
 	damage_per_second = 4 * 2,
 	post_effect_color = {a = 191, r = 255, g = 64, b = 0},
-	groups = {oil = 3, liquid = 2},
+	groups = {liquid = 3, },
 	sounds = lib_materials.node_sound_water_defaults(),
 })
 minetest.register_node("lib_materials:fluid_liquid_flowing", {
@@ -117,7 +116,6 @@ minetest.register_node("lib_materials:fluid_liquid_flowing", {
 	},
 	paramtype = "light",
 	paramtype2 = "flowingliquid",
-	light_source = default.LIGHT_MAX - 1,
 	walkable = false,
 	pointable = false,
 	diggable = false,
@@ -132,7 +130,7 @@ minetest.register_node("lib_materials:fluid_liquid_flowing", {
 	liquid_renewable = false,
 	damage_per_second = 4 * 2,
 	post_effect_color = {a = 191, r = 255, g = 64, b = 0},
-	groups = {oil = 3, liquid = 2, not_in_creative_inventory = 1},
+	groups = {liquid = 3, not_in_creative_inventory = 1},
 	sounds = lib_materials.node_sound_water_defaults(),
 })
 
@@ -177,7 +175,7 @@ minetest.register_node("lib_materials:fluid_water_source", {
 	liquid_alternative_source = "lib_materials:fluid_water_source",
 	liquid_viscosity = 1,
 	post_effect_color = {a = 103, r = 30, g = 60, b = 90},
-	groups = {water = 3, liquid = 3, cools_lava},
+	groups = {water = 3, liquid = 3, cools_lava = 1, puts_out_fire = 1, },
 	sounds = lib_materials.node_sound_water_defaults(),
 })
 minetest.register_node("lib_materials:fluid_water_flowing", {
@@ -221,7 +219,7 @@ minetest.register_node("lib_materials:fluid_water_flowing", {
 	liquid_viscosity = 1,
 	liquid_renewable = false,
 	post_effect_color = {a = 191, r = 255, g = 64, b = 0},
-	groups = {water = 3, liquid = 2, not_in_creative_inventory = 1},
+	groups = {water = 3, liquid = 3, cools_lava = 1, puts_out_fire = 1, not_in_creative_inventory = 1},
 	sounds = lib_materials.node_sound_water_defaults(),
 })
 minetest.register_node("lib_materials:fluid_water_river_source", {
@@ -266,7 +264,7 @@ minetest.register_node("lib_materials:fluid_water_river_source", {
 	liquid_renewable = false,
 	damage_per_second = 4 * 2,
 	post_effect_color = {a = 191, r = 255, g = 64, b = 0},
-	groups = {water = 3, liquid = 2},
+	groups = {water = 3, liquid = 2, cools_lava = 1, puts_out_fire = 1, },
 	sounds = lib_materials.node_sound_water_defaults(),
 })
 minetest.register_node("lib_materials:fluid_water_river_flowing", {
@@ -311,7 +309,7 @@ minetest.register_node("lib_materials:fluid_water_river_flowing", {
 	liquid_renewable = false,
 	damage_per_second = 4 * 2,
 	post_effect_color = {a = 191, r = 255, g = 64, b = 0},
-	groups = {water = 3, liquid = 2, not_in_creative_inventory = 1},
+	groups = {water = 3, liquid = 2, cools_lava = 1, puts_out_fire = 1, not_in_creative_inventory = 1},
 	sounds = lib_materials.node_sound_water_defaults(),
 })
 
@@ -358,7 +356,7 @@ minetest.register_node("lib_materials:fluid_water_dirty_source", {
 	liquid_renewable = false,
 	liquid_range = 2,
 	post_effect_color = {a = 103, r = 30, g = 76, b = 90},
-	groups = {water = 3, liquid = 3, puts_out_fire = 1, cools_lava = 1},
+	groups = {water = 3, liquid = 3, cools_lava = 1, puts_out_fire = 1, },
 	sounds = lib_materials.node_sound_water_defaults(),
 })
 minetest.register_node("lib_materials:fluid_water_dirty_flowing", {
@@ -404,8 +402,7 @@ minetest.register_node("lib_materials:fluid_water_dirty_flowing", {
 	liquid_renewable = false,
 	liquid_range = 2,
 	post_effect_color = {a = 103, r = 30, g = 76, b = 90},
-	groups = {water = 3, liquid = 3, puts_out_fire = 1,
-		not_in_creative_inventory = 1, cools_lava = 1},
+	groups = {water = 3, liquid = 3, cools_lava = 1, puts_out_fire = 1, not_in_creative_inventory = 1},
 	sounds = lib_materials.node_sound_water_defaults(),
 })
 minetest.register_node("lib_materials:fluid_water_murky_source", {
@@ -449,7 +446,7 @@ minetest.register_node("lib_materials:fluid_water_murky_source", {
 	liquid_alternative_source = "lib_materials:fluid_water_murky_source",
 	liquid_viscosity = 1,
 	post_effect_color = {a = 103, r = 30, g = 60, b = 90},
-	groups = {water = 3, liquid = 3, puts_out_fire = 1, cools_lava = 1},
+	groups = {water = 3, liquid = 3, cools_lava = 1, puts_out_fire = 1, },
 	sounds = lib_materials.node_sound_water_defaults(),
 })
 minetest.register_node("lib_materials:fluid_water_murky_flowing", {
@@ -493,8 +490,7 @@ minetest.register_node("lib_materials:fluid_water_murky_flowing", {
 	liquid_alternative_source = "lib_materials:fluid_water_murky_source",
 	liquid_viscosity = 1,
 	post_effect_color = {a = 103, r = 30, g = 60, b = 90},
-	groups = {water = 3, liquid = 3, puts_out_fire = 1,
-		not_in_creative_inventory = 1, cools_lava = 1},
+	groups = {water = 3, liquid = 3, cools_lava = 1, puts_out_fire = 1, not_in_creative_inventory = 1, },
 	sounds = lib_materials.node_sound_water_defaults(),
 })
 
@@ -540,7 +536,7 @@ minetest.register_node("lib_materials:fluid_water_river_muddy_source", {
 	liquid_renewable = false,
 	liquid_range = 2,
 	post_effect_color = {a = 103, r = 30, g = 76, b = 90},
-	groups = {water = 3, liquid = 3, puts_out_fire = 1, cools_lava = 1},
+	groups = {water = 3, liquid = 3, cools_lava = 1, puts_out_fire = 1, },
 	sounds = lib_materials.node_sound_water_defaults(),
 })
 minetest.register_node("lib_materials:fluid_water_river_muddy_flowing", {
@@ -586,8 +582,7 @@ minetest.register_node("lib_materials:fluid_water_river_muddy_flowing", {
 	liquid_renewable = false,
 	liquid_range = 2,
 	post_effect_color = {a = 103, r = 30, g = 76, b = 90},
-	groups = {water = 3, liquid = 3, puts_out_fire = 1,
-		not_in_creative_inventory = 1, cools_lava = 1},
+	groups = {water = 3, liquid = 3, cools_lava = 1, puts_out_fire = 1, not_in_creative_inventory = 1, },
 	sounds = lib_materials.node_sound_water_defaults(),
 })
 
@@ -761,7 +756,7 @@ minetest.register_node("lib_materials:fluid_mud_source", {
 	liquid_renewable = false,
 	damage_per_second = 3,
 	post_effect_color = {a = 191, r = 255, g = 64, b = 0},
-	groups = {quicksand = 3, liquid = 2},
+	groups = {mud = 3, liquid = 2, disable_jump = 1},
 })
 minetest.register_node("lib_materials:fluid_mud_flowing", {
 	description = S("Flowing Mud"),
@@ -806,7 +801,7 @@ minetest.register_node("lib_materials:fluid_mud_flowing", {
 	liquid_renewable = false,
 	damage_per_second = 4,
 	post_effect_color = {a = 191, r = 255, g = 64, b = 0},
-	groups = {quicksand = 3, liquid = 2, not_in_creative_inventory = 1},
+	groups = {quicksand = 3, liquid = 2, disable_jump = 1, not_in_creative_inventory = 1},
 })
 -- Mud as node.  Player will sink, slow, and take drowning damage.    Mud for swamps
 minetest.register_node("lib_materials:mud_wet", {
@@ -912,8 +907,7 @@ minetest.register_node("lib_materials:fluid_grease_flowing", {
 	liquid_alternative_source = "lib_materials:fluid_grease_source",
 	liquid_viscosity = 1,
 	post_effect_color = {a = 103, r = 45, g = 23, b = 7},
-	groups = {oil = 3, liquid = 1, flammable = 1,
-		not_in_creative_inventory = 1},
+	groups = {oil = 3, liquid = 1, flammable = 1, not_in_creative_inventory = 1},
 	sounds = lib_materials.node_sound_water_defaults(),
 })
 
@@ -1002,8 +996,7 @@ minetest.register_node("lib_materials:fluid_oil_flowing", {
 	liquid_alternative_source = "lib_materials:fluid_oil_source",
 	liquid_viscosity = 1,
 	post_effect_color = {a = 150, r = 45, g = 23, b = 7},
-	groups = {oil = 3, liquid = 1, flammable = 1,
-		not_in_creative_inventory = 1},
+	groups = {oil = 3, liquid = 1, flammable = 1, not_in_creative_inventory = 1},
 	sounds = lib_materials.node_sound_water_defaults(),
 })
 
@@ -1109,8 +1102,7 @@ minetest.register_node("lib_materials:fluid_oil_02_flowing", {
 	liquid_alternative_source = "lib_materials:fluid_oil_02_source",
 	liquid_viscosity = 1,
 	post_effect_color = {a = 150, r = 45, g = 23, b = 7},
-	groups = {oil = 3, liquid = 1, flammable = 1,
-		not_in_creative_inventory = 1},
+	groups = {oil = 3, liquid = 1, flammable = 1, not_in_creative_inventory = 1},
 	sounds = lib_materials.node_sound_water_defaults(),
 })
 
@@ -1199,8 +1191,7 @@ minetest.register_node("lib_materials:fluid_oil_03_flowing", {
 	liquid_alternative_source = "lib_materials:fluid_oil_03_source",
 	liquid_viscosity = 1,
 	post_effect_color = {a = 150, r = 45, g = 23, b = 7},
-	groups = {oil = 3, liquid = 1, flammable = 1,
-		not_in_creative_inventory = 1},
+	groups = {oil = 3, liquid = 1, flammable = 1, not_in_creative_inventory = 1},
 	sounds = lib_materials.node_sound_water_defaults(),
 })
 

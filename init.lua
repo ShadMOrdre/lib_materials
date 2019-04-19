@@ -18,33 +18,52 @@ else
 end
 lib_materials.intllib = S
 
+lib_materials.mgv7_mapgen_scale_factor = minetest.setting_get("lib_materials_mgv7_mapgen_scale_factor") or 8
+lib_materials.biome_altitude_range = minetest.setting_get("lib_materials_biome_altitude_range") or 40
+
+lib_materials.mg_params = minetest.get_mapgen_params()
+lib_materials.mg_seed = lib_materials.mg_params.seed
+
+
 --DEFAULTS
---0, 4, 30, 60, 90, 120, 150, 1800
+-- -192, -4, 0, 4, 30, 60, 90, 120, 150, 285, 485, 1250
+-- -192, -4, 0, 4, 40, 80, 120, 160, 200, 380, 780, 1800
 lib_materials.ocean_depth = -192
 lib_materials.beach_depth = -4
 lib_materials.sea_level = 0
 lib_materials.maxheight_beach = 4
-lib_materials.maxheight_coastal = 40
-lib_materials.maxheight_lowland = 80
-lib_materials.maxheight_shelf = 120
-lib_materials.maxheight_highland = 160
-lib_materials.maxheight_mountain = 200
-lib_materials.minheight_snow = 380
-lib_materials.maxheight_snow = 780
-lib_materials.maxheight_strato = 1800
+--lib_materials.maxheight_coastal = 30
+--lib_materials.maxheight_lowland = 60
+--lib_materials.maxheight_shelf = 90
+--lib_materials.maxheight_highland = 120
+--lib_materials.maxheight_mountain = 150
+lib_materials.maxheight_coastal = lib_materials.sea_level + lib_materials.biome_altitude_range
+lib_materials.maxheight_lowland = lib_materials.maxheight_coastal + lib_materials.biome_altitude_range
+lib_materials.maxheight_shelf = lib_materials.maxheight_lowland + lib_materials.biome_altitude_range
+lib_materials.maxheight_highland = lib_materials.maxheight_shelf + lib_materials.biome_altitude_range
+lib_materials.maxheight_mountain = lib_materials.maxheight_highland + lib_materials.biome_altitude_range
+lib_materials.minheight_snow = 285
+lib_materials.maxheight_snow = 485
+lib_materials.maxheight_strato = 1250
 
+-- 100, 75, 50, 25, 0
+-- 90, 75, 50, 25, 10
+-- 90, 70, 50, 30, 10
 lib_materials.temperature_hot = 90
-lib_materials.temperature_warm = 75
+lib_materials.temperature_warm = 70
 lib_materials.temperature_temperate = 50
-lib_materials.temperature_cool = 25
+lib_materials.temperature_cool = 30
 lib_materials.temperature_cold = 10
 lib_materials.humidity_humid = 90
-lib_materials.humidity_semihumid = 75
+lib_materials.humidity_semihumid = 70
 lib_materials.humidity_temperate = 50
-lib_materials.humidity_semiarid = 25
+lib_materials.humidity_semiarid = 30
 lib_materials.humidity_arid = 10
 
-lib_materials.biome_vertical_blend = 4
+-- 8, 4
+-- 
+--lib_materials.biome_vertical_blend = 4
+lib_materials.biome_vertical_blend = lib_materials.biome_altitude_range / 10
 
 minetest.clear_registered_biomes()
 minetest.clear_registered_decorations()
