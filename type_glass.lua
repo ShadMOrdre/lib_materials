@@ -40,7 +40,7 @@ minetest.register_node("lib_materials:glass_iron", {
 --]]
 
 
-minetest.register_node("lib_materials:glass_framed_diamond", {
+lib_materials.register_node("lib_materials:glass_framed_diamond", nil, {
 	description = S("Glass - Framed Diamond"),
 	drawtype = "glasslike_framed",
 	tiles = {"lib_materials_frame_diamond.png"},
@@ -51,7 +51,7 @@ minetest.register_node("lib_materials:glass_framed_diamond", {
 	sounds = default.node_sound_glass_defaults(),
 })
 
-minetest.register_node("lib_materials:glass_framed_round", {
+lib_materials.register_node("lib_materials:glass_framed_round", nil, {
 	description = S("Glass - Framed Round"),
 	drawtype = "glasslike_framed",
 	tiles = {"lib_materials_frame_round.png"},
@@ -62,7 +62,7 @@ minetest.register_node("lib_materials:glass_framed_round", {
 	sounds = default.node_sound_glass_defaults(),
 })
 
-minetest.register_node("lib_materials:glass_framed_square", {
+lib_materials.register_node("lib_materials:glass_framed_square", nil, {
 	description = S("Glass - Framed Square"),
 	drawtype = "glasslike_framed",
 	tiles = {"lib_materials_frame_square.png"},
@@ -73,40 +73,48 @@ minetest.register_node("lib_materials:glass_framed_square", {
 	sounds = default.node_sound_glass_defaults(),
 })
 
-minetest.register_node("lib_materials:glass_framed_steel_01", {
-	description = S("Glass - Framed Steel 01"),
-	drawtype = "glasslike_framed",
-	tiles = {"lib_materials_frame_steel_01_nbea.png"},
-	use_texture_alpha = true,
-	paramtype = "light",
-	sunlight_propagates = true,
-	groups = {snappy = 2, cracky = 3, oddly_breakable_by_hand = 3},
-	sounds = default.node_sound_glass_defaults(),
-})
+lib_materials.register_node(
+	"lib_materials:glass_framed_steel_01", nil,
+	{
+		description = S("Glass - Framed Steel 01"),
+		drawtype = "glasslike_framed",
+		tiles = {"lib_materials_frame_steel_01_nbea.png"},
+		use_texture_alpha = true,
+		paramtype = "light",
+		sunlight_propagates = true,
+		groups = {snappy = 2, cracky = 3, oddly_breakable_by_hand = 3},
+		sounds = default.node_sound_glass_defaults(),
+	}
+)
 
-minetest.register_node("lib_materials:glass_framed_steel_02", {
-	description = S("Glass - Framed Steel 02"),
-	drawtype = "glasslike_framed",
-	tiles = {"lib_materials_frame_steel_02_nbea.png"},
-	use_texture_alpha = true,
-	paramtype = "light",
-	sunlight_propagates = true,
-	groups = {snappy = 2, cracky = 3, oddly_breakable_by_hand = 3},
-	sounds = default.node_sound_glass_defaults(),
-})
+lib_materials.register_node(
+	"lib_materials:glass_framed_steel_02", nil,
+	{
+		description = S("Glass - Framed Steel 02"),
+		drawtype = "glasslike_framed",
+		tiles = {"lib_materials_frame_steel_02_nbea.png"},
+		use_texture_alpha = true,
+		paramtype = "light",
+		sunlight_propagates = true,
+		groups = {snappy = 2, cracky = 3, oddly_breakable_by_hand = 3},
+		sounds = default.node_sound_glass_defaults(),
+	}
+)
 
-minetest.register_node("lib_materials:glass_framed_wood_01", {
-	description = S("Glass - Framed Wood 01"),
-	drawtype = "glasslike_framed",
-	tiles = {"lib_materials_frame_wood_01_nbea.png"},
-	use_texture_alpha = true,
-	paramtype = "light",
-	sunlight_propagates = true,
-	groups = {snappy = 2, cracky = 3, oddly_breakable_by_hand = 3},
-	sounds = default.node_sound_glass_defaults(),
-})
+lib_materials.register_node("lib_materials:glass_framed_wood_01", nil,
+	{
+		description = S("Glass - Framed Wood 01"),
+		drawtype = "glasslike_framed",
+		tiles = {"lib_materials_frame_wood_01_nbea.png"},
+		use_texture_alpha = true,
+		paramtype = "light",
+		sunlight_propagates = true,
+		groups = {snappy = 2, cracky = 3, oddly_breakable_by_hand = 3},
+		sounds = default.node_sound_glass_defaults(),
+	}
+)
 
-minetest.register_node("lib_materials:glass_framed_wood_02", {
+lib_materials.register_node("lib_materials:glass_framed_wood_02", nil, {
 	description = S("Glass - Framed Wood 02"),
 	drawtype = "glasslike_framed",
 	tiles = {"lib_materials_frame_wood_02_nbea.png"},
@@ -117,7 +125,7 @@ minetest.register_node("lib_materials:glass_framed_wood_02", {
 	sounds = default.node_sound_glass_defaults(),
 })
 
-minetest.register_node("lib_materials:glass_framed_wood_03", {
+lib_materials.register_node("lib_materials:glass_framed_wood_03", nil, {
 	description = S("Glass - Framed Wood 03"),
 	drawtype = "glasslike_framed",
 	tiles = {"lib_materials_frame_wood_darkage.png"},
@@ -128,7 +136,7 @@ minetest.register_node("lib_materials:glass_framed_wood_03", {
 	sounds = default.node_sound_glass_defaults(),
 })
 
-minetest.register_node("lib_materials:frame_wood_rose", {
+lib_materials.register_node("lib_materials:frame_wood_rose", nil, {
 	description = S("Frame - Wood Rose"),
 	drawtype = "glasslike_framed",
 	tiles = {"lib_materials_frame_wood_medieval_rose.png"},
@@ -139,7 +147,7 @@ minetest.register_node("lib_materials:frame_wood_rose", {
 	sounds = default.node_sound_glass_defaults(),
 })
 
-minetest.register_node("lib_materials:frame_wood_screen", {
+lib_materials.register_node("lib_materials:frame_wood_screen", nil, {
 	description = S("Frame - Wood Screen"),
 	drawtype = "glasslike_framed",
 	tiles = {"lib_materials_frame_wood_xdecor.png"},
@@ -150,7 +158,7 @@ minetest.register_node("lib_materials:frame_wood_screen", {
 	sounds = default.node_sound_glass_defaults(),
 })
 
-minetest.register_node("lib_materials:glass_stained", {
+lib_materials.register_node("lib_materials:glass_stained", nil, {
 	description = S("Glass - Stained"),
 	drawtype = "glasslike_framed",
 	tiles = {"lib_materials_glass_stained_nbea.png"},
@@ -160,9 +168,3 @@ minetest.register_node("lib_materials:glass_stained", {
 	groups = {snappy = 2, cracky = 3, oddly_breakable_by_hand = 3},
 	sounds = default.node_sound_glass_defaults(),
 })
-
-
-
-
-
-
