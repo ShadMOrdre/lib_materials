@@ -28,8 +28,8 @@ minetest.register_craft({
 	}
 })
 
-minetest.register_node("lib_materials:snow", {
-	description = "Snow",
+minetest.register_node("lib_materials:snowball", {
+	description = "Snowball",
 	tiles = {"lib_materials_snow.png"},
 	inventory_image = "lib_materials_snowball.png",
 	wield_image = "lib_materials_snowball.png",
@@ -54,14 +54,14 @@ minetest.register_node("lib_materials:snow", {
 
 	on_construct = function(pos)
 		pos.y = pos.y - 1
-		if minetest.get_node(pos).name == "default:dirt_with_grass" then
-			minetest.set_node(pos, {name = "default:dirt_with_snow"})
-		end
+		--if minetest.get_node(pos).name == "default:dirt_with_grass" then
+			minetest.set_node(pos, {name = "lib_materials:dirt_with_snow"})
+		--end
 	end,
 })
 
-minetest.register_node("lib_materials:snow_block", {
-	description = "Snow Block",
+minetest.register_node("lib_materials:snow", {
+	description = "Snow",
 	tiles = {"lib_materials_snow.png"},
 	groups = {crumbly = 3, puts_out_fire = 1, cools_lava = 1, snowy = 1},
 	sounds = default.node_sound_dirt_defaults({
@@ -79,8 +79,8 @@ minetest.register_node("lib_materials:snow_block", {
 })
 
 -- Ice
-minetest.register_node("lib_materials:ice_default", {
-	description = "Ice - Default",
+minetest.register_node("lib_materials:ice", {
+	description = "Ice",
 	tiles = {"lib_materials_ice.png"},
 	is_ground_content = false,
 	paramtype = "light",
@@ -88,8 +88,8 @@ minetest.register_node("lib_materials:ice_default", {
 	sounds = default.node_sound_glass_defaults(),
 })
 
-minetest.register_node("lib_materials:ice_default2", {
-	description = "Ice - Default 2",
+minetest.register_node("lib_materials:ice_2", {
+	description = "Ice 2",
 	tiles = {"lib_materials_ice2.png"},
 	is_ground_content = false,
 	paramtype = "light",

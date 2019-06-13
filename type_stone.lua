@@ -71,18 +71,18 @@ end
 		is_ground_content = true,
 		groups = {cracky=3, stone=2},
 	})
-	minetest.register_node("lib_materials:dirt_cobble_stone", {
-		tiles = {"lib_materials_stone_cobble_default.png^(lib_materials_dirt.png^[mask:lib_materials_mask_cobble.png)"},
-		description = "Dirt Cobble Stone",
-		is_ground_content = true,
-		groups = {cracky=3, stone=2},
-	})
-	minetest.register_node("lib_materials:dirt_stone", {
-		tiles = { "lib_materials_stone_default.png^(lib_materials_dirt.png^[mask:lib_materials_mask_stone.png)" },
-		description = "Dirt Stone",
-		is_ground_content = true,
-		groups = {cracky=3, stone=2},
-	})
+	-- minetest.register_node("lib_materials:dirt_cobble_stone", {
+		-- tiles = {"lib_materials_stone_cobble_default.png^(lib_materials_dirt.png^[mask:lib_materials_mask_cobble.png)"},
+		-- description = "Dirt Cobble Stone",
+		-- is_ground_content = true,
+		-- groups = {cracky=3, stone=2},
+	-- })
+	-- minetest.register_node("lib_materials:dirt_stone", {
+		-- tiles = { "lib_materials_stone_default.png^(lib_materials_dirt.png^[mask:lib_materials_mask_stone.png)" },
+		-- description = "Dirt Stone",
+		-- is_ground_content = true,
+		-- groups = {cracky=3, stone=2},
+	-- })
 	minetest.register_node("lib_materials:sand_with_stone_desert", {
 		tiles = { "lib_materials_stone_desert_default.png^(lib_materials_sand_desert_default.png^[mask:lib_materials_mask_stone.png)" },
 		description = "Desert Sand with Desert Stone",
@@ -235,6 +235,14 @@ end
 		groups = {cracky = 3, stone = 2},
 		sounds = default.node_sound_stone_defaults(),
 	})
+	minetest.register_node("lib_materials:stone_cobble_hot", {
+		description = S("Stone - Cobble Hot"),
+		tiles = {"lib_materials_stone_cobble_hot.png"},
+		is_ground_content = false,
+		groups = {cracky = 3, stone = 2},
+		sounds = default.node_sound_stone_defaults(),
+	damage_per_second = 2 * 2,
+	})
 	minetest.register_node("lib_materials:stone_cobble_small", {
 		description = S("Stone - Cobble Small"),
 		tiles = {"lib_materials_stone_default_cobble_small.png"},
@@ -305,6 +313,13 @@ end
 	minetest.register_node("lib_materials:stone_desert_cobble_small", {
 		description = S("Stone - Desert Cobble Small"),
 		tiles = {"lib_materials_stone_desert_cobble_small.png"},
+		is_ground_content = false,
+		groups = {cracky = 3, stone = 2},
+		sounds = default.node_sound_stone_defaults(),
+	})
+	minetest.register_node("lib_materials:stone_desert_gravel", {
+		description = S("Stone - Desert Gravel"),
+		tiles = {"lib_materials_stone_desert_gravel.png"},
 		is_ground_content = false,
 		groups = {cracky = 3, stone = 2},
 		sounds = default.node_sound_stone_defaults(),
@@ -459,7 +474,13 @@ end
 		description = S("Stone - Basalt 01"),
 		tiles = {"lib_materials_stone_basalt_01.png"},
 		is_ground_content = true,
-		drop = get_node_drops("lib_materials:stone_basalt_01","lib_materials:stone_basalt_01_cobble"),
+		drop = {
+			max_items = 1,
+			items = {
+				{items = {"lib_materials:stone_basalt_01_cobble"}},
+				{items = {"lib_materials:stone_basalt_01"}, rarity = 20},
+			}
+		},
 		groups = {cracky = 3, stone = 1},
 		sounds = default.node_sound_stone_defaults()
 	})
@@ -541,7 +562,13 @@ end
 		tiles = {"lib_materials_stone_gneiss_01.png"},
 		is_ground_content = true,
 		groups = {cracky = 3, stone = 1},
-		drop = get_node_drops("lib_materials:stone_gneiss_01", "lib_materials:stone_gneiss_01_cobble"),
+		drop = {
+			max_items = 1,
+			items = {
+				{items = {"lib_materials:stone_gneiss_01_cobble"}},
+				{items = {"lib_materials:stone_gneiss_01"}, rarity = 20},
+			}
+		},
 		sounds = default.node_sound_stone_defaults()
 	})
 	minetest.register_node("lib_materials:stone_gneiss_01_block", {
@@ -587,9 +614,9 @@ end
 		groups = {cracky = 3, stone = 1},
 		sounds = default.node_sound_stone_defaults(),
 	})
-	minetest.register_node("lib_materials:stone_granite_brown", {
-		description = S("Stone - Granite Brown"),
-		tiles = {"lib_materials_stone_granite_brown.png"},
+	minetest.register_node("lib_materials:stone_granite_02_block", {
+		description = S("Stone - Granite 02 Block"),
+		tiles = {"lib_materials_stone_granite_02_block.png"},
 		groups = {cracky = 3, stone = 1},
 		sounds = default.node_sound_stone_defaults(),
 	})
@@ -599,6 +626,43 @@ end
 		is_ground_content = true,
 		sounds = default.node_sound_stone_defaults(),
 		groups = {cracky=3, stone=1}, 
+	})
+	minetest.register_node("lib_materials:stone_granite_04", {  
+		description = S("Stone - Granite 04"),
+		tiles = {"lib_materials_stone_granite_04.png" },
+		is_ground_content = true,
+		sounds = default.node_sound_stone_defaults(),
+		groups = {cracky=3, stone=1}, 
+	})
+	minetest.register_node("lib_materials:stone_granite_black", {
+		description = S("Stone - Granite Black"),
+		tiles = {"lib_materials_stone_granite_black.png"},
+		groups = {cracky = 3, stone = 1},
+		sounds = default.node_sound_stone_defaults(),
+	})
+	minetest.register_node("lib_materials:stone_granite_brown", {
+		description = S("Stone - Granite Brown"),
+		tiles = {"lib_materials_stone_granite_brown.png"},
+		groups = {cracky = 3, stone = 1},
+		sounds = default.node_sound_stone_defaults(),
+	})
+	minetest.register_node("lib_materials:stone_granite_brown_block", {
+		description = S("Stone - Granite Brown Block"),
+		tiles = {"lib_materials_stone_granite_brown_block.png"},
+		groups = {cracky = 3, stone = 1},
+		sounds = default.node_sound_stone_defaults(),
+	})
+	minetest.register_node("lib_materials:stone_granite_brown_02", {
+		description = S("Stone - Granite Brown 02"),
+		tiles = {"lib_materials_stone_granite_brown_02.png"},
+		groups = {cracky = 3, stone = 1},
+		sounds = default.node_sound_stone_defaults(),
+	})
+	minetest.register_node("lib_materials:stone_granite_pink", {
+		description = S("Stone - Granite Pink"),
+		tiles = {"lib_materials_stone_granite_pink.png"},
+		groups = {cracky = 3, stone = 1},
+		sounds = default.node_sound_stone_defaults(),
 	})
 	minetest.register_node("lib_materials:stone_laterite", {
 		description = S("Stone - Laterite clay"),

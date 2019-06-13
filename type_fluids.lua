@@ -134,6 +134,189 @@ minetest.register_node("lib_materials:fluid_liquid_flowing", {
 	sounds = lib_materials.node_sound_water_defaults(),
 })
 
+
+--Lava
+minetest.register_node("lib_materials:lava_source", {
+	description = "Lava Source",
+	drawtype = "liquid",
+	tiles = {
+		{
+			name = "lib_materials_fluid_lava_source_animated.png",
+			backface_culling = false,
+			animation = {
+				type = "vertical_frames",
+				aspect_w = 16,
+				aspect_h = 16,
+				length = 3.0,
+			},
+		},
+		{
+			name = "lib_materials_fluid_lava_source_animated.png",
+			backface_culling = true,
+			animation = {
+				type = "vertical_frames",
+				aspect_w = 16,
+				aspect_h = 16,
+				length = 3.0,
+			},
+		},
+	},
+	paramtype = "light",
+	light_source = 13,
+	walkable = false,
+	pointable = false,
+	diggable = false,
+	buildable_to = true,
+	is_ground_content = false,
+	drop = "",
+	drowning = 1,
+	liquidtype = "source",
+	liquid_alternative_flowing = "lib_materials:lava_flowing",
+	liquid_alternative_source = "lib_materials:lava_source",
+	liquid_viscosity = 7,
+	liquid_renewable = false,
+	damage_per_second = 4 * 2,
+	post_effect_color = {a = 191, r = 255, g = 64, b = 0},
+	groups = {lava = 3, liquid = 2, igniter = 1},
+})
+minetest.register_node("lib_materials:lava_flowing", {
+	description = "Flowing Lava",
+	drawtype = "flowingliquid",
+	tiles = {"lib_materials_fluid_lava.png"},
+	special_tiles = {
+		{
+			name = "lib_materials_fluid_lava_flowing_animated.png",
+			backface_culling = false,
+			animation = {
+				type = "vertical_frames",
+				aspect_w = 16,
+				aspect_h = 16,
+				length = 3.3,
+			},
+		},
+		{
+			name = "lib_materials_fluid_lava_flowing_animated.png",
+			backface_culling = true,
+			animation = {
+				type = "vertical_frames",
+				aspect_w = 16,
+				aspect_h = 16,
+				length = 3.3,
+			},
+		},
+	},
+	paramtype = "light",
+	paramtype2 = "flowingliquid",
+	light_source = 12,
+	walkable = false,
+	pointable = false,
+	diggable = false,
+	buildable_to = true,
+	is_ground_content = false,
+	drop = "",
+	drowning = 1,
+	liquidtype = "flowing",
+	liquid_alternative_flowing = "lib_materials:lava_flowing",
+	liquid_alternative_source = "lib_materials:lava_source",
+	liquid_viscosity = 7,
+	liquid_renewable = false,
+	damage_per_second = 4 * 2,
+	post_effect_color = {a = 191, r = 255, g = 64, b = 0},
+	groups = {lava = 3, liquid = 2, igniter = 1, not_in_creative_inventory = 1},
+})
+
+minetest.register_node("lib_materials:lava_cooling_source", {
+	description = "Lava Cooling Source",
+	drawtype = "liquid",
+	tiles = {
+		{
+			name = "lib_materials_stone_cobble_default.png^(lib_materials_fluid_lava_source_animated.png^[mask:lib_materials_mask_cobble.png)",
+			backface_culling = false,
+			animation = {
+				type = "vertical_frames",
+				aspect_w = 16,
+				aspect_h = 16,
+				length = 3.0,
+			},
+		},
+		{
+			name = "lib_materials_stone_cobble_default.png^(lib_materials_fluid_lava_source_animated.png^[mask:lib_materials_mask_cobble.png)",
+			backface_culling = true,
+			animation = {
+				type = "vertical_frames",
+				aspect_w = 16,
+				aspect_h = 16,
+				length = 3.0,
+			},
+		},
+	},
+	paramtype = "light",
+	light_source = 10,
+	walkable = false,
+	pointable = false,
+	diggable = false,
+	buildable_to = true,
+	is_ground_content = false,
+	drop = "",
+	drowning = 1,
+	liquidtype = "source",
+	liquid_alternative_flowing = "lib_materials:lava_cooling_flowing",
+	liquid_alternative_source = "lib_materials:lava_cooling_source",
+	liquid_viscosity = 97,
+	liquid_renewable = false,
+	liquid_range = 1,
+	damage_per_second = 4 * 2,
+	post_effect_color = {a = 191, r = 255, g = 64, b = 0},
+	groups = {lava = 3, liquid = 1, igniter = 1, crumbly = 3},
+})
+minetest.register_node("lib_materials:lava_cooling_flowing", {
+	description = "Lava Cooling Flowing",
+	drawtype = "flowingliquid",
+	tiles = {"lib_materials_stone_cobble_default.png^(lib_materials_fluid_lava.png^[mask:lib_materials_mask_cobble.png)"},
+	special_tiles = {
+		{
+			name = "lib_materials_stone_cobble_default.png^(lib_materials_fluid_lava_flowing_animated.png^[mask:lib_materials_mask_cobble.png)",
+			backface_culling = false,
+			animation = {
+				type = "vertical_frames",
+				aspect_w = 16,
+				aspect_h = 16,
+				length = 3.3,
+			},
+		},
+		{
+			name = "lib_materials_stone_cobble_default.png^(lib_materials_fluid_lava_flowing_animated.png^[mask:lib_materials_mask_cobble.png)",
+			backface_culling = true,
+			animation = {
+				type = "vertical_frames",
+				aspect_w = 16,
+				aspect_h = 16,
+				length = 3.3,
+			},
+		},
+	},
+	paramtype = "light",
+	paramtype2 = "flowingliquid",
+	light_source = 8,
+	walkable = false,
+	pointable = false,
+	diggable = false,
+	buildable_to = true,
+	is_ground_content = false,
+	drop = "",
+	drowning = 1,
+	liquidtype = "flowing",
+	liquid_alternative_flowing = "lib_materials:lava_cooling_flowing",
+	liquid_alternative_source = "lib_materials:lava_cooling_source",
+	liquid_viscosity = 7,
+	liquid_renewable = false,
+	liquid_range = 3,
+	damage_per_second = 4 * 2,
+	post_effect_color = {a = 191, r = 255, g = 64, b = 0},
+	groups = {lava = 3, liquid = 1, igniter = 1, crumbly = 3, not_in_creative_inventory = 1},
+})
+
+
 --Water
 minetest.register_node("lib_materials:fluid_water_source", {
 	description = S("Water Source"),
@@ -222,6 +405,7 @@ minetest.register_node("lib_materials:fluid_water_flowing", {
 	groups = {water = 3, liquid = 3, cools_lava = 1, puts_out_fire = 1, not_in_creative_inventory = 1},
 	sounds = lib_materials.node_sound_water_defaults(),
 })
+
 minetest.register_node("lib_materials:fluid_water_river_source", {
 	description = S("River Water Source"),
 	drawtype = "liquid",
@@ -312,7 +496,6 @@ minetest.register_node("lib_materials:fluid_water_river_flowing", {
 	groups = {water = 3, liquid = 2, cools_lava = 1, puts_out_fire = 1, not_in_creative_inventory = 1},
 	sounds = lib_materials.node_sound_water_defaults(),
 })
-
 
 minetest.register_node("lib_materials:fluid_water_dirty_source", {
 	description = S("Dirty Water Source"),
@@ -405,6 +588,7 @@ minetest.register_node("lib_materials:fluid_water_dirty_flowing", {
 	groups = {water = 3, liquid = 3, cools_lava = 1, puts_out_fire = 1, not_in_creative_inventory = 1},
 	sounds = lib_materials.node_sound_water_defaults(),
 })
+
 minetest.register_node("lib_materials:fluid_water_murky_source", {
 	description = S("Murky Water Source"),
 	drawtype = "liquid",
@@ -869,7 +1053,7 @@ minetest.register_node("lib_materials:fluid_grease_source", {
 minetest.register_node("lib_materials:fluid_grease_flowing", {
 	description = "Flowing Grease",
 	drawtype = "flowingliquid",
-	tiles = {"lib_materials_grease.png"},
+	tiles = {"lib_materials_fluid_grease_source.png"},
 	special_tiles = {
 		{
 			name = "steampunk_grease_flowing_animated.png",

@@ -5,6 +5,39 @@ local mgparams = minetest.get_mapgen_params()
 local seed = mgparams.seed
 --local mg_seed = mgparams.seed
 
+local oredefs = {}
+
+lib_materials.add_oredef = function(ore_name, ore_seed)
+
+	oredefs[ore_name] = ore_seed
+end
+
+lib_materials.get_oredefs = function()
+
+	local str = ""
+
+	for n, s in pairs(oredefs) do
+
+		str = str .. n .. " - " .. s .. "\n"
+		
+	end
+	
+	return str
+
+end
+
+minetest.register_chatcommand("get_oredefs", {
+ 	description = S("Get a list of ore names and seeds."),
+ 	func = function(name, params)
+
+		--lib_materials.get_oredefs()
+		--minetest.debug(lib_shapes.shapes_created)
+		--minetest.log(S("[MOD] lib_materials:  Decorating Hot Humid Biomes"))
+		minetest.chat_send_player(name, lib_materials.get_oredefs())
+	
+	end
+
+})
 
 
 local add_ore_blob = function(name, parent, biomes)
@@ -26,81 +59,58 @@ local add_ore_blob = function(name, parent, biomes)
 			octaves = 1,
 			persist = 0.5
 		},
-        biomes = biomes or nil,
+        	biomes = biomes or nil,
 		random_factor = 1.0
 	})
 
 end
 
-local add_ore_sheet_arid = function(name, parent, density, biomes)
+local add_ore_blob2 = function(name, parent, biomes)
 
-	local ore_seed = seed + math.random()  --4130293965
+	local ore_seed = tonumber(name)
 
 	minetest.register_ore({
-		ore_type = "sheet",
-		ore = name,
-		wherein = parent,
-		clust_size = 40,
-		y_min = -1000,
-		y_max = 31000,
-		noise_threshold = density,
-		noise_params = {
-			offset = 0,
-			scale = 1,
-			spread = {x = 512, y = 512, z = 512},
+		ore_type         = "blob",
+		ore              = name,
+		wherein          = parent,
+		clust_scarcity   = 4 * 4 * 4,
+		clust_num_ores = 32,
+		clust_size       = 20,
+		y_min            = -1000,
+		y_max            = 31000,
+		noise_params     = {
+			offset = 0.35,
+			scale = 0.2,
+			spread = {x = 64, y = 64, z = 64},
 			seed = ore_seed,
-			octaves = 5,
-			persist = 0.60
+			octaves = 1,
+			persist = 0.5
 		},
-	        column_height_min = 1,
-	        column_height_max = 16,
-	        column_midpoint_factor = 0.5,
- 		biomes = biomes or nil
+        	biomes = biomes or nil,
+		random_factor = 1.0
 	})
-
 
 end
 
-local add_ore_sheet_semiarid = function(name, parent, density, biomes)
 
-	local ore_seed = seed + math.random()  --4130293965
+local add_ore_sheet = function(name, parent, density, min_y, max_y, biomes)
 
-	minetest.register_ore({
-		ore_type = "sheet",
-		ore = name,
-		wherein = parent,
-		clust_size = 40,
-		y_min = -1000,
-		y_max = 31000,
-		noise_threshold = density,
-		noise_params = {
-			offset = 0,
-			scale = 1,
-			spread = {x = 256, y = 256, z = 256},
-			seed = ore_seed,
-			octaves = 5,
-			persist = 0.60
-		},
-	        column_height_min = 1,
-	        column_height_max = 16,
-	        column_midpoint_factor = 0.5,
- 		biomes = biomes or nil
-	})
+	local spread_val = 2^(density * 10)
+	--local ore_seed = seed
+	--local ore_seed = 4130293965
+	--local ore_seed = 89
+	local ore_seed = math.random(1, spread_val)
+	--local ore_seed = string.len(name) + spread_val
 
-
-end
-
-local add_ore_sheet_temperate = function(name, parent, density, biomes)
-
-	local ore_seed = seed + math.random()  --4130293965
+	lib_materials.add_oredef(name, ore_seed)
 
 	minetest.register_ore({
 		ore_type = "sheet",
 		ore = name,
 		wherein = parent,
-		clust_size = 40,
-		y_min = -1000,
-		y_max = 31000,
+		clust_size = 8,
+		y_min = min_y - lib_materials.biome_vertical_blend,
+		y_max = max_y + lib_materials.biome_vertical_blend,
 		noise_threshold = density,
 		noise_params = {
 			offset = 0,
@@ -110,37 +120,38 @@ local add_ore_sheet_temperate = function(name, parent, density, biomes)
 			octaves = 5,
 			persist = 0.60
 		},
-	        column_height_min = 1,
-	        column_height_max = 16,
-	        column_midpoint_factor = 0.5,
+		column_height_min = (lib_materials.biome_altitude_range / 2) + lib_materials.biome_vertical_blend,  --1
+		column_height_max = lib_materials.biome_altitude_range + (lib_materials.biome_vertical_blend * 2),
+		column_midpoint_factor = 0.5,
  		biomes = biomes or nil
 	})
 
 
 end
 
-local add_ore_sheet_semihumid = function(name, parent, density, biomes)
+local add_ore_sheet_01 = function(name, parent, density, min_y, max_y, biomes)
 
-	local ore_seed = seed + math.random()  --4130293965
+	local spread_val = 2^(density * 10)
+	local ore_seed = math.random(1, spread_val)
 
 	minetest.register_ore({
 		ore_type = "sheet",
 		ore = name,
 		wherein = parent,
-		clust_size = 40,
-		y_min = -1000,
-		y_max = 31000,
+		clust_size = (density * 10),
+		y_min = min_y,
+		y_max = max_y,
 		noise_threshold = density,
 		noise_params = {
 			offset = 0,
 			scale = 1,
-			spread = {x = 128, y = 128, z = 128},
+			spread = {x = spread_val, y = spread_val, z = spread_val},
 			seed = ore_seed,
 			octaves = 5,
 			persist = 0.60
 		},
 	        column_height_min = 1,
-	        column_height_max = 16,
+	        column_height_max = lib_materials.biome_altitude_range,
 	        column_midpoint_factor = 0.5,
  		biomes = biomes or nil
 	})
@@ -148,17 +159,20 @@ local add_ore_sheet_semihumid = function(name, parent, density, biomes)
 
 end
 
-local add_ore_sheet_humid = function(name, parent, density, biomes)
+local add_ore_sheet_03 = function(name, parent, density, min_y, max_y, biomes)
 
-	local ore_seed = seed + math.random()  --4130293965
+	--local ore_seed = seed + math.random()  --4130293965
+	--local name_num = tonumber(name)
+	local spread_val = 2^(density * 10)
+	local ore_seed = math.random(1, spread_val)
 
 	minetest.register_ore({
 		ore_type = "sheet",
 		ore = name,
 		wherein = parent,
-		clust_size = 40,
-		y_min = -1000,
-		y_max = 31000,
+		clust_size = 8,
+		y_min = min_y,
+		y_max = max_y,
 		noise_threshold = density,
 		noise_params = {
 			offset = 0,
@@ -169,7 +183,7 @@ local add_ore_sheet_humid = function(name, parent, density, biomes)
 			persist = 0.60
 		},
 	        column_height_min = 1,
-	        column_height_max = 16,
+	        column_height_max = lib_materials.biome_altitude_range,
 	        column_midpoint_factor = 0.5,
  		biomes = biomes or nil
 	})
@@ -177,11 +191,10 @@ local add_ore_sheet_humid = function(name, parent, density, biomes)
 
 end
 
+local add_ore_sheet_orig = function(name, parent, density, biomes)
 
-
-local add_ore_sheet = function(name, parent, density, biomes)
-
-	local ore_seed = seed + math.random()  --4130293965
+	--local ore_seed = seed + math.random()  --4130293965
+	local ore_seed = tonumber(name)
 
 	minetest.register_ore({
 		ore_type = "sheet",
@@ -209,9 +222,32 @@ local add_ore_sheet = function(name, parent, density, biomes)
 end
 
 
+local add_ore_blob_01 = function(name, parent, min_y, max_y, biomes)
 
+	local ore_seed = tonumber(name)
 
+	minetest.register_ore({
+		ore_type         = "blob",
+		ore              = name,
+		wherein          = parent,
+		clust_scarcity   = 4 * 4 * 4,
+		clust_num_ores = 32,
+		clust_size       = 6,
+		y_min = min_y - (lib_materials.biome_altitude_range / 2),
+		y_max = max_y + (lib_materials.biome_altitude_range / 2),
+		noise_params     = {
+			offset = 0.35,
+			scale = 0.2,
+			spread = {x = 64, y = 64, z = 64},
+			seed = ore_seed,
+			octaves = 1,
+			persist = 0.5
+		},
+        	biomes = biomes or nil,
+		random_factor = 1.0
+	})
 
+end
 
 local add_ore_stratum = function(name, parent, biomes)
 
@@ -276,472 +312,468 @@ end
 	-- add_ore_sheet("lib_materials:stone_brown", "lib_materials:stone_sand")
 --]]
 	
-	--add_ore_stratum("lib_materials:stone_limestone_01", {"lib_materials:stone_bluestone", }, 0.5, {"temperate_semihumid_coastal", "temperate_semihumid_lowland", "temperate_semihumid_shelf", "temperate_semihumid_highland", })
-
-
 local function add_dirt_grass_types_as_ore()
 
-	--add_ore_sheet("lib_materials:dirt_silt_01", {"lib_materials:sand_volcanic", "lib_materials:dirt_silt_02", "lib_materials:dirt_with_grass_warm_humid_coastal", }, 0.5, {"hot_humid_beach", "hot_semihumid_beach", "warm_humid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_hot_humid_coastal", {"lib_materials:dirt_with_grass_hot_humid_coastal", }, 0.8, {"hot_humid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_humid_coastal", {"lib_materials:dirt_with_grass_hot_humid_coastal", }, 0.1, {"hot_humid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_humid_coastal", {"lib_materials:dirt_with_grass_hot_humid_coastal", }, 0.1, {"hot_humid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_humid_coastal", {"lib_materials:dirt_with_grass_hot_humid_coastal", }, 0.1, {"hot_humid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_humid_coastal", {"lib_materials:dirt_with_grass_hot_humid_coastal", }, 0.3, {"hot_humid_coastal", })
-	add_ore_sheet("lib_materials:dirt_with_rainforest_litter", {"lib_materials:dirt_with_grass_hot_humid_coastal", }, 0.4, {"hot_humid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_hot_humid_lowland", {"lib_materials:dirt_with_grass_hot_humid_lowland", }, 0.6, {"hot_humid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_humid_lowland", {"lib_materials:dirt_with_grass_hot_humid_lowland", }, 0.3, {"hot_humid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_humid_lowland", {"lib_materials:dirt_with_grass_hot_humid_lowland", }, 0.1, {"hot_humid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_humid_lowland", {"lib_materials:dirt_with_grass_hot_humid_lowland", }, 0.1, {"hot_humid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_humid_lowland", {"lib_materials:dirt_with_grass_hot_humid_lowland", }, 0.3, {"hot_humid_lowland", })
-	add_ore_sheet_humid("lib_materials:dirt_with_rainforest_litter", {"lib_materials:dirt_with_grass_hot_humid_lowland", }, 0.6, {"hot_humid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_hot_humid_shelf", {"lib_materials:dirt_with_grass_hot_humid_shelf", }, 0.3, {"hot_humid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_humid_shelf", {"lib_materials:dirt_with_grass_hot_humid_shelf", }, 0.3, {"hot_humid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_humid_shelf", {"lib_materials:dirt_with_grass_hot_humid_shelf", }, 0.1, {"hot_humid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_humid_shelf", {"lib_materials:dirt_with_grass_hot_humid_shelf", }, 0.1, {"hot_humid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_humid_shelf", {"lib_materials:dirt_with_grass_hot_humid_shelf", }, 0.3, {"hot_humid_shelf", })
-	add_ore_sheet_humid("lib_materials:dirt_with_rainforest_litter", {"lib_materials:dirt_with_grass_hot_humid_shelf", }, 0.8, {"hot_humid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_hot_humid_highland", {"lib_materials:dirt_with_grass_hot_humid_highland", }, 0.3, {"hot_humid_highland", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_humid_highland", {"lib_materials:dirt_with_grass_hot_humid_highland", }, 0.3, {"hot_humid_highland", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_humid_highland", {"lib_materials:dirt_with_grass_hot_humid_highland", }, 0.1, {"hot_humid_highland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_humid_highland", {"lib_materials:dirt_with_grass_hot_humid_highland", }, 0.1, {"hot_humid_highland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_humid_highland", {"lib_materials:dirt_with_grass_hot_humid_highland", }, 0.3, {"hot_humid_highland", })
-	add_ore_sheet_humid("lib_materials:dirt_with_rainforest_litter", {"lib_materials:dirt_with_grass_hot_humid_highland", }, 1.0, {"hot_humid_highland", })
+--HOT HUMID
+	add_ore_sheet("lib_materials:dirt_silt_01", {"lib_materials:sand", }, 0.8, lib_materials.beach_depth, lib_materials.maxheight_beach, {"hot_humid_beach", })
+	
+	add_ore_sheet("lib_materials:dirt_black_with_grass_hot_humid_coastal", {"lib_materials:dirt_with_grass_hot_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_humid_coastal", {"lib_materials:dirt_with_grass_hot_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_humid_coastal", {"lib_materials:dirt_with_grass_hot_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_humid_coastal", {"lib_materials:dirt_with_grass_hot_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_humid_coastal", {"lib_materials:dirt_with_grass_hot_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_humid_coastal", })
+	add_ore_sheet_01("lib_materials:dirt_black_with_litter_fungi", {"lib_materials:dirt_with_grass_hot_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_black_with_litter_rainforest", {"lib_materials:dirt_with_grass_hot_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_brown_with_litter_rainforest", {"lib_materials:dirt_with_grass_hot_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_litter_rainforest", {"lib_materials:dirt_with_grass_hot_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_litter_rainforest", {"lib_materials:dirt_with_grass_hot_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_silty_with_litter_rainforest", {"lib_materials:dirt_with_grass_hot_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_humid_coastal", })
 
-	add_ore_sheet("lib_materials:dirt_black_with_grass_hot_semihumid_coastal", {"lib_materials:dirt_with_grass_hot_semihumid_coastal", }, 0.2, {"hot_semihumid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_semihumid_coastal", {"lib_materials:dirt_with_grass_hot_semihumid_coastal", }, 0.5, {"hot_semihumid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_semihumid_coastal", {"lib_materials:dirt_with_grass_hot_semihumid_coastal", }, 0.5, {"hot_semihumid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_semihumid_coastal", {"lib_materials:dirt_with_grass_hot_semihumid_coastal", }, 0.5, {"hot_semihumid_coastal", })
-	add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_semihumid_coastal", {"lib_materials:dirt_with_grass_hot_semihumid_coastal", }, 0.2, {"hot_semihumid_coastal", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_hot_semihumid_lowland", {"lib_materials:dirt_with_grass_hot_semihumid_lowland", }, 0.4, {"hot_semihumid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_semihumid_lowland", {"lib_materials:dirt_with_grass_hot_semihumid_lowland", }, 0.5, {"hot_semihumid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_semihumid_lowland", {"lib_materials:dirt_with_grass_hot_semihumid_lowland", }, 0.5, {"hot_semihumid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_semihumid_lowland", {"lib_materials:dirt_with_grass_hot_semihumid_lowland", }, 0.5, {"hot_semihumid_lowland", })
-	add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_semihumid_lowland", {"lib_materials:dirt_with_grass_hot_semihumid_lowland", }, 0.4, {"hot_semihumid_lowland", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_hot_semihumid_shelf", {"lib_materials:dirt_with_grass_hot_semihumid_shelf", }, 0.6, {"hot_semihumid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_semihumid_shelf", {"lib_materials:dirt_with_grass_hot_semihumid_shelf", }, 0.5, {"hot_semihumid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_semihumid_shelf", {"lib_materials:dirt_with_grass_hot_semihumid_shelf", }, 0.5, {"hot_semihumid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_semihumid_shelf", {"lib_materials:dirt_with_grass_hot_semihumid_shelf", }, 0.5, {"hot_semihumid_shelf", })
-	add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_semihumid_shelf", {"lib_materials:dirt_with_grass_hot_semihumid_shelf", }, 0.6, {"hot_semihumid_shelf", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_hot_semihumid_highland", {"lib_materials:dirt_with_grass_hot_semihumid_highland", }, 0.8, {"hot_semihumid_highland", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_semihumid_highland", {"lib_materials:dirt_with_grass_hot_semihumid_highland", }, 0.5, {"hot_semihumid_highland", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_semihumid_highland", {"lib_materials:dirt_with_grass_hot_semihumid_highland", }, 0.5, {"hot_semihumid_highland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_semihumid_highland", {"lib_materials:dirt_with_grass_hot_semihumid_highland", }, 0.5, {"hot_semihumid_highland", })
-	add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_semihumid_highland", {"lib_materials:dirt_with_grass_hot_semihumid_highland", }, 0.8, {"hot_semihumid_highland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_humid_lowland", {"lib_materials:dirt_with_grass_hot_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_humid_lowland", {"lib_materials:dirt_with_grass_hot_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_humid_lowland", {"lib_materials:dirt_with_grass_hot_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_humid_lowland", })
+	add_ore_sheet_01("lib_materials:dirt_black_with_litter_fungi", {"lib_materials:dirt_with_grass_hot_humid_lowland", }, 0.6, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_black_with_litter_rainforest", {"lib_materials:dirt_with_grass_hot_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_litter_rainforest", {"lib_materials:dirt_with_grass_hot_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_litter_rainforest", {"lib_materials:dirt_with_grass_hot_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_litter_rainforest", {"lib_materials:dirt_with_grass_hot_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_litter_rainforest", {"lib_materials:dirt_with_grass_hot_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_humid_lowland", })
 
-	add_ore_sheet("lib_materials:dirt_black_with_grass_hot_temperate_coastal", {"lib_materials:dirt_with_grass_hot_temperate_coastal", }, 0.2, {"hot_temperate_coastal", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_temperate_coastal", {"lib_materials:dirt_with_grass_hot_temperate_coastal", }, 0.2, {"hot_temperate_coastal", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_temperate_coastal", {"lib_materials:dirt_with_grass_hot_temperate_coastal", }, 0.5, {"hot_temperate_coastal", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_temperate_coastal", {"lib_materials:dirt_with_grass_hot_temperate_coastal", }, 0.5, {"hot_temperate_coastal", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_temperate_coastal", {"lib_materials:dirt_with_grass_hot_temperate_coastal", }, 0.5, {"hot_temperate_coastal", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_hot_temperate_lowland", {"lib_materials:dirt_with_grass_hot_temperate_lowland", }, 0.4, {"hot_temperate_lowland", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_temperate_lowland", {"lib_materials:dirt_with_grass_hot_temperate_lowland", }, 0.4, {"hot_temperate_lowland", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_temperate_lowland", {"lib_materials:dirt_with_grass_hot_temperate_lowland", }, 0.5, {"hot_temperate_lowland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_temperate_lowland", {"lib_materials:dirt_with_grass_hot_temperate_lowland", }, 0.5, {"hot_temperate_lowland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_temperate_lowland", {"lib_materials:dirt_with_grass_hot_temperate_lowland", }, 0.5, {"hot_temperate_lowland", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_hot_temperate_shelf", {"lib_materials:dirt_with_grass_hot_temperate_shelf", }, 0.6, {"hot_temperate_shelf", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_temperate_shelf", {"lib_materials:dirt_with_grass_hot_temperate_shelf", }, 0.6, {"hot_temperate_shelf", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_temperate_shelf", {"lib_materials:dirt_with_grass_hot_temperate_shelf", }, 0.5, {"hot_temperate_shelf", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_temperate_shelf", {"lib_materials:dirt_with_grass_hot_temperate_shelf", }, 0.5, {"hot_temperate_shelf", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_temperate_shelf", {"lib_materials:dirt_with_grass_hot_temperate_shelf", }, 0.5, {"hot_temperate_shelf", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_hot_temperate_highland", {"lib_materials:dirt_with_grass_hot_temperate_highland", }, 0.8, {"hot_temperate_highland", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_temperate_highland", {"lib_materials:dirt_with_grass_hot_temperate_highland", }, 0.8, {"hot_temperate_highland", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_temperate_highland", {"lib_materials:dirt_with_grass_hot_temperate_highland", }, 0.5, {"hot_temperate_highland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_temperate_highland", {"lib_materials:dirt_with_grass_hot_temperate_highland", }, 0.5, {"hot_temperate_highland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_temperate_highland", {"lib_materials:dirt_with_grass_hot_temperate_highland", }, 0.5, {"hot_temperate_highland", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_hot_humid_shelf", {"lib_materials:dirt_with_grass_hot_humid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_humid_shelf", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_humid_shelf", {"lib_materials:dirt_with_grass_hot_humid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_humid_shelf", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_humid_shelf", {"lib_materials:dirt_with_grass_hot_humid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_humid_shelf", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_humid_shelf", {"lib_materials:dirt_with_grass_hot_humid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_humid_shelf", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_humid_shelf", {"lib_materials:dirt_with_grass_hot_humid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_humid_shelf", })
+	add_ore_sheet_01("lib_materials:dirt_black_with_litter_fungi", {"lib_materials:dirt_with_grass_hot_humid_shelf", }, 0.6, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_humid_shelf", })
+	add_ore_sheet("lib_materials:dirt_black_with_litter_rainforest", {"lib_materials:dirt_with_grass_hot_humid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_humid_shelf", })
+	add_ore_sheet("lib_materials:dirt_brown_with_litter_rainforest", {"lib_materials:dirt_with_grass_hot_humid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_humid_shelf", })
 
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_hot_semiarid_coastal", {"lib_materials:dirt_with_grass_hot_semiarid_coastal", }, 0.5, {"hot_semiarid_coastal", })
-	add_ore_sheet_arid("lib_materials:dirt_brown_with_grass_hot_semiarid_coastal", {"lib_materials:dirt_with_grass_hot_semiarid_coastal", }, 0.2, {"hot_semiarid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_semiarid_coastal", {"lib_materials:dirt_with_grass_hot_semiarid_coastal", }, 0.5, {"hot_semiarid_coastal", })
-	add_ore_sheet_arid("lib_materials:dirt_sandy_with_grass_hot_semiarid_coastal", {"lib_materials:dirt_with_grass_hot_semiarid_coastal", }, 0.2, {"hot_semiarid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_semiarid_coastal", {"lib_materials:dirt_with_grass_hot_semiarid_coastal", }, 0.5, {"hot_semiarid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_hot_semiarid_lowland", {"lib_materials:dirt_with_grass_hot_semiarid_lowland", }, 0.5, {"hot_semiarid_lowland", })
-	add_ore_sheet_arid("lib_materials:dirt_brown_with_grass_hot_semiarid_lowland", {"lib_materials:dirt_with_grass_hot_semiarid_lowland", }, 0.4, {"hot_semiarid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_semiarid_lowland", {"lib_materials:dirt_with_grass_hot_semiarid_lowland", }, 0.5, {"hot_semiarid_lowland", })
-	add_ore_sheet_arid("lib_materials:dirt_sandy_with_grass_hot_semiarid_lowland", {"lib_materials:dirt_with_grass_hot_semiarid_lowland", }, 0.4, {"hot_semiarid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_semiarid_lowland", {"lib_materials:dirt_with_grass_hot_semiarid_lowland", }, 0.5, {"hot_semiarid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_hot_semiarid_shelf", {"lib_materials:dirt_with_grass_hot_semiarid_shelf", }, 0.5, {"hot_semiarid_shelf", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_semiarid_shelf", {"lib_materials:dirt_with_grass_hot_semiarid_shelf", }, 0.6, {"hot_semiarid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_semiarid_shelf", {"lib_materials:dirt_with_grass_hot_semiarid_shelf", }, 0.5, {"hot_semiarid_shelf", })
-	add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_semiarid_shelf", {"lib_materials:dirt_with_grass_hot_semiarid_shelf", }, 0.6, {"hot_semiarid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_semiarid_shelf", {"lib_materials:dirt_with_grass_hot_semiarid_shelf", }, 0.5, {"hot_semiarid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_hot_semiarid_highland", {"lib_materials:dirt_with_grass_hot_semiarid_highland", }, 0.5, {"hot_semiarid_highland", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_semiarid_highland", {"lib_materials:dirt_with_grass_hot_semiarid_highland", }, 0.8, {"hot_semiarid_highland", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_semiarid_highland", {"lib_materials:dirt_with_grass_hot_semiarid_highland", }, 0.5, {"hot_semiarid_highland", })
-	add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_semiarid_highland", {"lib_materials:dirt_with_grass_hot_semiarid_highland", }, 0.8, {"hot_semiarid_highland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_semiarid_highland", {"lib_materials:dirt_with_grass_hot_semiarid_highland", }, 0.5, {"hot_semiarid_highland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_humid_highland", {"lib_materials:dirt_with_grass_hot_humid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_humid_highland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_humid_highland", {"lib_materials:dirt_with_grass_hot_humid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_humid_highland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_humid_highland", {"lib_materials:dirt_with_grass_hot_humid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_humid_highland", })
+	add_ore_sheet_01("lib_materials:dirt_black_with_litter_fungi", {"lib_materials:dirt_with_grass_hot_humid_highland", }, 0.4, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_humid_highland", })
+	add_ore_sheet("lib_materials:dirt_black_with_litter_rainforest", {"lib_materials:dirt_with_grass_hot_humid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_humid_highland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_litter_rainforest", {"lib_materials:dirt_with_grass_hot_humid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_humid_highland", })
+--HOT SEMIHUMID
+	add_ore_sheet("lib_materials:dirt_silt_01", {"lib_materials:sand_volcanic", }, 0.8, lib_materials.beach_depth, lib_materials.maxheight_beach, {"hot_semihumid_beach", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_semihumid_coastal", {"lib_materials:dirt_with_grass_hot_semihumid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_semihumid_coastal", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_semihumid_coastal", {"lib_materials:dirt_with_grass_hot_semihumid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_semihumid_coastal", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_semihumid_coastal", {"lib_materials:dirt_with_grass_hot_semihumid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_semihumid_coastal", })
+	add_ore_sheet("lib_materials:dirt_black_with_litter_rainforest", {"lib_materials:dirt_with_grass_hot_semihumid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_semihumid_coastal", })
+	add_ore_sheet("lib_materials:dirt_brown_with_litter_rainforest", {"lib_materials:dirt_with_grass_hot_semihumid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_semihumid_coastal", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_semihumid_lowland", {"lib_materials:dirt_with_grass_hot_semihumid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_semihumid_lowland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_semihumid_lowland", {"lib_materials:dirt_with_grass_hot_semihumid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_semihumid_lowland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_semihumid_lowland", {"lib_materials:dirt_with_grass_hot_semihumid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_semihumid_lowland", })
+	add_ore_sheet("lib_materials:dirt_black_with_litter_rainforest", {"lib_materials:dirt_with_grass_hot_semihumid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_semihumid_lowland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_litter_rainforest", {"lib_materials:dirt_with_grass_hot_semihumid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_semihumid_lowland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_semihumid_shelf", {"lib_materials:dirt_with_grass_hot_semihumid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_semihumid_shelf", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_semihumid_shelf", {"lib_materials:dirt_with_grass_hot_semihumid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_semihumid_shelf", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_semihumid_shelf", {"lib_materials:dirt_with_grass_hot_semihumid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_semihumid_shelf", })
+	add_ore_sheet("lib_materials:dirt_black_with_litter_rainforest", {"lib_materials:dirt_with_grass_hot_semihumid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_semihumid_shelf", })
+	add_ore_sheet("lib_materials:dirt_brown_with_litter_rainforest", {"lib_materials:dirt_with_grass_hot_semihumid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_semihumid_shelf", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_semihumid_highland", {"lib_materials:dirt_with_grass_hot_semihumid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_semihumid_highland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_semihumid_highland", {"lib_materials:dirt_with_grass_hot_semihumid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_semihumid_highland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_semihumid_highland", {"lib_materials:dirt_with_grass_hot_semihumid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_semihumid_highland", })
+	add_ore_sheet("lib_materials:dirt_black_with_litter_rainforest", {"lib_materials:dirt_with_grass_hot_semihumid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_semihumid_highland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_litter_rainforest", {"lib_materials:dirt_with_grass_hot_semihumid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_semihumid_highland", })
+--HOT TEMPERATE
+	add_ore_sheet("lib_materials:dirt_black_with_grass_hot_temperate_coastal", {"lib_materials:dirt_with_grass_hot_temperate_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_temperate_coastal", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_temperate_coastal", {"lib_materials:dirt_with_grass_hot_temperate_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_temperate_coastal", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_temperate_coastal", {"lib_materials:dirt_with_grass_hot_temperate_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_temperate_coastal", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_temperate_coastal", {"lib_materials:dirt_with_grass_hot_temperate_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_temperate_coastal", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_temperate_coastal", {"lib_materials:dirt_with_grass_hot_temperate_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_temperate_coastal", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_hot_temperate_lowland", {"lib_materials:dirt_with_grass_hot_temperate_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_temperate_lowland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_temperate_lowland", {"lib_materials:dirt_with_grass_hot_temperate_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_temperate_lowland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_temperate_lowland", {"lib_materials:dirt_with_grass_hot_temperate_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_temperate_lowland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_temperate_lowland", {"lib_materials:dirt_with_grass_hot_temperate_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_temperate_lowland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_temperate_lowland", {"lib_materials:dirt_with_grass_hot_temperate_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_temperate_lowland", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_hot_temperate_shelf", {"lib_materials:dirt_with_grass_hot_temperate_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_temperate_shelf", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_temperate_shelf", {"lib_materials:dirt_with_grass_hot_temperate_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_temperate_shelf", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_temperate_shelf", {"lib_materials:dirt_with_grass_hot_temperate_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_temperate_shelf", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_temperate_shelf", {"lib_materials:dirt_with_grass_hot_temperate_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_temperate_shelf", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_temperate_shelf", {"lib_materials:dirt_with_grass_hot_temperate_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_temperate_shelf", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_hot_temperate_highland", {"lib_materials:dirt_with_grass_hot_temperate_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_temperate_highland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_temperate_highland", {"lib_materials:dirt_with_grass_hot_temperate_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_temperate_highland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_temperate_highland", {"lib_materials:dirt_with_grass_hot_temperate_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_temperate_highland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_temperate_highland", {"lib_materials:dirt_with_grass_hot_temperate_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_temperate_highland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_temperate_highland", {"lib_materials:dirt_with_grass_hot_temperate_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_temperate_highland", })
+--HOT SEMIARID
+	add_ore_sheet("lib_materials:dirt_black_with_grass_hot_semiarid_coastal", {"lib_materials:dirt_with_grass_hot_semiarid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_semiarid_coastal", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_semiarid_coastal", {"lib_materials:dirt_with_grass_hot_semiarid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_semiarid_coastal", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_semiarid_coastal", {"lib_materials:dirt_with_grass_hot_semiarid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_semiarid_coastal", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_semiarid_coastal", {"lib_materials:dirt_with_grass_hot_semiarid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_semiarid_coastal", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_semiarid_coastal", {"lib_materials:dirt_with_grass_hot_semiarid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_semiarid_coastal", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_hot_semiarid_lowland", {"lib_materials:dirt_with_grass_hot_semiarid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_semiarid_lowland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_semiarid_lowland", {"lib_materials:dirt_with_grass_hot_semiarid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_semiarid_lowland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_semiarid_lowland", {"lib_materials:dirt_with_grass_hot_semiarid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_semiarid_lowland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_semiarid_lowland", {"lib_materials:dirt_with_grass_hot_semiarid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_semiarid_lowland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_semiarid_lowland", {"lib_materials:dirt_with_grass_hot_semiarid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_semiarid_lowland", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_hot_semiarid_shelf", {"lib_materials:dirt_with_grass_hot_semiarid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_semiarid_shelf", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_semiarid_shelf", {"lib_materials:dirt_with_grass_hot_semiarid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_semiarid_shelf", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_semiarid_shelf", {"lib_materials:dirt_with_grass_hot_semiarid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_semiarid_shelf", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_semiarid_shelf", {"lib_materials:dirt_with_grass_hot_semiarid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_semiarid_shelf", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_semiarid_shelf", {"lib_materials:dirt_with_grass_hot_semiarid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_semiarid_shelf", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_hot_semiarid_highland", {"lib_materials:dirt_with_grass_hot_semiarid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_semiarid_highland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_hot_semiarid_highland", {"lib_materials:dirt_with_grass_hot_semiarid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_semiarid_highland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_hot_semiarid_highland", {"lib_materials:dirt_with_grass_hot_semiarid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_semiarid_highland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_hot_semiarid_highland", {"lib_materials:dirt_with_grass_hot_semiarid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_semiarid_highland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_hot_semiarid_highland", {"lib_materials:dirt_with_grass_hot_semiarid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_semiarid_highland", })
+--HOT_ARID
+	add_ore_sheet("lib_materials:sand", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_arid_coastal", })
+	add_ore_sheet("lib_materials:sand_desert", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_arid_coastal", })
+	add_ore_sheet("lib_materials:sand_white", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_arid_coastal", })
+	add_ore_sheet("lib_materials:stone_desert_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_arid_coastal", })
+	add_ore_sheet("lib_materials:stone_sandstone_white_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"hot_arid_coastal", })
+	add_ore_sheet("lib_materials:sand", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_arid_lowland", })
+	add_ore_sheet("lib_materials:sand_desert", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_arid_lowland", })
+	add_ore_sheet("lib_materials:sand_white", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_arid_lowland", })
+	add_ore_sheet("lib_materials:stone_sandstone_white_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_arid_lowland", })
+	add_ore_sheet("lib_materials:stone_desert_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"hot_arid_lowland", })
+	add_ore_sheet("lib_materials:sand", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_arid_shelf", })
+	add_ore_sheet("lib_materials:sand_desert", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_arid_shelf", })
+	add_ore_sheet("lib_materials:sand_white", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_arid_shelf", })
+	add_ore_sheet("lib_materials:stone_desert_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_arid_shelf", })
+	add_ore_sheet("lib_materials:stone_sandstone_white_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"hot_arid_shelf", })
+	add_ore_sheet("lib_materials:sand", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_arid_highland", })
+	add_ore_sheet("lib_materials:sand_desert", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_arid_highland", })
+	add_ore_sheet("lib_materials:sand_white", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_arid_highland", })
+	add_ore_sheet("lib_materials:stone_desert_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_arid_highland", })
+	add_ore_sheet("lib_materials:stone_sandstone_white_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"hot_arid_highland", })
 
-	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_humid_coastal", {"lib_materials:dirt_with_grass_warm_humid_coastal", }, 0.8, {"warm_humid_coastal", })
-	-- add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_humid_coastal", {"lib_materials:dirt_with_grass_warm_humid_coastal", }, 0.5, {"warm_humid_coastal", })
-	-- add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_humid_coastal", {"lib_materials:dirt_with_grass_warm_humid_coastal", }, 0.5, {"warm_humid_coastal", })
-	-- add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_humid_coastal", {"lib_materials:dirt_with_grass_warm_humid_coastal", }, 0.5, {"warm_humid_coastal", })
-	add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_humid_coastal", {"lib_materials:dirt_with_grass_warm_humid_coastal", }, 0.8, {"warm_humid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_wet_03", {"lib_materials:dirt_with_grass_warm_humid_coastal", }, 0.2, {"warm_humid_coastal", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_humid_lowland", {"lib_materials:dirt_with_grass_warm_humid_lowland", }, 0.8, {"warm_humid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_humid_lowland", {"lib_materials:dirt_with_grass_warm_humid_lowland", }, 0.5, {"warm_humid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_humid_lowland", {"lib_materials:dirt_with_grass_warm_humid_lowland", }, 0.5, {"warm_humid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_humid_lowland", {"lib_materials:dirt_with_grass_warm_humid_lowland", }, 0.5, {"warm_humid_lowland", })
-	add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_humid_lowland", {"lib_materials:dirt_with_grass_warm_humid_lowland", }, 0.8, {"warm_humid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_lush_03", {"lib_materials:dirt_with_grass_warm_humid_lowland", }, 0.4, {"warm_humid_lowland", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_humid_shelf", {"lib_materials:dirt_with_grass_warm_humid_shelf", }, 0.8, {"warm_humid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_humid_shelf", {"lib_materials:dirt_with_grass_warm_humid_shelf", }, 0.5, {"warm_humid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_humid_shelf", {"lib_materials:dirt_with_grass_warm_humid_shelf", }, 0.5, {"warm_humid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_humid_shelf", {"lib_materials:dirt_with_grass_warm_humid_shelf", }, 0.5, {"warm_humid_shelf", })
-	add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_humid_shelf", {"lib_materials:dirt_with_grass_warm_humid_shelf", }, 0.8, {"warm_humid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_dry_03", {"lib_materials:dirt_with_grass_warm_humid_shelf", }, 0.6, {"warm_humid_shelf", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_humid_highland", {"lib_materials:dirt_with_grass_warm_humid_highland", }, 0.8, {"warm_humid_highland", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_humid_highland", {"lib_materials:dirt_with_grass_warm_humid_highland", }, 0.5, {"warm_humid_highland", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_humid_highland", {"lib_materials:dirt_with_grass_warm_humid_highland", }, 0.5, {"warm_humid_highland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_humid_highland", {"lib_materials:dirt_with_grass_warm_humid_highland", }, 0.5, {"warm_humid_highland", })
-	add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_humid_highland", {"lib_materials:dirt_with_grass_warm_humid_highland", }, 0.8, {"warm_humid_highland", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_brown_03", {"lib_materials:dirt_with_grass_warm_humid_highland", }, 0.8, {"warm_humid_highland", })
-	add_ore_sheet("lib_materials:dirt_with_rainforest_litter", {"lib_materials:dirt_with_grass_warm_humid_highland", }, 0.8, {"warm_humid_highland", })
+--WARM HUMID
+	add_ore_sheet("lib_materials:dirt_silt_01", {"lib_materials:sand_white", }, 0.8, lib_materials.beach_depth, lib_materials.maxheight_beach, {"warm_humid_beach", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_humid_coastal", {"lib_materials:dirt_with_grass_warm_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_humid_coastal", {"lib_materials:dirt_with_grass_warm_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_humid_coastal", {"lib_materials:dirt_with_grass_warm_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_humid_coastal", {"lib_materials:dirt_with_grass_warm_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_humid_coastal", {"lib_materials:dirt_with_grass_warm_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_humid_lowland", {"lib_materials:dirt_with_grass_warm_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_humid_lowland", {"lib_materials:dirt_with_grass_warm_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_humid_lowland", {"lib_materials:dirt_with_grass_warm_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_humid_lowland", {"lib_materials:dirt_with_grass_warm_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_humid_lowland", {"lib_materials:dirt_with_grass_warm_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_humid_shelf", {"lib_materials:dirt_with_grass_warm_humid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_humid_shelf", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_humid_shelf", {"lib_materials:dirt_with_grass_warm_humid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_humid_shelf", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_humid_shelf", {"lib_materials:dirt_with_grass_warm_humid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_humid_shelf", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_humid_shelf", {"lib_materials:dirt_with_grass_warm_humid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_humid_shelf", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_humid_shelf", {"lib_materials:dirt_with_grass_warm_humid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_humid_shelf", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_humid_highland", {"lib_materials:dirt_with_grass_warm_humid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_humid_highland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_humid_highland", {"lib_materials:dirt_with_grass_warm_humid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_humid_highland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_humid_highland", {"lib_materials:dirt_with_grass_warm_humid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_humid_highland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_humid_highland", {"lib_materials:dirt_with_grass_warm_humid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_humid_highland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_humid_highland", {"lib_materials:dirt_with_grass_warm_humid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_humid_highland", })
+--WARM SEMIHUMID
+	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_semihumid_coastal", {"lib_materials:dirt_with_grass_warm_semihumid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_semihumid_coastal", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_semihumid_coastal", {"lib_materials:dirt_with_grass_warm_semihumid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_semihumid_coastal", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_semihumid_coastal", {"lib_materials:dirt_with_grass_warm_semihumid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_semihumid_coastal", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_semihumid_coastal", {"lib_materials:dirt_with_grass_warm_semihumid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_semihumid_coastal", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_semihumid_coastal", {"lib_materials:dirt_with_grass_warm_semihumid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_semihumid_coastal", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_semihumid_lowland", {"lib_materials:dirt_with_grass_warm_semihumid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_semihumid_lowland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_semihumid_lowland", {"lib_materials:dirt_with_grass_warm_semihumid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_semihumid_lowland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_semihumid_lowland", {"lib_materials:dirt_with_grass_warm_semihumid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_semihumid_lowland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_semihumid_lowland", {"lib_materials:dirt_with_grass_warm_semihumid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_semihumid_lowland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_semihumid_lowland", {"lib_materials:dirt_with_grass_warm_semihumid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_semihumid_lowland", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_semihumid_shelf", {"lib_materials:dirt_with_grass_warm_semihumid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_semihumid_shelf", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_semihumid_shelf", {"lib_materials:dirt_with_grass_warm_semihumid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_semihumid_shelf", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_semihumid_shelf", {"lib_materials:dirt_with_grass_warm_semihumid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_semihumid_shelf", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_semihumid_shelf", {"lib_materials:dirt_with_grass_warm_semihumid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_semihumid_shelf", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_semihumid_shelf", {"lib_materials:dirt_with_grass_warm_semihumid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_semihumid_shelf", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_semihumid_highland", {"lib_materials:dirt_with_grass_warm_semihumid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_semihumid_highland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_semihumid_highland", {"lib_materials:dirt_with_grass_warm_semihumid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_semihumid_highland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_semihumid_highland", {"lib_materials:dirt_with_grass_warm_semihumid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_semihumid_highland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_semihumid_highland", {"lib_materials:dirt_with_grass_warm_semihumid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_semihumid_highland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_semihumid_highland", {"lib_materials:dirt_with_grass_warm_semihumid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_semihumid_highland", })
+--WARM TEMPERATE
+	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_temperate_coastal", {"lib_materials:dirt_with_grass_warm_temperate_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_temperate_coastal", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_temperate_coastal", {"lib_materials:dirt_with_grass_warm_temperate_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_temperate_coastal", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_temperate_coastal", {"lib_materials:dirt_with_grass_warm_temperate_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_temperate_coastal", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_temperate_coastal", {"lib_materials:dirt_with_grass_warm_temperate_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_temperate_coastal", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_temperate_coastal", {"lib_materials:dirt_with_grass_warm_temperate_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_temperate_coastal", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_temperate_lowland", {"lib_materials:dirt_with_grass_warm_temperate_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_temperate_lowland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_temperate_lowland", {"lib_materials:dirt_with_grass_warm_temperate_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_temperate_lowland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_temperate_lowland", {"lib_materials:dirt_with_grass_warm_temperate_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_temperate_lowland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_temperate_lowland", {"lib_materials:dirt_with_grass_warm_temperate_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_temperate_lowland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_temperate_lowland", {"lib_materials:dirt_with_grass_warm_temperate_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_temperate_lowland", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_temperate_shelf", {"lib_materials:dirt_with_grass_warm_temperate_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_temperate_shelf", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_temperate_shelf", {"lib_materials:dirt_with_grass_warm_temperate_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_temperate_shelf", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_temperate_shelf", {"lib_materials:dirt_with_grass_warm_temperate_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_temperate_shelf", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_temperate_shelf", {"lib_materials:dirt_with_grass_warm_temperate_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_temperate_shelf", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_temperate_shelf", {"lib_materials:dirt_with_grass_warm_temperate_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_temperate_shelf", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_temperate_highland", {"lib_materials:dirt_with_grass_warm_temperate_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_temperate_highland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_temperate_highland", {"lib_materials:dirt_with_grass_warm_temperate_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_temperate_highland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_temperate_highland", {"lib_materials:dirt_with_grass_warm_temperate_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_temperate_highland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_temperate_highland", {"lib_materials:dirt_with_grass_warm_temperate_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_temperate_highland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_temperate_highland", {"lib_materials:dirt_with_grass_warm_temperate_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_temperate_highland", })
+--WARM SEMIARID
+	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_semiarid_coastal", {"lib_materials:dirt_with_grass_warm_semiarid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_semiarid_coastal", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_semiarid_coastal", {"lib_materials:dirt_with_grass_warm_semiarid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_semiarid_coastal", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_semiarid_coastal", {"lib_materials:dirt_with_grass_warm_semiarid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_semiarid_coastal", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_semiarid_coastal", {"lib_materials:dirt_with_grass_warm_semiarid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_semiarid_coastal", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_semiarid_coastal", {"lib_materials:dirt_with_grass_warm_semiarid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_semiarid_coastal", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_semiarid_lowland", {"lib_materials:dirt_with_grass_warm_semiarid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_semiarid_lowland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_semiarid_lowland", {"lib_materials:dirt_with_grass_warm_semiarid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_semiarid_lowland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_semiarid_lowland", {"lib_materials:dirt_with_grass_warm_semiarid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_semiarid_lowland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_semiarid_lowland", {"lib_materials:dirt_with_grass_warm_semiarid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_semiarid_lowland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_semiarid_lowland", {"lib_materials:dirt_with_grass_warm_semiarid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_semiarid_lowland", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_semiarid_shelf", {"lib_materials:dirt_with_grass_warm_semiarid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_semiarid_shelf", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_semiarid_shelf", {"lib_materials:dirt_with_grass_warm_semiarid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_semiarid_shelf", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_semiarid_shelf", {"lib_materials:dirt_with_grass_warm_semiarid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_semiarid_shelf", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_semiarid_shelf", {"lib_materials:dirt_with_grass_warm_semiarid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_semiarid_shelf", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_semiarid_shelf", {"lib_materials:dirt_with_grass_warm_semiarid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_semiarid_shelf", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_semiarid_highland", {"lib_materials:dirt_with_grass_warm_semiarid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_semiarid_highland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_semiarid_highland", {"lib_materials:dirt_with_grass_warm_semiarid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_semiarid_highland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_semiarid_highland", {"lib_materials:dirt_with_grass_warm_semiarid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_semiarid_highland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_semiarid_highland", {"lib_materials:dirt_with_grass_warm_semiarid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_semiarid_highland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_semiarid_highland", {"lib_materials:dirt_with_grass_warm_semiarid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_semiarid_highland", })
+--WARM ARID
+	add_ore_sheet("lib_materials:sand", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_arid_coastal", })
+	add_ore_sheet("lib_materials:sand_desert", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_arid_coastal", })
+	add_ore_sheet("lib_materials:sand_white", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_arid_coastal", })
+	add_ore_sheet("lib_materials:stone_desert_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_arid_coastal", })
+	add_ore_sheet("lib_materials:stone_sandstone_white_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"warm_arid_coastal", })
+	add_ore_sheet("lib_materials:sand", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_arid_lowland", })
+	add_ore_sheet("lib_materials:sand_desert", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_arid_lowland", })
+	add_ore_sheet("lib_materials:sand_white", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_arid_lowland", })
+	add_ore_sheet("lib_materials:stone_sandstone_white_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_arid_lowland", })
+	add_ore_sheet("lib_materials:stone_desert_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"warm_arid_lowland", })
+	add_ore_sheet("lib_materials:sand", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_arid_shelf", })
+	add_ore_sheet("lib_materials:sand_desert", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_arid_shelf", })
+	add_ore_sheet("lib_materials:sand_white", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_arid_shelf", })
+	add_ore_sheet("lib_materials:stone_desert_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_arid_shelf", })
+	add_ore_sheet("lib_materials:stone_sandstone_white_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"warm_arid_shelf", })
+	add_ore_sheet("lib_materials:sand", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_arid_highland", })
+	add_ore_sheet("lib_materials:sand_desert", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_arid_highland", })
+	add_ore_sheet("lib_materials:sand_white", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_arid_highland", })
+	add_ore_sheet("lib_materials:stone_desert_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_arid_highland", })
+	add_ore_sheet("lib_materials:stone_sandstone_white_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"warm_arid_highland", })
 
-	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_semihumid_coastal", {"lib_materials:dirt_with_grass_warm_semihumid_coastal", }, 0.6, {"warm_semihumid_coastal", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_semihumid_coastal", {"lib_materials:dirt_with_grass_warm_semihumid_coastal", }, 0.6, {"warm_semihumid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_semihumid_coastal", {"lib_materials:dirt_with_grass_warm_semihumid_coastal", }, 0.2, {"warm_semihumid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_semihumid_coastal", {"lib_materials:dirt_with_grass_warm_semihumid_coastal", }, 0.5, {"warm_semihumid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_semihumid_coastal", {"lib_materials:dirt_with_grass_warm_semihumid_coastal", }, 0.5, {"warm_semihumid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_wet_07", {"lib_materials:dirt_with_grass_warm_semihumid_coastal", }, 0.2, {"warm_semihumid_coastal", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_semihumid_lowland", {"lib_materials:dirt_with_grass_warm_semihumid_lowland", }, 0.6, {"warm_semihumid_lowland", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_semihumid_lowland", {"lib_materials:dirt_with_grass_warm_semihumid_lowland", }, 0.6, {"warm_semihumid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_semihumid_lowland", {"lib_materials:dirt_with_grass_warm_semihumid_lowland", }, 0.2, {"warm_semihumid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_semihumid_lowland", {"lib_materials:dirt_with_grass_warm_semihumid_lowland", }, 0.5, {"warm_semihumid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_semihumid_lowland", {"lib_materials:dirt_with_grass_warm_semihumid_lowland", }, 0.5, {"warm_semihumid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_lush_07", {"lib_materials:dirt_with_grass_warm_semihumid_lowland", }, 0.4, {"warm_semihumid_lowland", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_semihumid_shelf", {"lib_materials:dirt_with_grass_warm_semihumid_shelf", }, 0.6, {"warm_semihumid_shelf", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_semihumid_shelf", {"lib_materials:dirt_with_grass_warm_semihumid_shelf", }, 0.6, {"warm_semihumid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_semihumid_shelf", {"lib_materials:dirt_with_grass_warm_semihumid_shelf", }, 0.2, {"warm_semihumid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_semihumid_shelf", {"lib_materials:dirt_with_grass_warm_semihumid_shelf", }, 0.5, {"warm_semihumid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_semihumid_shelf", {"lib_materials:dirt_with_grass_warm_semihumid_shelf", }, 0.5, {"warm_semihumid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_dry_07", {"lib_materials:dirt_with_grass_warm_semihumid_shelf", }, 0.6, {"warm_semihumid_shelf", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_warm_semihumid_highland", {"lib_materials:dirt_with_grass_warm_semihumid_highland", }, 0.6, {"warm_semihumid_highland", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_semihumid_highland", {"lib_materials:dirt_with_grass_warm_semihumid_highland", }, 0.6, {"warm_semihumid_highland", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_semihumid_highland", {"lib_materials:dirt_with_grass_warm_semihumid_highland", }, 0.2, {"warm_semihumid_highland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_semihumid_highland", {"lib_materials:dirt_with_grass_warm_semihumid_highland", }, 0.5, {"warm_semihumid_highland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_semihumid_highland", {"lib_materials:dirt_with_grass_warm_semihumid_highland", }, 0.5, {"warm_semihumid_highland", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_brown_07", {"lib_materials:dirt_with_grass_warm_semihumid_highland", }, 0.8, {"warm_semihumid_highland", })
+--TEMPERATE HUMID
+	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_humid_coastal", {"lib_materials:dirt_with_grass_temperate_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_humid_coastal", {"lib_materials:dirt_with_grass_temperate_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_humid_coastal", {"lib_materials:dirt_with_grass_temperate_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_humid_coastal", {"lib_materials:dirt_with_grass_temperate_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_humid_coastal", {"lib_materials:dirt_with_grass_temperate_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_humid_lowland", {"lib_materials:dirt_with_grass_temperate_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_humid_lowland", {"lib_materials:dirt_with_grass_temperate_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_humid_lowland", {"lib_materials:dirt_with_grass_temperate_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_humid_lowland", {"lib_materials:dirt_with_grass_temperate_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_humid_lowland", {"lib_materials:dirt_with_grass_temperate_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_humid_shelf", {"lib_materials:dirt_with_grass_temperate_humid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_humid_shelf", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_humid_shelf", {"lib_materials:dirt_with_grass_temperate_humid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_humid_shelf", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_humid_shelf", {"lib_materials:dirt_with_grass_temperate_humid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_humid_shelf", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_humid_shelf", {"lib_materials:dirt_with_grass_temperate_humid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_humid_shelf", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_humid_shelf", {"lib_materials:dirt_with_grass_temperate_humid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_humid_shelf", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_humid_highland", {"lib_materials:dirt_with_grass_temperate_humid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_humid_highland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_humid_highland", {"lib_materials:dirt_with_grass_temperate_humid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_humid_highland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_humid_highland", {"lib_materials:dirt_with_grass_temperate_humid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_humid_highland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_humid_highland", {"lib_materials:dirt_with_grass_temperate_humid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_humid_highland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_humid_highland", {"lib_materials:dirt_with_grass_temperate_humid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_humid_highland", })
+--TEMPERATE SEMIHUMID
+	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_semihumid_coastal", {"lib_materials:dirt_with_grass_temperate_semihumid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_semihumid_coastal", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_semihumid_coastal", {"lib_materials:dirt_with_grass_temperate_semihumid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_semihumid_coastal", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_semihumid_coastal", {"lib_materials:dirt_with_grass_temperate_semihumid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_semihumid_coastal", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_semihumid_coastal", {"lib_materials:dirt_with_grass_temperate_semihumid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_semihumid_coastal", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_semihumid_coastal", {"lib_materials:dirt_with_grass_temperate_semihumid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_semihumid_coastal", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_semihumid_lowland", {"lib_materials:dirt_with_grass_temperate_semihumid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_semihumid_lowland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_semihumid_lowland", {"lib_materials:dirt_with_grass_temperate_semihumid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_semihumid_lowland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_semihumid_lowland", {"lib_materials:dirt_with_grass_temperate_semihumid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_semihumid_lowland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_semihumid_lowland", {"lib_materials:dirt_with_grass_temperate_semihumid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_semihumid_lowland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_semihumid_lowland", {"lib_materials:dirt_with_grass_temperate_semihumid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_semihumid_lowland", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_semihumid_shelf", {"lib_materials:dirt_with_grass_temperate_semihumid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_semihumid_shelf", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_semihumid_shelf", {"lib_materials:dirt_with_grass_temperate_semihumid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_semihumid_shelf", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_semihumid_shelf", {"lib_materials:dirt_with_grass_temperate_semihumid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_semihumid_shelf", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_semihumid_shelf", {"lib_materials:dirt_with_grass_temperate_semihumid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_semihumid_shelf", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_semihumid_shelf", {"lib_materials:dirt_with_grass_temperate_semihumid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_semihumid_shelf", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_semihumid_highland", {"lib_materials:dirt_with_grass_temperate_semihumid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_semihumid_highland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_semihumid_highland", {"lib_materials:dirt_with_grass_temperate_semihumid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_semihumid_highland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_semihumid_highland", {"lib_materials:dirt_with_grass_temperate_semihumid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_semihumid_highland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_semihumid_highland", {"lib_materials:dirt_with_grass_temperate_semihumid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_semihumid_highland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_semihumid_highland", {"lib_materials:dirt_with_grass_temperate_semihumid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_semihumid_highland", })
+--TEMPERATE TEMPERATE 
+	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_temperate_coastal", {"lib_materials:dirt_with_grass_temperate_temperate_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_temperate_coastal", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_temperate_coastal", {"lib_materials:dirt_with_grass_temperate_temperate_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_temperate_coastal", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_temperate_coastal", {"lib_materials:dirt_with_grass_temperate_temperate_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_temperate_coastal", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_temperate_coastal", {"lib_materials:dirt_with_grass_temperate_temperate_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_temperate_coastal", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_temperate_coastal", {"lib_materials:dirt_with_grass_temperate_temperate_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_temperate_coastal", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_temperate_lowland", {"lib_materials:dirt_with_grass_temperate_temperate_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_temperate_lowland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_temperate_lowland", {"lib_materials:dirt_with_grass_temperate_temperate_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_temperate_lowland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_temperate_lowland", {"lib_materials:dirt_with_grass_temperate_temperate_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_temperate_lowland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_temperate_lowland", {"lib_materials:dirt_with_grass_temperate_temperate_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_temperate_lowland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_temperate_lowland", {"lib_materials:dirt_with_grass_temperate_temperate_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_temperate_lowland", })
+	add_ore_sheet("lib_materials:dirt_with_grass_gray", {"lib_materials:dirt_with_grass_temperate_temperate_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_temperate_lowland", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_temperate_shelf", {"lib_materials:dirt_with_grass_temperate_temperate_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_temperate_shelf", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_temperate_shelf", {"lib_materials:dirt_with_grass_temperate_temperate_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_temperate_shelf", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_temperate_shelf", {"lib_materials:dirt_with_grass_temperate_temperate_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_temperate_shelf", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_temperate_shelf", {"lib_materials:dirt_with_grass_temperate_temperate_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_temperate_shelf", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_temperate_shelf", {"lib_materials:dirt_with_grass_temperate_temperate_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_temperate_shelf", })
+	add_ore_sheet("lib_materials:dirt_with_grass_gray", {"lib_materials:dirt_with_grass_temperate_temperate_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_temperate_shelf", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_temperate_highland", {"lib_materials:dirt_with_grass_temperate_temperate_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_temperate_highland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_temperate_highland", {"lib_materials:dirt_with_grass_temperate_temperate_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_temperate_highland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_temperate_highland", {"lib_materials:dirt_with_grass_temperate_temperate_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_temperate_highland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_temperate_highland", {"lib_materials:dirt_with_grass_temperate_temperate_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_temperate_highland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_temperate_highland", {"lib_materials:dirt_with_grass_temperate_temperate_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_temperate_highland", })
+--TEMPERATE SEMIARID
+	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_semiarid_coastal", {"lib_materials:dirt_with_grass_temperate_semiarid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_semiarid_coastal", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_semiarid_coastal", {"lib_materials:dirt_with_grass_temperate_semiarid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_semiarid_coastal", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_semiarid_coastal", {"lib_materials:dirt_with_grass_temperate_semiarid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_semiarid_coastal", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_semiarid_coastal", {"lib_materials:dirt_with_grass_temperate_semiarid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_semiarid_coastal", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_semiarid_coastal", {"lib_materials:dirt_with_grass_temperate_semiarid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_semiarid_coastal", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_semiarid_lowland", {"lib_materials:dirt_with_grass_temperate_semiarid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_semiarid_lowland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_semiarid_lowland", {"lib_materials:dirt_with_grass_temperate_semiarid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_semiarid_lowland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_semiarid_lowland", {"lib_materials:dirt_with_grass_temperate_semiarid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_semiarid_lowland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_semiarid_lowland", {"lib_materials:dirt_with_grass_temperate_semiarid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_semiarid_lowland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_semiarid_lowland", {"lib_materials:dirt_with_grass_temperate_semiarid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_semiarid_lowland", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_semiarid_shelf", {"lib_materials:dirt_with_grass_temperate_semiarid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_semiarid_shelf", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_semiarid_shelf", {"lib_materials:dirt_with_grass_temperate_semiarid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_semiarid_shelf", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_semiarid_shelf", {"lib_materials:dirt_with_grass_temperate_semiarid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_semiarid_shelf", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_semiarid_shelf", {"lib_materials:dirt_with_grass_temperate_semiarid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_semiarid_shelf", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_semiarid_shelf", {"lib_materials:dirt_with_grass_temperate_semiarid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_semiarid_shelf", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_semiarid_highland", {"lib_materials:dirt_with_grass_temperate_semiarid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_semiarid_highland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_semiarid_highland", {"lib_materials:dirt_with_grass_temperate_semiarid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_semiarid_highland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_semiarid_highland", {"lib_materials:dirt_with_grass_temperate_semiarid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_semiarid_highland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_semiarid_highland", {"lib_materials:dirt_with_grass_temperate_semiarid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_semiarid_highland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_semiarid_highland", {"lib_materials:dirt_with_grass_temperate_semiarid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_semiarid_highland", })
+--TEMPERATE  ARID
+	add_ore_sheet("lib_materials:sand", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_arid_coastal", })
+	add_ore_sheet("lib_materials:sand_desert", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_arid_coastal", })
+	add_ore_sheet("lib_materials:sand_white", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_arid_coastal", })
+	add_ore_sheet("lib_materials:stone_desert_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_arid_coastal", })
+	add_ore_sheet("lib_materials:stone_sandstone_white_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"temperate_arid_coastal", })
+	add_ore_sheet("lib_materials:sand", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_arid_lowland", })
+	add_ore_sheet("lib_materials:sand_desert", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_arid_lowland", })
+	add_ore_sheet("lib_materials:sand_white", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_arid_lowland", })
+	add_ore_sheet("lib_materials:stone_sandstone_white_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_arid_lowland", })
+	add_ore_sheet("lib_materials:stone_desert_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"temperate_arid_lowland", })
+	add_ore_sheet("lib_materials:sand", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_arid_shelf", })
+	add_ore_sheet("lib_materials:sand_desert", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_arid_shelf", })
+	add_ore_sheet("lib_materials:sand_white", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_arid_shelf", })
+	add_ore_sheet("lib_materials:stone_desert_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_arid_shelf", })
+	add_ore_sheet("lib_materials:stone_sandstone_white_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"temperate_arid_shelf", })
+	add_ore_sheet("lib_materials:sand", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_arid_highland", })
+	add_ore_sheet("lib_materials:sand_desert", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_arid_highland", })
+	add_ore_sheet("lib_materials:sand_white", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_arid_highland", })
+	add_ore_sheet("lib_materials:stone_desert_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_arid_highland", })
+	add_ore_sheet("lib_materials:stone_sandstone_white_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"temperate_arid_highland", })
 
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_warm_temperate_coastal", {"lib_materials:dirt_with_grass_warm_temperate_coastal", }, 0.5, {"warm_temperate_coastal", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_temperate_coastal", {"lib_materials:dirt_with_grass_warm_temperate_coastal", }, 0.4, {"warm_temperate_coastal", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_temperate_coastal", {"lib_materials:dirt_with_grass_warm_temperate_coastal", }, 0.4, {"warm_temperate_coastal", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_wet_11", {"lib_materials:dirt_with_grass_warm_temperate_coastal", }, 0.2, {"warm_temperate_coastal", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_temperate_coastal", {"lib_materials:dirt_with_grass_warm_temperate_coastal", }, 0.5, {"warm_temperate_coastal", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_temperate_coastal", {"lib_materials:dirt_with_grass_warm_temperate_coastal", }, 0.5, {"warm_temperate_coastal", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_warm_temperate_lowland", {"lib_materials:dirt_with_grass_warm_temperate_lowland", }, 0.5, {"warm_temperate_lowland", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_temperate_lowland", {"lib_materials:dirt_with_grass_warm_temperate_lowland", }, 0.4, {"warm_temperate_lowland", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_temperate_lowland", {"lib_materials:dirt_with_grass_warm_temperate_lowland", }, 0.4, {"warm_temperate_lowland", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_lush_11", {"lib_materials:dirt_with_grass_warm_temperate_lowland", }, 0.4, {"warm_temperate_lowland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_temperate_lowland", {"lib_materials:dirt_with_grass_warm_temperate_lowland", }, 0.5, {"warm_temperate_lowland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_temperate_lowland", {"lib_materials:dirt_with_grass_warm_temperate_lowland", }, 0.5, {"warm_temperate_lowland", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_warm_temperate_shelf", {"lib_materials:dirt_with_grass_warm_temperate_shelf", }, 0.5, {"warm_temperate_shelf", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_temperate_shelf", {"lib_materials:dirt_with_grass_warm_temperate_shelf", }, 0.4, {"warm_temperate_shelf", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_temperate_shelf", {"lib_materials:dirt_with_grass_warm_temperate_shelf", }, 0.4, {"warm_temperate_shelf", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_dry_11", {"lib_materials:dirt_with_grass_warm_temperate_shelf", }, 0.6, {"warm_temperate_shelf", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_temperate_shelf", {"lib_materials:dirt_with_grass_warm_temperate_shelf", }, 0.5, {"warm_temperate_shelf", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_temperate_shelf", {"lib_materials:dirt_with_grass_warm_temperate_shelf", }, 0.5, {"warm_temperate_shelf", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_warm_temperate_highland", {"lib_materials:dirt_with_grass_warm_temperate_highland", }, 0.5, {"warm_temperate_highland", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_temperate_highland", {"lib_materials:dirt_with_grass_warm_temperate_highland", }, 0.4, {"warm_temperate_highland", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_temperate_highland", {"lib_materials:dirt_with_grass_warm_temperate_highland", }, 0.4, {"warm_temperate_highland", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_brown_11", {"lib_materials:dirt_with_grass_warm_temperate_highland", }, 0.8, {"warm_temperate_highland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_temperate_highland", {"lib_materials:dirt_with_grass_warm_temperate_highland", }, 0.5, {"warm_temperate_highland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_temperate_highland", {"lib_materials:dirt_with_grass_warm_temperate_highland", }, 0.5, {"warm_temperate_highland", })
-
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_warm_semiarid_coastal", {"lib_materials:dirt_with_grass_warm_semiarid_coastal", }, 0.5, {"warm_semiarid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_semiarid_coastal", {"lib_materials:dirt_with_grass_warm_semiarid_coastal", }, 0.5, {"warm_semiarid_coastal", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_semiarid_coastal", {"lib_materials:dirt_with_grass_warm_semiarid_coastal", }, 0.2, {"warm_semiarid_coastal", })
-	add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_semiarid_coastal", {"lib_materials:dirt_with_grass_warm_semiarid_coastal", }, 0.2, {"warm_semiarid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_semiarid_coastal", {"lib_materials:dirt_with_grass_warm_semiarid_coastal", }, 0.5, {"warm_semiarid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_warm_semiarid_lowland", {"lib_materials:dirt_with_grass_warm_semiarid_lowland", }, 0.5, {"warm_semiarid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_semiarid_lowland", {"lib_materials:dirt_with_grass_warm_semiarid_lowland", }, 0.5, {"warm_semiarid_lowland", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_semiarid_lowland", {"lib_materials:dirt_with_grass_warm_semiarid_lowland", }, 0.4, {"warm_semiarid_lowland", })
-	add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_semiarid_lowland", {"lib_materials:dirt_with_grass_warm_semiarid_lowland", }, 0.4, {"warm_semiarid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_semiarid_lowland", {"lib_materials:dirt_with_grass_warm_semiarid_lowland", }, 0.5, {"warm_semiarid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_warm_semiarid_shelf", {"lib_materials:dirt_with_grass_warm_semiarid_shelf", }, 0.5, {"warm_semiarid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_semiarid_shelf", {"lib_materials:dirt_with_grass_warm_semiarid_shelf", }, 0.5, {"warm_semiarid_shelf", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_semiarid_shelf", {"lib_materials:dirt_with_grass_warm_semiarid_shelf", }, 0.6, {"warm_semiarid_shelf", })
-	add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_semiarid_shelf", {"lib_materials:dirt_with_grass_warm_semiarid_shelf", }, 0.6, {"warm_semiarid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_semiarid_shelf", {"lib_materials:dirt_with_grass_warm_semiarid_shelf", }, 0.5, {"warm_semiarid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_warm_semiarid_highland", {"lib_materials:dirt_with_grass_warm_semiarid_highland", }, 0.5, {"warm_semiarid_highland", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_warm_semiarid_highland", {"lib_materials:dirt_with_grass_warm_semiarid_highland", }, 0.5, {"warm_semiarid_highland", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_warm_semiarid_highland", {"lib_materials:dirt_with_grass_warm_semiarid_highland", }, 0.8, {"warm_semiarid_highland", })
-	add_ore_sheet("lib_materials:dirt_sandy_with_grass_warm_semiarid_highland", {"lib_materials:dirt_with_grass_warm_semiarid_highland", }, 0.8, {"warm_semiarid_highland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_warm_semiarid_highland", {"lib_materials:dirt_with_grass_warm_semiarid_highland", }, 0.5, {"warm_semiarid_highland", })
-
-	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_humid_coastal", {"lib_materials:dirt_with_grass_temperate_humid_coastal", }, 0.8, {"temperate_humid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_humid_coastal", {"lib_materials:dirt_with_grass_temperate_humid_coastal", }, 0.5, {"temperate_humid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_humid_coastal", {"lib_materials:dirt_with_grass_temperate_humid_coastal", }, 0.5, {"temperate_humid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_humid_coastal", {"lib_materials:dirt_with_grass_temperate_humid_coastal", }, 0.5, {"temperate_humid_coastal", })
-	add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_humid_coastal", {"lib_materials:dirt_with_grass_temperate_humid_coastal", }, 0.8, {"temperate_humid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_wet_02", {"lib_materials:dirt_with_grass_temperate_humid_coastal", }, 0.2, {"temperate_humid_coastal", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_humid_lowland", {"lib_materials:dirt_with_grass_temperate_humid_lowland", }, 0.8, {"temperate_humid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_humid_lowland", {"lib_materials:dirt_with_grass_temperate_humid_lowland", }, 0.5, {"temperate_humid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_humid_lowland", {"lib_materials:dirt_with_grass_temperate_humid_lowland", }, 0.5, {"temperate_humid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_humid_lowland", {"lib_materials:dirt_with_grass_temperate_humid_lowland", }, 0.5, {"temperate_humid_lowland", })
-	add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_humid_lowland", {"lib_materials:dirt_with_grass_temperate_humid_lowland", }, 0.8, {"temperate_humid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_lush_02", {"lib_materials:dirt_with_grass_temperate_humid_lowland", }, 0.4, {"temperate_humid_lowland", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_humid_shelf", {"lib_materials:dirt_with_grass_temperate_humid_shelf", }, 0.8, {"temperate_humid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_humid_shelf", {"lib_materials:dirt_with_grass_temperate_humid_shelf", }, 0.5, {"temperate_humid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_humid_shelf", {"lib_materials:dirt_with_grass_temperate_humid_shelf", }, 0.5, {"temperate_humid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_humid_shelf", {"lib_materials:dirt_with_grass_temperate_humid_shelf", }, 0.5, {"temperate_humid_shelf", })
-	add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_humid_shelf", {"lib_materials:dirt_with_grass_temperate_humid_shelf", }, 0.8, {"temperate_humid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_dry_02", {"lib_materials:dirt_with_grass_temperate_humid_shelf", }, 0.6, {"temperate_humid_shelf", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_humid_highland", {"lib_materials:dirt_with_grass_temperate_humid_highland", }, 0.8, {"temperate_humid_highland", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_humid_highland", {"lib_materials:dirt_with_grass_temperate_humid_highland", }, 0.5, {"temperate_humid_highland", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_humid_highland", {"lib_materials:dirt_with_grass_temperate_humid_highland", }, 0.5, {"temperate_humid_highland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_humid_highland", {"lib_materials:dirt_with_grass_temperate_humid_highland", }, 0.5, {"temperate_humid_highland", })
-	add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_humid_highland", {"lib_materials:dirt_with_grass_temperate_humid_highland", }, 0.8, {"temperate_humid_highland", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_brown_02", {"lib_materials:dirt_with_grass_temperate_humid_highland", }, 0.8, {"temperate_humid_highland", })
-
-	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_semihumid_coastal", {"lib_materials:dirt_with_grass_temperate_semihumid_coastal", }, 0.6, {"temperate_semihumid_coastal", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_semihumid_coastal", {"lib_materials:dirt_with_grass_temperate_semihumid_coastal", }, 0.6, {"temperate_semihumid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_semihumid_coastal", {"lib_materials:dirt_with_grass_temperate_semihumid_coastal", }, 0.2, {"temperate_semihumid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_semihumid_coastal", {"lib_materials:dirt_with_grass_temperate_semihumid_coastal", }, 0.5, {"temperate_semihumid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_semihumid_coastal", {"lib_materials:dirt_with_grass_temperate_semihumid_coastal", }, 0.5, {"temperate_semihumid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_wet_06", {"lib_materials:dirt_with_grass_temperate_semihumid_coastal", }, 0.2, {"temperate_semihumid_coastal", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_semihumid_lowland", {"lib_materials:dirt_with_grass_temperate_semihumid_lowland", }, 0.6, {"temperate_semihumid_lowland", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_semihumid_lowland", {"lib_materials:dirt_with_grass_temperate_semihumid_lowland", }, 0.6, {"temperate_semihumid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_semihumid_lowland", {"lib_materials:dirt_with_grass_temperate_semihumid_lowland", }, 0.2, {"temperate_semihumid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_semihumid_lowland", {"lib_materials:dirt_with_grass_temperate_semihumid_lowland", }, 0.5, {"temperate_semihumid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_semihumid_lowland", {"lib_materials:dirt_with_grass_temperate_semihumid_lowland", }, 0.5, {"temperate_semihumid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_lush_06", {"lib_materials:dirt_with_grass_temperate_semihumid_lowland", }, 0.4, {"temperate_semihumid_lowland", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_semihumid_shelf", {"lib_materials:dirt_with_grass_temperate_semihumid_shelf", }, 0.6, {"temperate_semihumid_shelf", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_semihumid_shelf", {"lib_materials:dirt_with_grass_temperate_semihumid_shelf", }, 0.6, {"temperate_semihumid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_semihumid_shelf", {"lib_materials:dirt_with_grass_temperate_semihumid_shelf", }, 0.2, {"temperate_semihumid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_semihumid_shelf", {"lib_materials:dirt_with_grass_temperate_semihumid_shelf", }, 0.5, {"temperate_semihumid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_semihumid_shelf", {"lib_materials:dirt_with_grass_temperate_semihumid_shelf", }, 0.5, {"temperate_semihumid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_dry_06", {"lib_materials:dirt_with_grass_temperate_semihumid_shelf", }, 0.6, {"temperate_semihumid_shelf", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_semihumid_highland", {"lib_materials:dirt_with_grass_temperate_semihumid_highland", }, 0.6, {"temperate_semihumid_highland", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_semihumid_highland", {"lib_materials:dirt_with_grass_temperate_semihumid_highland", }, 0.6, {"temperate_semihumid_highland", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_semihumid_highland", {"lib_materials:dirt_with_grass_temperate_semihumid_highland", }, 0.2, {"temperate_semihumid_highland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_semihumid_highland", {"lib_materials:dirt_with_grass_temperate_semihumid_highland", }, 0.5, {"temperate_semihumid_highland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_semihumid_highland", {"lib_materials:dirt_with_grass_temperate_semihumid_highland", }, 0.5, {"temperate_semihumid_highland", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_brown_06", {"lib_materials:dirt_with_grass_temperate_semihumid_highland", }, 0.8, {"temperate_semihumid_highland", })
-
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_temperate_coastal", {"lib_materials:dirt_with_grass_temperate_temperate_coastal", }, 0.5, {"temperate_temperate_coastal", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_temperate_coastal", {"lib_materials:dirt_with_grass_temperate_temperate_coastal", }, 0.4, {"temperate_temperate_coastal", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_temperate_coastal", {"lib_materials:dirt_with_grass_temperate_temperate_coastal", }, 0.4, {"temperate_temperate_coastal", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_temperate_coastal", {"lib_materials:dirt_with_grass_temperate_temperate_coastal", }, 0.5, {"temperate_temperate_coastal", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_temperate_coastal", {"lib_materials:dirt_with_grass_temperate_temperate_coastal", }, 0.5, {"temperate_temperate_coastal", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_wet_11", {"lib_materials:dirt_with_grass_temperate_temperate_coastal", }, 0.2, {"temperate_temperate_coastal", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_temperate_lowland", {"lib_materials:dirt_with_grass_temperate_temperate_lowland", }, 0.5, {"temperate_temperate_lowland", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_temperate_lowland", {"lib_materials:dirt_with_grass_temperate_temperate_lowland", }, 0.4, {"temperate_temperate_lowland", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_temperate_lowland", {"lib_materials:dirt_with_grass_temperate_temperate_lowland", }, 0.4, {"temperate_temperate_lowland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_temperate_lowland", {"lib_materials:dirt_with_grass_temperate_temperate_lowland", }, 0.5, {"temperate_temperate_lowland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_temperate_lowland", {"lib_materials:dirt_with_grass_temperate_temperate_lowland", }, 0.5, {"temperate_temperate_lowland", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_lush_11", {"lib_materials:dirt_with_grass_temperate_temperate_coastal", }, 0.4, {"temperate_temperate_coastal", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_temperate_shelf", {"lib_materials:dirt_with_grass_temperate_temperate_shelf", }, 0.5, {"temperate_temperate_shelf", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_temperate_shelf", {"lib_materials:dirt_with_grass_temperate_temperate_shelf", }, 0.4, {"temperate_temperate_shelf", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_temperate_shelf", {"lib_materials:dirt_with_grass_temperate_temperate_shelf", }, 0.4, {"temperate_temperate_shelf", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_temperate_shelf", {"lib_materials:dirt_with_grass_temperate_temperate_shelf", }, 0.5, {"temperate_temperate_shelf", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_temperate_shelf", {"lib_materials:dirt_with_grass_temperate_temperate_shelf", }, 0.5, {"temperate_temperate_shelf", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_dry_11", {"lib_materials:dirt_with_grass_temperate_temperate_coastal", }, 0.6, {"temperate_temperate_coastal", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_temperate_highland", {"lib_materials:dirt_with_grass_temperate_temperate_highland", }, 0.5, {"temperate_temperate_highland", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_temperate_highland", {"lib_materials:dirt_with_grass_temperate_temperate_highland", }, 0.4, {"temperate_temperate_highland", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_temperate_highland", {"lib_materials:dirt_with_grass_temperate_temperate_highland", }, 0.4, {"temperate_temperate_highland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_temperate_highland", {"lib_materials:dirt_with_grass_temperate_temperate_highland", }, 0.5, {"temperate_temperate_highland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_temperate_highland", {"lib_materials:dirt_with_grass_temperate_temperate_highland", }, 0.5, {"temperate_temperate_highland", })
-	--add_ore_sheet("lib_materials:dirt_with_grass_brown_11", {"lib_materials:dirt_with_grass_temperate_temperate_coastal", }, 0.8, {"temperate_temperate_coastal", })
-
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_semiarid_coastal", {"lib_materials:dirt_with_grass_temperate_semiarid_coastal", }, 0.5, {"temperate_semiarid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_semiarid_coastal", {"lib_materials:dirt_with_grass_temperate_semiarid_coastal", }, 0.5, {"temperate_semiarid_coastal", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_semiarid_coastal", {"lib_materials:dirt_with_grass_temperate_semiarid_coastal", }, 0.2, {"temperate_semiarid_coastal", })
-	add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_semiarid_coastal", {"lib_materials:dirt_with_grass_temperate_semiarid_coastal", }, 0.2, {"temperate_semiarid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_semiarid_coastal", {"lib_materials:dirt_with_grass_temperate_semiarid_coastal", }, 0.5, {"temperate_semiarid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_semiarid_lowland", {"lib_materials:dirt_with_grass_temperate_semiarid_lowland", }, 0.5, {"temperate_semiarid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_semiarid_lowland", {"lib_materials:dirt_with_grass_temperate_semiarid_lowland", }, 0.5, {"temperate_semiarid_lowland", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_semiarid_lowland", {"lib_materials:dirt_with_grass_temperate_semiarid_lowland", }, 0.4, {"temperate_semiarid_lowland", })
-	add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_semiarid_lowland", {"lib_materials:dirt_with_grass_temperate_semiarid_lowland", }, 0.4, {"temperate_semiarid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_semiarid_lowland", {"lib_materials:dirt_with_grass_temperate_semiarid_lowland", }, 0.5, {"temperate_semiarid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_semiarid_shelf", {"lib_materials:dirt_with_grass_temperate_semiarid_shelf", }, 0.5, {"temperate_semiarid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_semiarid_shelf", {"lib_materials:dirt_with_grass_temperate_semiarid_shelf", }, 0.5, {"temperate_semiarid_shelf", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_semiarid_shelf", {"lib_materials:dirt_with_grass_temperate_semiarid_shelf", }, 0.6, {"temperate_semiarid_shelf", })
-	add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_semiarid_shelf", {"lib_materials:dirt_with_grass_temperate_semiarid_shelf", }, 0.6, {"temperate_semiarid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_semiarid_shelf", {"lib_materials:dirt_with_grass_temperate_semiarid_shelf", }, 0.5, {"temperate_semiarid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_temperate_semiarid_highland", {"lib_materials:dirt_with_grass_temperate_semiarid_highland", }, 0.5, {"temperate_semiarid_highland", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_temperate_semiarid_highland", {"lib_materials:dirt_with_grass_temperate_semiarid_highland", }, 0.5, {"temperate_semiarid_highland", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_temperate_semiarid_highland", {"lib_materials:dirt_with_grass_temperate_semiarid_highland", }, 0.8, {"temperate_semiarid_highland", })
-	add_ore_sheet("lib_materials:dirt_sandy_with_grass_temperate_semiarid_highland", {"lib_materials:dirt_with_grass_temperate_semiarid_highland", }, 0.8, {"temperate_semiarid_highland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_temperate_semiarid_highland", {"lib_materials:dirt_with_grass_temperate_semiarid_highland", }, 0.5, {"temperate_semiarid_highland", })
-
-	add_ore_sheet("lib_materials:dirt_black_with_grass_cool_humid_coastal", {"lib_materials:dirt_with_grass_cool_humid_coastal", }, 0.2, {"cool_humid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_humid_coastal", {"lib_materials:dirt_with_grass_cool_humid_coastal", }, 0.5, {"cool_humid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_humid_coastal", {"lib_materials:dirt_with_grass_cool_humid_coastal", }, 0.5, {"cool_humid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_humid_coastal", {"lib_materials:dirt_with_grass_cool_humid_coastal", }, 0.5, {"cool_humid_coastal", })
-	add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_humid_coastal", {"lib_materials:dirt_with_grass_cool_humid_coastal", }, 0.2, {"cool_humid_coastal", })
-	add_ore_sheet("lib_materials:dirt_with_coniferous_litter", {"lib_materials:dirt_with_grass_cool_humid_coastal", }, 0.4, {"cool_humid_coastal", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_cool_humid_lowland", {"lib_materials:dirt_with_grass_cool_humid_lowland", }, 0.4, {"cool_humid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_humid_lowland", {"lib_materials:dirt_with_grass_cool_humid_lowland", }, 0.5, {"cool_humid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_humid_lowland", {"lib_materials:dirt_with_grass_cool_humid_lowland", }, 0.5, {"cool_humid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_humid_lowland", {"lib_materials:dirt_with_grass_cool_humid_lowland", }, 0.5, {"cool_humid_lowland", })
-	add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_humid_lowland", {"lib_materials:dirt_with_grass_cool_humid_lowland", }, 0.4, {"cool_humid_lowland", })
-	add_ore_sheet("lib_materials:dirt_with_coniferous_litter", {"lib_materials:dirt_with_grass_cool_humid_lowland", }, 0.6, {"cool_humid_lowland", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_cool_humid_shelf", {"lib_materials:dirt_with_grass_cool_humid_shelf", }, 0.6, {"cool_humid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_humid_shelf", {"lib_materials:dirt_with_grass_cool_humid_shelf", }, 0.5, {"cool_humid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_humid_shelf", {"lib_materials:dirt_with_grass_cool_humid_shelf", }, 0.5, {"cool_humid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_humid_shelf", {"lib_materials:dirt_with_grass_cool_humid_shelf", }, 0.5, {"cool_humid_shelf", })
-	add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_humid_shelf", {"lib_materials:dirt_with_grass_cool_humid_shelf", }, 0.6, {"cool_humid_shelf", })
-	add_ore_sheet("lib_materials:dirt_with_coniferous_litter", {"lib_materials:dirt_with_grass_cool_humid_shelf", }, 0.8, {"cool_humid_shelf", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_cool_humid_highland", {"lib_materials:dirt_with_grass_cool_humid_highland", }, 0.8, {"cool_humid_highland", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_humid_highland", {"lib_materials:dirt_with_grass_cool_humid_highland", }, 0.5, {"cool_humid_highland", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_humid_highland", {"lib_materials:dirt_with_grass_cool_humid_highland", }, 0.5, {"cool_humid_highland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_humid_highland", {"lib_materials:dirt_with_grass_cool_humid_highland", }, 0.5, {"cool_humid_highland", })
-	add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_humid_highland", {"lib_materials:dirt_with_grass_cool_humid_highland", }, 0.8, {"cool_humid_highland", })
-	add_ore_sheet("lib_materials:dirt_with_coniferous_litter", {"lib_materials:dirt_with_grass_cool_humid_highland", }, 1.0, {"cool_humid_highland", })
-
-
-	add_ore_sheet("lib_materials:dirt_black_with_grass_cool_semihumid_coastal", {"lib_materials:dirt_with_grass_cool_semihumid_coastal", }, 0.2, {"cool_semihumid_coastal", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_semihumid_coastal", {"lib_materials:dirt_with_grass_cool_semihumid_coastal", }, 0.2, {"cool_semihumid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_semihumid_coastal", {"lib_materials:dirt_with_grass_cool_semihumid_coastal", }, 0.5, {"cool_semihumid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_semihumid_coastal", {"lib_materials:dirt_with_grass_cool_semihumid_coastal", }, 0.5, {"cool_semihumid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_semihumid_coastal", {"lib_materials:dirt_with_grass_cool_semihumid_coastal", }, 0.5, {"cool_semihumid_coastal", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_cool_semihumid_lowland", {"lib_materials:dirt_with_grass_cool_semihumid_lowland", }, 0.4, {"cool_semihumid_lowland", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_semihumid_lowland", {"lib_materials:dirt_with_grass_cool_semihumid_lowland", }, 0.4, {"cool_semihumid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_semihumid_lowland", {"lib_materials:dirt_with_grass_cool_semihumid_lowland", }, 0.5, {"cool_semihumid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_semihumid_lowland", {"lib_materials:dirt_with_grass_cool_semihumid_lowland", }, 0.5, {"cool_semihumid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_semihumid_lowland", {"lib_materials:dirt_with_grass_cool_semihumid_lowland", }, 0.5, {"cool_semihumid_lowland", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_cool_semihumid_shelf", {"lib_materials:dirt_with_grass_cool_semihumid_shelf", }, 0.6, {"cool_semihumid_shelf", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_semihumid_shelf", {"lib_materials:dirt_with_grass_cool_semihumid_shelf", }, 0.6, {"cool_semihumid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_semihumid_shelf", {"lib_materials:dirt_with_grass_cool_semihumid_shelf", }, 0.5, {"cool_semihumid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_semihumid_shelf", {"lib_materials:dirt_with_grass_cool_semihumid_shelf", }, 0.5, {"cool_semihumid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_semihumid_shelf", {"lib_materials:dirt_with_grass_cool_semihumid_shelf", }, 0.5, {"cool_semihumid_shelf", })
-	add_ore_sheet("lib_materials:dirt_black_with_grass_cool_semihumid_highland", {"lib_materials:dirt_with_grass_cool_semihumid_highland", }, 0.8, {"cool_semihumid_highland", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_semihumid_highland", {"lib_materials:dirt_with_grass_cool_semihumid_highland", }, 0.8, {"cool_semihumid_highland", })
-	--add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_semihumid_highland", {"lib_materials:dirt_with_grass_cool_semihumid_highland", }, 0.5, {"cool_semihumid_highland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_semihumid_highland", {"lib_materials:dirt_with_grass_cool_semihumid_highland", }, 0.5, {"cool_semihumid_highland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_semihumid_highland", {"lib_materials:dirt_with_grass_cool_semihumid_highland", }, 0.5, {"cool_semihumid_highland", })
-
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_cool_temperate_coastal", {"lib_materials:dirt_with_grass_cool_temperate_coastal", }, 0.5, {"cool_temperate_coastal", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_temperate_coastal", {"lib_materials:dirt_with_grass_cool_temperate_coastal", }, 0.2, {"cool_temperate_coastal", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_temperate_coastal", {"lib_materials:dirt_with_grass_cool_temperate_coastal", }, 0.2, {"cool_temperate_coastal", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_temperate_coastal", {"lib_materials:dirt_with_grass_cool_temperate_coastal", }, 0.5, {"cool_temperate_coastal", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_temperate_coastal", {"lib_materials:dirt_with_grass_cool_temperate_coastal", }, 0.5, {"cool_temperate_coastal", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_cool_temperate_lowland", {"lib_materials:dirt_with_grass_cool_temperate_lowland", }, 0.5, {"cool_temperate_lowland", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_temperate_lowland", {"lib_materials:dirt_with_grass_cool_temperate_lowland", }, 0.4, {"cool_temperate_lowland", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_temperate_lowland", {"lib_materials:dirt_with_grass_cool_temperate_lowland", }, 0.4, {"cool_temperate_lowland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_temperate_lowland", {"lib_materials:dirt_with_grass_cool_temperate_lowland", }, 0.5, {"cool_temperate_lowland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_temperate_lowland", {"lib_materials:dirt_with_grass_cool_temperate_lowland", }, 0.5, {"cool_temperate_lowland", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_cool_temperate_shelf", {"lib_materials:dirt_with_grass_cool_temperate_shelf", }, 0.5, {"cool_temperate_shelf", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_temperate_shelf", {"lib_materials:dirt_with_grass_cool_temperate_shelf", }, 0.6, {"cool_temperate_shelf", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_temperate_shelf", {"lib_materials:dirt_with_grass_cool_temperate_shelf", }, 0.6, {"cool_temperate_shelf", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_temperate_shelf", {"lib_materials:dirt_with_grass_cool_temperate_shelf", }, 0.5, {"cool_temperate_shelf", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_temperate_shelf", {"lib_materials:dirt_with_grass_cool_temperate_shelf", }, 0.5, {"cool_temperate_shelf", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_cool_temperate_highland", {"lib_materials:dirt_with_grass_cool_temperate_highland", }, 0.5, {"cool_temperate_highland", })
-	add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_temperate_highland", {"lib_materials:dirt_with_grass_cool_temperate_highland", }, 0.8, {"cool_temperate_highland", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_temperate_highland", {"lib_materials:dirt_with_grass_cool_temperate_highland", }, 0.8, {"cool_temperate_highland", })
-	--add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_temperate_highland", {"lib_materials:dirt_with_grass_cool_temperate_highland", }, 0.5, {"cool_temperate_highland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_temperate_highland", {"lib_materials:dirt_with_grass_cool_temperate_highland", }, 0.5, {"cool_temperate_highland", })
-
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_cool_semiarid_coastal", {"lib_materials:dirt_with_grass_cool_semiarid_coastal", }, 0.5, {"cool_semiarid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_semiarid_coastal", {"lib_materials:dirt_with_grass_cool_semiarid_coastal", }, 0.5, {"cool_semiarid_coastal", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_semiarid_coastal", {"lib_materials:dirt_with_grass_cool_semiarid_coastal", }, 0.2, {"cool_semiarid_coastal", })
-	add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_semiarid_coastal", {"lib_materials:dirt_with_grass_cool_semiarid_coastal", }, 0.2, {"cool_semiarid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_semiarid_coastal", {"lib_materials:dirt_with_grass_cool_semiarid_coastal", }, 0.5, {"cool_semiarid_coastal", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_cool_semiarid_lowland", {"lib_materials:dirt_with_grass_cool_semiarid_lowland", }, 0.5, {"cool_semiarid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_semiarid_lowland", {"lib_materials:dirt_with_grass_cool_semiarid_lowland", }, 0.5, {"cool_semiarid_lowland", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_semiarid_lowland", {"lib_materials:dirt_with_grass_cool_semiarid_lowland", }, 0.4, {"cool_semiarid_lowland", })
-	add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_semiarid_lowland", {"lib_materials:dirt_with_grass_cool_semiarid_lowland", }, 0.4, {"cool_semiarid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_semiarid_lowland", {"lib_materials:dirt_with_grass_cool_semiarid_lowland", }, 0.5, {"cool_semiarid_lowland", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_cool_semiarid_shelf", {"lib_materials:dirt_with_grass_cool_semiarid_shelf", }, 0.5, {"cool_semiarid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_semiarid_shelf", {"lib_materials:dirt_with_grass_cool_semiarid_shelf", }, 0.5, {"cool_semiarid_shelf", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_semiarid_shelf", {"lib_materials:dirt_with_grass_cool_semiarid_shelf", }, 0.6, {"cool_semiarid_shelf", })
-	add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_semiarid_shelf", {"lib_materials:dirt_with_grass_cool_semiarid_shelf", }, 0.6, {"cool_semiarid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_semiarid_shelf", {"lib_materials:dirt_with_grass_cool_semiarid_shelf", }, 0.5, {"cool_semiarid_shelf", })
-	--add_ore_sheet("lib_materials:dirt_black_with_grass_cool_semiarid_highland", {"lib_materials:dirt_with_grass_cool_semiarid_highland", }, 0.5, {"cool_semiarid_highland", })
-	--add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_semiarid_highland", {"lib_materials:dirt_with_grass_cool_semiarid_highland", }, 0.5, {"cool_semiarid_highland", })
-	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_semiarid_highland", {"lib_materials:dirt_with_grass_cool_semiarid_highland", }, 0.8, {"cool_semiarid_highland", })
-	add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_semiarid_highland", {"lib_materials:dirt_with_grass_cool_semiarid_highland", }, 0.8, {"cool_semiarid_highland", })
-	--add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_semiarid_highland", {"lib_materials:dirt_with_grass_cool_semiarid_highland", }, 0.5, {"cool_semiarid_highland", })
+--COOL HUMID
+	add_ore_sheet("lib_materials:dirt_black_with_litter_coniferous", {"lib_materials:dirt_with_grass_cool_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_brown_with_litter_coniferous", {"lib_materials:dirt_with_grass_cool_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_litter_coniferous", {"lib_materials:dirt_with_grass_cool_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_litter_coniferous", {"lib_materials:dirt_with_grass_cool_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_silty_with_litter_coniferous", {"lib_materials:dirt_with_grass_cool_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_cool_humid_coastal", {"lib_materials:dirt_with_grass_cool_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_humid_coastal", {"lib_materials:dirt_with_grass_cool_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_humid_coastal", {"lib_materials:dirt_with_grass_cool_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_humid_coastal", {"lib_materials:dirt_with_grass_cool_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_humid_coastal", {"lib_materials:dirt_with_grass_cool_humid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_humid_coastal", })
+	add_ore_sheet("lib_materials:dirt_black_with_litter_coniferous", {"lib_materials:dirt_with_grass_cool_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_litter_coniferous", {"lib_materials:dirt_with_grass_cool_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_litter_coniferous", {"lib_materials:dirt_with_grass_cool_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_litter_coniferous", {"lib_materials:dirt_with_grass_cool_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_litter_coniferous", {"lib_materials:dirt_with_grass_cool_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_cool_humid_lowland", {"lib_materials:dirt_with_grass_cool_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_humid_lowland", {"lib_materials:dirt_with_grass_cool_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_humid_lowland", {"lib_materials:dirt_with_grass_cool_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_humid_lowland", {"lib_materials:dirt_with_grass_cool_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_humid_lowland", {"lib_materials:dirt_with_grass_cool_humid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_humid_lowland", })
+	add_ore_sheet("lib_materials:dirt_black_with_litter_coniferous", {"lib_materials:dirt_with_grass_cool_humid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_humid_shelf", })
+	add_ore_sheet("lib_materials:dirt_brown_with_litter_coniferous", {"lib_materials:dirt_with_grass_cool_humid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_humid_shelf", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_humid_shelf", {"lib_materials:dirt_with_grass_cool_humid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_humid_shelf", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_humid_shelf", {"lib_materials:dirt_with_grass_cool_humid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_humid_shelf", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_humid_shelf", {"lib_materials:dirt_with_grass_cool_humid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_humid_shelf", })
+	add_ore_sheet("lib_materials:dirt_black_with_litter_coniferous", {"lib_materials:dirt_with_grass_cool_humid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_humid_highland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_litter_coniferous", {"lib_materials:dirt_with_grass_cool_humid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_humid_highland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_humid_highland", {"lib_materials:dirt_with_grass_cool_humid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_humid_highland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_humid_highland", {"lib_materials:dirt_with_grass_cool_humid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_humid_highland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_humid_highland", {"lib_materials:dirt_with_grass_cool_humid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_humid_highland", })
+--COOL SEMIHUMID
+	add_ore_sheet("lib_materials:dirt_black_with_grass_cool_semihumid_coastal", {"lib_materials:dirt_with_grass_cool_semihumid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_semihumid_coastal", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_semihumid_coastal", {"lib_materials:dirt_with_grass_cool_semihumid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_semihumid_coastal", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_semihumid_coastal", {"lib_materials:dirt_with_grass_cool_semihumid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_semihumid_coastal", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_semihumid_coastal", {"lib_materials:dirt_with_grass_cool_semihumid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_semihumid_coastal", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_semihumid_coastal", {"lib_materials:dirt_with_grass_cool_semihumid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_semihumid_coastal", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_cool_semihumid_lowland", {"lib_materials:dirt_with_grass_cool_semihumid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_semihumid_lowland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_semihumid_lowland", {"lib_materials:dirt_with_grass_cool_semihumid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_semihumid_lowland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_semihumid_lowland", {"lib_materials:dirt_with_grass_cool_semihumid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_semihumid_lowland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_semihumid_lowland", {"lib_materials:dirt_with_grass_cool_semihumid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_semihumid_lowland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_semihumid_lowland", {"lib_materials:dirt_with_grass_cool_semihumid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_semihumid_lowland", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_cool_semihumid_shelf", {"lib_materials:dirt_with_grass_cool_semihumid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_semihumid_shelf", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_semihumid_shelf", {"lib_materials:dirt_with_grass_cool_semihumid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_semihumid_shelf", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_semihumid_shelf", {"lib_materials:dirt_with_grass_cool_semihumid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_semihumid_shelf", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_semihumid_shelf", {"lib_materials:dirt_with_grass_cool_semihumid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_semihumid_shelf", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_semihumid_shelf", {"lib_materials:dirt_with_grass_cool_semihumid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_semihumid_shelf", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_cool_semihumid_highland", {"lib_materials:dirt_with_grass_cool_semihumid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_semihumid_highland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_semihumid_highland", {"lib_materials:dirt_with_grass_cool_semihumid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_semihumid_highland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_semihumid_highland", {"lib_materials:dirt_with_grass_cool_semihumid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_semihumid_highland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_semihumid_highland", {"lib_materials:dirt_with_grass_cool_semihumid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_semihumid_highland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_semihumid_highland", {"lib_materials:dirt_with_grass_cool_semihumid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_semihumid_highland", })
+--COOL TEMPERATE
+	add_ore_sheet("lib_materials:dirt_black_with_grass_cool_temperate_coastal", {"lib_materials:dirt_with_grass_cool_temperate_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_temperate_coastal", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_temperate_coastal", {"lib_materials:dirt_with_grass_cool_temperate_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_temperate_coastal", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_temperate_coastal", {"lib_materials:dirt_with_grass_cool_temperate_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_temperate_coastal", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_temperate_coastal", {"lib_materials:dirt_with_grass_cool_temperate_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_temperate_coastal", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_temperate_coastal", {"lib_materials:dirt_with_grass_cool_temperate_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_temperate_coastal", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_cool_temperate_lowland", {"lib_materials:dirt_with_grass_cool_temperate_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_temperate_lowland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_temperate_lowland", {"lib_materials:dirt_with_grass_cool_temperate_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_temperate_lowland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_temperate_lowland", {"lib_materials:dirt_with_grass_cool_temperate_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_temperate_lowland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_temperate_lowland", {"lib_materials:dirt_with_grass_cool_temperate_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_temperate_lowland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_temperate_lowland", {"lib_materials:dirt_with_grass_cool_temperate_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_temperate_lowland", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_cool_temperate_shelf", {"lib_materials:dirt_with_grass_cool_temperate_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_temperate_shelf", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_temperate_shelf", {"lib_materials:dirt_with_grass_cool_temperate_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_temperate_shelf", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_temperate_shelf", {"lib_materials:dirt_with_grass_cool_temperate_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_temperate_shelf", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_temperate_shelf", {"lib_materials:dirt_with_grass_cool_temperate_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_temperate_shelf", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_temperate_shelf", {"lib_materials:dirt_with_grass_cool_temperate_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_temperate_shelf", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_cool_temperate_highland", {"lib_materials:dirt_with_grass_cool_temperate_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_temperate_highland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_temperate_highland", {"lib_materials:dirt_with_grass_cool_temperate_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_temperate_highland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_temperate_highland", {"lib_materials:dirt_with_grass_cool_temperate_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_temperate_highland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_temperate_highland", {"lib_materials:dirt_with_grass_cool_temperate_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_temperate_highland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_temperate_highland", {"lib_materials:dirt_with_grass_cool_temperate_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_temperate_highland", })
+--COOL SEMIRID
+	add_ore_sheet("lib_materials:dirt_black_with_grass_cool_semiarid_coastal", {"lib_materials:dirt_with_grass_cool_semiarid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_semiarid_coastal", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_semiarid_coastal", {"lib_materials:dirt_with_grass_cool_semiarid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_semiarid_coastal", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_semiarid_coastal", {"lib_materials:dirt_with_grass_cool_semiarid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_semiarid_coastal", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_semiarid_coastal", {"lib_materials:dirt_with_grass_cool_semiarid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_semiarid_coastal", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_semiarid_coastal", {"lib_materials:dirt_with_grass_cool_semiarid_coastal", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_semiarid_coastal", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_cool_semiarid_lowland", {"lib_materials:dirt_with_grass_cool_semiarid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_semiarid_lowland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_semiarid_lowland", {"lib_materials:dirt_with_grass_cool_semiarid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_semiarid_lowland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_semiarid_lowland", {"lib_materials:dirt_with_grass_cool_semiarid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_semiarid_lowland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_semiarid_lowland", {"lib_materials:dirt_with_grass_cool_semiarid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_semiarid_lowland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_semiarid_lowland", {"lib_materials:dirt_with_grass_cool_semiarid_lowland", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_semiarid_lowland", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_cool_semiarid_shelf", {"lib_materials:dirt_with_grass_cool_semiarid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_semiarid_shelf", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_semiarid_shelf", {"lib_materials:dirt_with_grass_cool_semiarid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_semiarid_shelf", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_semiarid_shelf", {"lib_materials:dirt_with_grass_cool_semiarid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_semiarid_shelf", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_semiarid_shelf", {"lib_materials:dirt_with_grass_cool_semiarid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_semiarid_shelf", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_semiarid_shelf", {"lib_materials:dirt_with_grass_cool_semiarid_shelf", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_semiarid_shelf", })
+	add_ore_sheet("lib_materials:dirt_black_with_grass_cool_semiarid_highland", {"lib_materials:dirt_with_grass_cool_semiarid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_semiarid_highland", })
+	add_ore_sheet("lib_materials:dirt_brown_with_grass_cool_semiarid_highland", {"lib_materials:dirt_with_grass_cool_semiarid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_semiarid_highland", })
+	add_ore_sheet("lib_materials:dirt_clayey_with_grass_cool_semiarid_highland", {"lib_materials:dirt_with_grass_cool_semiarid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_semiarid_highland", })
+	add_ore_sheet("lib_materials:dirt_sandy_with_grass_cool_semiarid_highland", {"lib_materials:dirt_with_grass_cool_semiarid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_semiarid_highland", })
+	add_ore_sheet("lib_materials:dirt_silty_with_grass_cool_semiarid_highland", {"lib_materials:dirt_with_grass_cool_semiarid_highland", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_semiarid_highland", })
+--COOL ARID
+	add_ore_sheet("lib_materials:sand", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_arid_coastal", })
+	add_ore_sheet("lib_materials:sand_desert", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_arid_coastal", })
+	add_ore_sheet("lib_materials:sand_white", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_arid_coastal", })
+	add_ore_sheet("lib_materials:stone_desert_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_arid_coastal", })
+	add_ore_sheet("lib_materials:stone_sandstone_white_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_beach, lib_materials.maxheight_coastal, {"cool_arid_coastal", })
+	add_ore_sheet("lib_materials:sand", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_arid_lowland", })
+	add_ore_sheet("lib_materials:sand_desert", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_arid_lowland", })
+	add_ore_sheet("lib_materials:sand_white", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_arid_lowland", })
+	add_ore_sheet("lib_materials:stone_sandstone_white_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_arid_lowland", })
+	add_ore_sheet("lib_materials:stone_desert_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_coastal, lib_materials.maxheight_lowland, {"cool_arid_lowland", })
+	add_ore_sheet("lib_materials:sand", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_arid_shelf", })
+	add_ore_sheet("lib_materials:sand_desert", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_arid_shelf", })
+	add_ore_sheet("lib_materials:sand_white", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_arid_shelf", })
+	add_ore_sheet("lib_materials:stone_desert_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_arid_shelf", })
+	add_ore_sheet("lib_materials:stone_sandstone_white_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_lowland, lib_materials.maxheight_shelf, {"cool_arid_shelf", })
+	add_ore_sheet("lib_materials:sand", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_arid_highland", })
+	add_ore_sheet("lib_materials:sand_desert", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_arid_highland", })
+	add_ore_sheet("lib_materials:sand_white", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_arid_highland", })
+	add_ore_sheet("lib_materials:stone_desert_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_arid_highland", })
+	add_ore_sheet("lib_materials:stone_sandstone_white_gravel", {"lib_materials:stone_sandstone_desert_gravel", }, 0.8, lib_materials.maxheight_shelf, lib_materials.maxheight_highland, {"cool_arid_highland", })
 
 end
 
 add_dirt_grass_types_as_ore()
-
---	minetest.register_ore({
---		ore_type = "sheet",
---		ore = "lib_materials:dirt_black_with_grass_wet_07",
---		wherein = {"lib_materials:dirt_with_grass_warm_semihumid_coastal", },
---		clust_size = 40,
---		y_min = -1000,
---		y_max = 31000,
---		noise_threshold = 0.2,
---		noise_params = {
---			offset = 0,
---			scale = 1,
---			spread = {x = 256, y = 256, z = 256},
---			seed = 4130293965,
---			octaves = 5,
---			persist = 0.60
---		},
---	        column_height_min = 1,
---	        column_height_max = 2,
---	        column_midpoint_factor = 0.5,
---		biomes = "warm_semihumid_coastal",
---	})
---	minetest.register_ore({
---		ore_type = "sheet",
---		ore = "lib_materials:dirt_black_with_grass_lush_07",
---		wherein = {"lib_materials:dirt_with_grass_warm_semihumid_lowland", },
---		clust_size = 16,
---		y_min = 0,
---		y_max = 1000,
---		noise_threshold = 0.4,
---		noise_params = {
---			offset = 0,
---			scale = 1,
---			spread = {x = 256, y = 256, z = 256},
---			seed = 4130293965,
---			octaves = 5,
---			persist = 0.60
---		},
---	        column_height_min = 1,
---	        column_height_max = 2,
---	        column_midpoint_factor = 0.5,
- --		biomes = "warm_semihumid_lowland"
---	})
---	minetest.register_ore({
---		ore_type = "sheet",
---		ore = "lib_materials:dirt_black_with_grass_dry_07",
---		wherein = {"lib_materials:dirt_with_grass_warm_semihumid_shelf", },
---		clust_size = 40,
---		y_min = -1000,
---		y_max = 31000,
---		noise_threshold = 0.6,
---		noise_params = {
---			offset = 0,
---			scale = 1,
---			spread = {x = 256, y = 256, z = 256},
---			seed = 4130293965,
---			octaves = 5,
---			persist = 0.60
---		},
---	        column_height_min = 1,
---	        column_height_max = 2,
---	        column_midpoint_factor = 0.5,
--- 		biomes = "warm_semihumid_shelf",
---	})
---	minetest.register_ore({
---		ore_type         = "blob",
---		ore              = "lib_materials:dirt_black_with_grass_brown_07",
---		wherein          = {"lib_materials:dirt_with_grass_warm_semihumid_highland", },
---		clust_scarcity   = 4 * 4 * 4,
---		clust_num_ores = 8,
---		clust_size       = 6,
---		y_min            = -10,
---		y_max            = 71,
---		noise_params     = {
---			offset = 0.35,
---			scale = 0.2,
---			spread = {x = 5, y = 5, z = 5},
---			seed = -316,
---			octaves = 1,
---			persist = 0.5
---		},
---		biomes = "warm_semihumid_lowland",
---		random_factor = 1.0
---	})
-
-
-
 
 
 --[[
@@ -847,7 +879,7 @@ minetest.register_ore({
 	minetest.register_ore({
 		ore_type         = "blob",
 		ore              = "lib_materials:dirt_clay_red",
-		wherein          = {"lib_materials:dirt", "lib_materials:dirt_clayey"},
+		wherein          = {"lib_materials:dirt_clayey"},
 		clust_scarcity   = 4 * 4 * 4,
 		clust_num_ores = 8,
 		clust_size       = 6,
@@ -865,7 +897,7 @@ minetest.register_ore({
 	minetest.register_ore({
 		ore_type         = "blob",
 		ore              = "lib_materials:dirt_clay_white",
-		wherein          = {"lib_materials:dirt", "lib_materials:dirt_clayey"},
+		wherein          = {"lib_materials:dirt_clayey"},
 		clust_scarcity   = 4 * 4 * 4,
 		clust_num_ores = 8,
 		clust_size       = 6,
@@ -883,7 +915,25 @@ minetest.register_ore({
 	minetest.register_ore({
 		ore_type         = "blob",
 		ore              = "lib_materials:dirt_sandy",
-		wherein          = {"lib_materials:dirt", "lib_materials:sand"},
+		wherein          = {"lib_materials:dirt"},
+		clust_scarcity   = 4 * 4 * 4,
+		clust_num_ores = 8,
+		clust_size       = 6,
+		y_min            = -10,
+		y_max            = 71,
+		noise_params     = {
+			offset = 0.35,
+			scale = 0.2,
+			spread = {x = 5, y = 5, z = 5},
+			seed = -613,
+			octaves = 1,
+			persist = 0.5
+		},
+	})
+	minetest.register_ore({
+		ore_type         = "blob",
+		ore              = "lib_materials:sand",
+		wherein          = {"lib_materials:dirt_sandy"},
 		clust_scarcity   = 4 * 4 * 4,
 		clust_num_ores = 8,
 		clust_size       = 6,
@@ -911,7 +961,7 @@ minetest.register_ore({
 			offset = 0.35,
 			scale = 0.2,
 			spread = {x = 5, y = 5, z = 5},
-			seed = -316,
+			seed = -613,
 			octaves = 1,
 			persist = 0.5
 		},
@@ -919,7 +969,7 @@ minetest.register_ore({
 	minetest.register_ore({
 		ore_type         = "blob",
 		ore              = "lib_materials:dirt_silt_01",
-		wherein          = {"lib_materials:dirt", "lib_materials:dirt_silty"},
+		wherein          = {"lib_materials:dirt_silty"},
 		clust_scarcity   = 4 * 4 * 4,
 		clust_num_ores = 8,
 		clust_size       = 6,
@@ -929,7 +979,7 @@ minetest.register_ore({
 			offset = 0.35,
 			scale = 0.2,
 			spread = {x = 5, y = 5, z = 5},
-			seed = -613,
+			seed = -316,
 			octaves = 1,
 			persist = 0.5
 		},
@@ -937,7 +987,7 @@ minetest.register_ore({
 	minetest.register_ore({
 		ore_type         = "blob",
 		ore              = "lib_materials:dirt_silt_02",
-		wherein          = {"lib_materials:dirt", "lib_materials:dirt_silty"},
+		wherein          = {"lib_materials:dirt_silty"},
 		clust_scarcity   = 4 * 4 * 4,
 		clust_num_ores = 8,
 		clust_size       = 6,
@@ -1008,7 +1058,7 @@ minetest.register_ore({
 
 
 --Adds default ores to desert_stone
-local add_ore = function(a, b, c, d, e, f, g)
+local add_ore_scatter = function(a, b, c, d, e, f, g)
 
 	minetest.register_ore({
 		ore_type = "scatter",
@@ -1023,38 +1073,64 @@ local add_ore = function(a, b, c, d, e, f, g)
 end
 
 -- Coal
-	add_ore("lib_materials:ore_stone_with_coal", "lib_materials:stone_desert", 24*24*24, 27, 6, -31000, -16)
+	add_ore_scatter("lib_materials:ore_stone_with_coal", "lib_materials:stone", 8 * 8 * 8, 9, 3, 31000, 1025)
+	add_ore_scatter("lib_materials:ore_stone_with_coal", "lib_materials:stone", 8 * 8 * 8, 8, 3, 64, -127)
+	add_ore_scatter("lib_materials:ore_stone_with_coal", "lib_materials:stone", 12 * 12 * 12, 30, 5, -128, -31000)
+	add_ore_scatter("lib_materials:ore_stone_with_coal", "lib_materials:stone_desert", 24*24*24, 27, 6, -31000, -16)
+
+-- Tin
+	add_ore_scatter("lib_materials:ore_stone_with_tin", "lib_materials:stone", 10 * 10 * 10, 5, 3, 31000, 1025)
+	add_ore_scatter("lib_materials:ore_stone_with_tin", "lib_materials:stone", 13 * 13 * 13, 4, 3, 64, -127)
+	add_ore_scatter("lib_materials:ore_stone_with_tin", "lib_materials:stone", 10 * 10 * 10, 5, 3, -128, -31000)
 
 -- Copper
-	add_ore("lib_materials:ore_stone_with_copper", "lib_materials:stone_desert", 9*9*9, 5, 3, -31000, -64)
+	add_ore_scatter("lib_materials:ore_stone_with_copper", "lib_materials:stone", 9 * 9 * 9, 5, 3, 31000, 1025)
+	add_ore_scatter("lib_materials:ore_stone_with_copper", "lib_materials:stone", 12 * 12 * 12, 4, 3, 64, -127)
+	add_ore_scatter("lib_materials:ore_stone_with_copper", "lib_materials:stone", 9 * 9 * 9, 5, 3, -128, -31000)
+	add_ore_scatter("lib_materials:ore_stone_with_copper", "lib_materials:stone_desert", 9*9*9, 5, 3, -31000, -64)
 
--- Diamond
-	add_ore("lib_materials:ore_stone_with_diamond", "lib_materials:stone_desert", 17*17*17, 4, 3, -255, -128)
-	add_ore("lib_materials:ore_stone_with_diamond", "lib_materials:stone_desert", 15*15*15, 4, 3, -31000, -256)
-
--- Gold
-	add_ore("lib_materials:ore_stone_with_gold", "lib_materials:stone_desert", 15*15*15, 3, 2, -255, -64)
-	add_ore("lib_materials:ore_stone_with_gold", "lib_materials:stone_desert", 13*13*13, 5, 3, -31000, -256)
+--Lead
+	add_ore_scatter("lib_materials:ore_stone_with_lead", "lib_materials:stone", 10*10*10, 24, 4, -100, -10)
+	add_ore_scatter("lib_materials:ore_stone_with_lead", "default:stone_desert", 10*10*10, 24, 4, -100, -10)
+	add_ore_scatter("lib_materials:ore_stone_with_lead", "lib_materials:stone_brown", 10*10*10, 24, 4, -100, -10)
 
 -- Iron
-	add_ore("lib_materials:ore_stone_with_iron", "lib_materials:stone_desert", 9*9*9, 5, 3, -63, -16)
-	add_ore("lib_materials:ore_stone_with_iron", "lib_materials:stone_desert", 24*24*24, 27, 6, -31000, -64)
+	add_ore_scatter("lib_materials:ore_stone_with_iron", "lib_materials:stone", 9 * 9 * 9, 12, 3, 31000, 1025)
+	add_ore_scatter("lib_materials:ore_stone_with_iron", "lib_materials:stone", 7 * 7 * 7, 5, 3, -128, -255)
+	add_ore_scatter("lib_materials:ore_stone_with_iron", "lib_materials:stone", 12 * 12 * 12, 29, 5, -256, -31000)
+	add_ore_scatter("lib_materials:ore_stone_with_iron", "lib_materials:stone_desert", 9 * 9 * 9, 5, 3, -63, -16)
+	add_ore_scatter("lib_materials:ore_stone_with_iron", "lib_materials:stone_desert", 24 * 24 * 24, 27, 6, -31000, -64)
+	add_ore_scatter("lib_materials:ore_stone_desert_with_iron", "lib_materials:stone_desert", 12 * 12 * 12, 3, 2, -1, 200)
 
---Mese
-	add_ore("lib_materials:ore_stone_with_mese", "lib_materials:stone_desert", 14*14*14, 5, 3, -31000, -256)
+-- Silver
+	add_ore_scatter("lib_materials:ore_stone_with_silver", "lib_materials:stone", 10*10*10, 24, 4, -100, -10)
+	add_ore_scatter("lib_materials:ore_stone_with_silver", "default:stone_desert", 10*10*10, 24, 4, -100, -10)
+	add_ore_scatter("lib_materials:ore_stone_with_silver", "lib_materials:stone_brown", 10*10*10, 24, 4, -100, -10)
 
--- Coral Sand
---add_ore("lib_materials:sandy", "lib_materials:sand", 10*10*10, 24, 4, -100, -10)
+-- Gold
+	add_ore_scatter("lib_materials:ore_stone_with_gold", "lib_materials:stone", 13 * 13 * 13, 5, 3, 31000, 1025)
+	add_ore_scatter("lib_materials:ore_stone_with_gold", "lib_materials:stone", 15 * 15 * 15, 3, 2, -256, -511)
+	add_ore_scatter("lib_materials:ore_stone_with_gold", "lib_materials:stone", 13 * 13 * 13, 5, 3, -512, -31000)
+	add_ore_scatter("lib_materials:ore_stone_with_gold", "lib_materials:stone_desert", 15*15*15, 3, 2, -255, -64)
+	add_ore_scatter("lib_materials:ore_stone_with_gold", "lib_materials:stone_desert", 13*13*13, 5, 3, -31000, -256)
 
+-- Diamond
+	add_ore_scatter("lib_materials:ore_stone_with_diamond", "lib_materials:stone", 15 * 15 * 15, 4, 3, 31000, 1025)
+	add_ore_scatter("lib_materials:ore_stone_with_diamond", "lib_materials:stone", 17 * 17 * 17, 4, 3, -1024, -2047)
+	add_ore_scatter("lib_materials:ore_stone_with_diamond", "lib_materials:stone", 15 * 15 * 15, 4, 3, -2048, -31000)
+	add_ore_scatter("lib_materials:ore_stone_with_diamond", "lib_materials:stone_desert", 17*17*17, 4, 3, -255, -128)
+	add_ore_scatter("lib_materials:ore_stone_with_diamond", "lib_materials:stone_desert", 15*15*15, 4, 3, -31000, -256)
 
--- technic lead and moreores silver
-	add_ore("lib_materials:ore_stone_with_lead", "lib_materials:stone", 10*10*10, 24, 4, -100, -10)
-	add_ore("lib_materials:ore_stone_with_lead", "default:stone_desert", 10*10*10, 24, 4, -100, -10)
-	add_ore("lib_materials:ore_stone_with_lead", "lib_materials:stone_brown", 10*10*10, 24, 4, -100, -10)
-	add_ore("lib_materials:ore_stone_with_silver", "lib_materials:stone", 10*10*10, 24, 4, -100, -10)
-	add_ore("lib_materials:ore_stone_with_silver", "default:stone_desert", 10*10*10, 24, 4, -100, -10)
-	add_ore("lib_materials:ore_stone_with_silver", "lib_materials:stone_brown", 10*10*10, 24, 4, -100, -10)
+-- Mese crystal
+	add_ore_scatter("lib_materials:ore_stone_with_mese", "lib_materials:stone", 14 * 14 * 14, 5, 3, 31000, 1025)
+	add_ore_scatter("lib_materials:ore_stone_with_mese", "lib_materials:stone", 18 * 18 * 18, 3, 2, -512, -1023)
+	add_ore_scatter("lib_materials:ore_stone_with_mese", "lib_materials:stone", 9 * 9 * 9, 5, 3, -1024, -31000)
 
+-- Mese block
+	add_ore_scatter("lib_materials:mineral_mese_block", "lib_materials:stone", 36 * 36 * 36, 3, 2, 31000, 1025)
+	add_ore_scatter("lib_materials:mineral_mese_block", "lib_materials:stone", 36 * 36 * 36, 3, 2, -2048, -4095)
+	add_ore_scatter("lib_materials:mineral_mese_block", "lib_materials:stone", 28 * 28 * 28, 5, 3, -4096, -31000)
+	add_ore_scatter("lib_materials:ore_stone_with_mese", "lib_materials:stone_desert", 14*14*14, 5, 3, -31000, -256)
 
 
 --Darkage Ores
@@ -1215,18 +1291,6 @@ local function generate_claylike(data, varea, name, minp, maxp, seed, chance, mi
 	end
 end
 --]]
-
--- Generate desert stone with iron in derset.
-	minetest.register_ore({
-		ore_type       = "scatter",
-		ore            = "lib_materials:ore_stone_desert_with_iron",
-		wherein        = "lib_materials:stone_desert",
-		clust_scarcity = 12 * 12 * 12,
-		clust_num_ores = 3,
-		clust_size     = 2,
-		y_min          = -1,
-		y_max          = 200,
-	})
 
 -- Generate chalk inside mountains
 	minetest.register_ore({
@@ -1489,7 +1553,7 @@ end
 	minetest.register_ore({
 		ore_type       = "scatter",
 	 wherein="lib_materials:stone_skarn",
-	 ore="lib_materials:skarn_chalcopyrite",
+	 ore="lib_materials:ore_stone_skarn_with_chalcopyrite",
 	 clust_size=3,
 	 clust_num_ores=12,
 	 clust_scarcity=4^3,
@@ -1506,7 +1570,7 @@ end
 	minetest.register_ore({
 		ore_type       = "scatter",
 	 wherein="lib_materials:stone_skarn",
-	 ore="lib_materials:skarn_malachyte",
+	 ore="lib_materials:ore_stone_skarn_with_malachyte",
 	 clust_size=3,
 	 clust_num_ores=11,
 	 clust_scarcity=4^3,
@@ -1530,7 +1594,7 @@ end
 	minetest.register_ore({
 		ore_type       = "scatter",
 	 wherein="lib_materials:stone_skarn",
-	 ore="lib_materials:skarn_sphalerite",
+	 ore="lib_materials:ore_stone_skarn_with_sphalerite",
 	 clust_size=3,
 	 clust_num_ores=9,
 	 clust_scarcity=4^3,
@@ -1547,7 +1611,7 @@ end
 	minetest.register_ore({
 		ore_type       = "scatter",
 	 wherein="lib_materials:stone_skarn",
-	 ore="lib_materials:skarn_galena",
+	 ore="lib_materials:ore_stone_skarn_with_galena",
 	 clust_size=3,
 	 clust_num_ores=10,
 	 clust_scarcity=4^3,
@@ -1570,7 +1634,7 @@ end
 	minetest.register_ore({
 		ore_type       = "scatter",
 	 wherein="lib_materials:stone_skarn",
-	 ore="lib_materials:skarn_magnetite",
+	 ore="lib_materials:ore_stone_skarn_with_magnetite",
 	 clust_size=3,
 	 clust_num_ores=13,
 	 clust_scarcity=4^3,
@@ -1606,7 +1670,7 @@ end
 	minetest.register_ore({
 		ore_type       = "scatter",
 	 wherein="lib_materials:stone_pegmatite",
-	 ore="lib_materials:pegmatite_cassiterite",
+	 ore="lib_materials:ore_stone_pegmatite_with_cassiterite",
 	 clust_size=3,
 	 clust_num_ores=9,
 	 clust_scarcity=4^3,

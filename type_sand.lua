@@ -4,13 +4,13 @@ local S = lib_materials.intllib
 
 	minetest.register_node("lib_materials:sand", {
 		description = "Sand - Sand Default",
-		tiles = {"lib_materials_sand_sand_default.png"},
+		tiles = {"lib_materials_sand_default.png"},
 		groups = {crumbly = 3, falling_node = 1, sand = 1},
 		sounds = default.node_sound_sand_defaults(),
 	})
 	minetest.register_node("lib_materials:sand_beach", {
 		description = "Sand - Beach",
-		tiles = {"lib_materials_sand_sand_default.png"},
+		tiles = {"lib_materials_sand_default.png"},
 		groups = {crumbly = 3, falling_node = 1, sand = 1},
 		sounds = default.node_sound_sand_defaults(),
 	})

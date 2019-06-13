@@ -13,6 +13,32 @@ local GRASS_HIGHLAND_TEXTURE_TOP = "lib_materials_grass_highland_top.png"
 local GRASS_HIGHLAND_TEXTURE_SIDE = "lib_materials_grass_highland_side.png"
 
 local GRASS_HUMID_PALETTE_1 = "#43e9a5:80"
+--local GRASS_HUMID_PALETTE_2 = "#36e44b:80"   --"30e87a:80"
+--local GRASS_HUMID_PALETTE_3 = "#81da62:80"   --"12e66c:80"
+local GRASS_HUMID_PALETTE_2 = "#81da62:80"
+local GRASS_HUMID_PALETTE_3 = "#36e44b:80"
+local GRASS_HUMID_PALETTE_4 = "#93fc54:80"   --"54da4a:80"
+local GRASS_SEMIHUMID_PALETTE_1 = "#69e942:80"
+--local GRASS_SEMIHUMID_PALETTE_2 = "#b1e436:80"
+--local GRASS_SEMIHUMID_PALETTE_3 = "#dacf61:80"
+local GRASS_SEMIHUMID_PALETTE_2 = "#dacf61:80"
+local GRASS_SEMIHUMID_PALETTE_3 = "#b1e436:80"
+local GRASS_SEMIHUMID_PALETTE_4 = "#fcd953:80"
+local GRASS_TEMPERATE_PALETTE_1 = "#ace943:80"
+--local GRASS_TEMPERATE_PALETTE_2 = "#e4d136:80"
+--local GRASS_TEMPERATE_PALETTE_3 = "#daa062:80"
+local GRASS_TEMPERATE_PALETTE_2 = "#daa062:80"
+local GRASS_TEMPERATE_PALETTE_3 = "#e4d136:80"
+local GRASS_TEMPERATE_PALETTE_4 = "#fc9754:80"
+local GRASS_SEMIARID_PALETTE_1 = "#e9df43:80"
+--local GRASS_SEMIARID_PALETTE_2 = "#e48836:80"
+--local GRASS_SEMIARID_PALETTE_3 = "#da6e62:80"
+local GRASS_SEMIARID_PALETTE_2 = "#da6e62:80"
+local GRASS_SEMIARID_PALETTE_3 = "#e48836:80"
+local GRASS_SEMIARID_PALETTE_4 = "#fc5458:80"
+
+--[[
+local GRASS_HUMID_PALETTE_1 = "#43e9a5:80"
 local GRASS_HUMID_PALETTE_2 = "#36e44b:80"
 local GRASS_HUMID_PALETTE_3 = "#81da62:80"
 local GRASS_HUMID_PALETTE_4 = "#93fc54:80"
@@ -28,6 +54,7 @@ local GRASS_SEMIARID_PALETTE_1 = "#e9df43:80"
 local GRASS_SEMIARID_PALETTE_2 = "#e48836:80"
 local GRASS_SEMIARID_PALETTE_3 = "#da6e62:80"
 local GRASS_SEMIARID_PALETTE_4 = "#fc5458:80"
+--]]
 
 --[[  ALT COLOR VALUES
 --DEFAULTS
@@ -215,6 +242,7 @@ local GRASS_JUNGLE_TEXTURE_SIDE = "lib_materials_grass_jungle_01_side.png"
 		sounds = default.node_sound_dirt_defaults({footstep = "",
 		}),
 	})
+
 	minetest.register_craftitem("lib_materials:dirt_mud_lump", {
 		description = "Dirt - Mud Lump",
 		inventory_image = "lib_materials_dirt_mud_lump.png",
@@ -224,13 +252,6 @@ local GRASS_JUNGLE_TEXTURE_SIDE = "lib_materials_grass_jungle_01_side.png"
 		inventory_image = "lib_materials_dirt_silt_lump.png",
 	})
 
---Default
-	minetest.register_node("lib_materials:dirt_permafrost", {
-		description = "Dirt - Permafrost",
-		tiles = {"lib_materials_dirt_permafrost.png"},
-		groups = {crumbly = 3, soil = 1},
-		sounds = default.node_sound_dirt_defaults(),
-	})
 	minetest.register_craftitem("lib_materials:dirt_clay_white_lump", {
 		description = S("Dirt - Clay Lump"),
 		inventory_image = "lib_materials_dirt_clay_lump.png",
@@ -250,61 +271,232 @@ local GRASS_JUNGLE_TEXTURE_SIDE = "lib_materials_grass_jungle_01_side.png"
 		groups = {crumbly = 3},
 		sounds = default.node_sound_dirt_defaults()
 	})
+
 	minetest.register_craft({
 		type = "cooking",
 		output = "lib_materials:dirt_dried",
 		recipe = "default:dirt",
 		cooktime = 3,
 	})
-	--[[ green dirt
-	-- -- minetest.register_node("lib_materials:green_dirt", {
-		-- -- description = S("Green Dirt"),
-		-- -- tiles = {
-			-- -- "default_grass.png",
-			-- -- "default_dirt.png",
-			-- -- "default_dirt.png^default_grass_side.png"
-		-- -- },
-		-- -- is_ground_content = false,
-		-- -- groups = {crumbly = 3, soil = 1, lib_ecology_grass = 1},
-		-- -- soil = {
-			-- -- base = "lib_materials:green_dirt",
-			-- -- dry = "farming:soil",
-			-- -- wet = "farming:soil_wet"
-		-- -- },
-		-- -- drop = "default:dirt",
-		-- -- sounds = default.node_sound_dirt_defaults({
-			-- -- footstep = {name = "default_grass_footstep", gain = 0.25},
-		-- -- }),
-	-- -- })
-	--]]
-	local dirts = {
-		"Bamboo", "Cold", "Crystal", "Fiery", "Gray", "Green",
-		"Grove", "Jungle_01", "Mushroom", "Prairie"
-	}
-	for n = 1, #dirts do
 
-		local desc = dirts[n]
-		local name = desc:lower()
 
-		minetest.register_node("lib_materials:dirt_with_grass_"..name, {
-			description = S("Dirt with  Grass" .. desc),
-			tiles = {
-				"lib_materials_grass_"..name.."_top.png",
-				"lib_materials_dirt.png",
-				"lib_materials_dirt.png^lib_materials_grass_"..name.."_side.png"
-			},
-			is_ground_content = false,
-			groups = {crumbly = 3, soil = 1, lib_ecology_grass = 1},
-			soil = {
-				base = "lib_materials:dirt_with_"..name.."_grass",
-				dry = "farming:soil",
-				wet = "farming:soil_wet"
-			},
-			drop = "lib_materials:dirt",
-			sounds = default.node_sound_dirt_defaults({footstep = {name = "default_grass_footstep", gain = 0.25},}),
-		})
+	minetest.register_node("lib_materials:dirt_with_grass_bamboo", {
+		description = S("Dirt with Grass Bamboo"),
+		tiles = {
+			"lib_materials_grass_bamboo_top.png",
+			"lib_materials_dirt.png",
+			"lib_materials_dirt.png^lib_materials_grass_bamboo_side.png"
+		},
+		is_ground_content = false,
+		groups = {crumbly = 3, soil = 1, lib_ecology_grass = 1},
+		soil = {
+			base = "lib_materials:dirt_with_bamboo_grass",
+			dry = "farming:soil",
+			wet = "farming:soil_wet"
+		},
+		drop = "lib_materials:dirt",
+		sounds = default.node_sound_dirt_defaults({footstep = {name = "default_grass_footstep", gain = 0.25},}),
+	})
 
-	end
+	minetest.register_node("lib_materials:dirt_with_grass_brown", {
+		description = S("Dirt with Grass Brown"),
+		tiles = {
+			"lib_materials_grass_brown_top.png",
+			"lib_materials_dirt.png",
+			"lib_materials_dirt.png^lib_materials_grass_brown_side.png"
+		},
+		is_ground_content = false,
+		groups = {crumbly = 3, soil = 1, lib_ecology_grass = 1},
+		soil = {
+			base = "lib_materials:dirt_with_brown_grass",
+			dry = "farming:soil",
+			wet = "farming:soil_wet"
+		},
+		drop = "lib_materials:dirt",
+		sounds = default.node_sound_dirt_defaults({footstep = {name = "default_grass_footstep", gain = 0.25},}),
+	})
+
+	minetest.register_node("lib_materials:dirt_with_grass_cold", {
+		description = S("Dirt with Grass Cold"),
+		tiles = {
+			"lib_materials_grass_cold_top.png",
+			"lib_materials_dirt.png",
+			"lib_materials_dirt.png^lib_materials_grass_cold_side.png"
+		},
+		is_ground_content = false,
+		groups = {crumbly = 3, soil = 1, lib_ecology_grass = 1},
+		soil = {
+			base = "lib_materials:dirt_with_cold_grass",
+			dry = "farming:soil",
+			wet = "farming:soil_wet"
+		},
+		drop = "lib_materials:dirt",
+		sounds = default.node_sound_dirt_defaults({footstep = {name = "default_grass_footstep", gain = 0.25},}),
+	})
+
+	minetest.register_node("lib_materials:dirt_with_grass_crystal", {
+		description = S("Dirt with Grass Crystal"),
+		tiles = {
+			"lib_materials_grass_crystal_top.png",
+			"lib_materials_dirt.png",
+			"lib_materials_dirt.png^lib_materials_grass_crystal_side.png"
+		},
+		is_ground_content = false,
+		groups = {crumbly = 3, soil = 1, lib_ecology_grass = 1},
+		soil = {
+			base = "lib_materials:dirt_with_crystal_grass",
+			dry = "farming:soil",
+			wet = "farming:soil_wet"
+		},
+		drop = "lib_materials:dirt",
+		sounds = default.node_sound_dirt_defaults({footstep = {name = "default_grass_footstep", gain = 0.25},}),
+	})
+
+	minetest.register_node("lib_materials:dirt_with_grass_dry", {
+		description = S("Dirt with Grass Dry"),
+		tiles = {
+			"lib_materials_grass_dry_top.png",
+			"lib_materials_dirt.png",
+			"lib_materials_dirt.png^lib_materials_grass_dry_side.png"
+		},
+		is_ground_content = false,
+		groups = {crumbly = 3, soil = 1, lib_ecology_grass = 1},
+		soil = {
+			base = "lib_materials:dirt_with_dry_grass",
+			dry = "farming:soil",
+			wet = "farming:soil_wet"
+		},
+		drop = "lib_materials:dirt",
+		sounds = default.node_sound_dirt_defaults({footstep = {name = "default_grass_footstep", gain = 0.25},}),
+	})
+
+	minetest.register_node("lib_materials:dirt_with_grass_fiery", {
+		description = S("Dirt with Grass Fiery"),
+		tiles = {
+			"lib_materials_grass_fiery_top.png",
+			"lib_materials_dirt.png",
+			"lib_materials_dirt.png^lib_materials_grass_fiery_side.png"
+		},
+		is_ground_content = false,
+		groups = {crumbly = 3, soil = 1, lib_ecology_grass = 1},
+		soil = {
+			base = "lib_materials:dirt_with_fiery_grass",
+			dry = "farming:soil",
+			wet = "farming:soil_wet"
+		},
+		drop = "lib_materials:dirt",
+		sounds = default.node_sound_dirt_defaults({footstep = {name = "default_grass_footstep", gain = 0.25},}),
+	})
+
+	minetest.register_node("lib_materials:dirt_with_grass_gray", {
+		description = S("Dirt with Grass Gray"),
+		tiles = {
+			"lib_materials_grass_gray_top.png",
+			"lib_materials_dirt.png",
+			"lib_materials_dirt.png^lib_materials_grass_gray_side.png"
+		},
+		is_ground_content = false,
+		groups = {crumbly = 3, soil = 1, lib_ecology_grass = 1},
+		soil = {
+			base = "lib_materials:dirt_with_gray_grass",
+			dry = "farming:soil",
+			wet = "farming:soil_wet"
+		},
+		drop = "lib_materials:dirt",
+		sounds = default.node_sound_dirt_defaults({footstep = {name = "default_grass_footstep", gain = 0.25},}),
+	})
+
+	minetest.register_node("lib_materials:dirt_with_grass_green", {
+		description = S("Dirt with Grass Green"),
+		tiles = {
+			"lib_materials_grass_green_top.png",
+			"lib_materials_dirt.png",
+			"lib_materials_dirt.png^lib_materials_grass_green_side.png"
+		},
+		is_ground_content = false,
+		groups = {crumbly = 3, soil = 1, lib_ecology_grass = 1},
+		soil = {
+			base = "lib_materials:dirt_with_green_grass",
+			dry = "farming:soil",
+			wet = "farming:soil_wet"
+		},
+		drop = "lib_materials:dirt",
+		sounds = default.node_sound_dirt_defaults({footstep = {name = "default_grass_footstep", gain = 0.25},}),
+	})
+
+	minetest.register_node("lib_materials:dirt_with_grass_grove", {
+		description = S("Dirt with Grass Grove"),
+		tiles = {
+			"lib_materials_grass_grove_top.png",
+			"lib_materials_dirt.png",
+			"lib_materials_dirt.png^lib_materials_grass_grove_side.png"
+		},
+		is_ground_content = false,
+		groups = {crumbly = 3, soil = 1, lib_ecology_grass = 1},
+		soil = {
+			base = "lib_materials:dirt_with_grove_grass",
+			dry = "farming:soil",
+			wet = "farming:soil_wet"
+		},
+		drop = "lib_materials:dirt",
+		sounds = default.node_sound_dirt_defaults({footstep = {name = "default_grass_footstep", gain = 0.25},}),
+	})
+
+	minetest.register_node("lib_materials:dirt_with_grass_jungle_01", {
+		description = S("Dirt with Grass Jungle 01"),
+		tiles = {
+			"lib_materials_grass_jungle_01_top.png",
+			"lib_materials_dirt.png",
+			"lib_materials_dirt.png^lib_materials_grass_jungle_01_side.png"
+		},
+		is_ground_content = false,
+		groups = {crumbly = 3, soil = 1, lib_ecology_grass = 1},
+		soil = {
+			base = "lib_materials:dirt_with_jungle_01_grass",
+			dry = "farming:soil",
+			wet = "farming:soil_wet"
+		},
+		drop = "lib_materials:dirt",
+		sounds = default.node_sound_dirt_defaults({footstep = {name = "default_grass_footstep", gain = 0.25},}),
+	})
+
+	minetest.register_node("lib_materials:dirt_with_grass_mushroom", {
+		description = S("Dirt with Grass Mushroom"),
+		tiles = {
+			"lib_materials_grass_mushroom_top.png",
+			"lib_materials_dirt.png",
+			"lib_materials_dirt.png^lib_materials_grass_mushroom_side.png"
+		},
+		is_ground_content = false,
+		groups = {crumbly = 3, soil = 1, lib_ecology_grass = 1},
+		soil = {
+			base = "lib_materials:dirt_with_mushroom_grass",
+			dry = "farming:soil",
+			wet = "farming:soil_wet"
+		},
+		drop = "lib_materials:dirt",
+		sounds = default.node_sound_dirt_defaults({footstep = {name = "default_grass_footstep", gain = 0.25},}),
+	})
+
+	minetest.register_node("lib_materials:dirt_with_grass_prairie", {
+		description = S("Dirt with Grass Prairie"),
+		tiles = {
+			"lib_materials_grass_prairie_top.png",
+			"lib_materials_dirt.png",
+			"lib_materials_dirt.png^lib_materials_grass_prairie_side.png"
+		},
+		is_ground_content = false,
+		groups = {crumbly = 3, soil = 1, lib_ecology_grass = 1},
+		soil = {
+			base = "lib_materials:dirt_with_prairie_grass",
+			dry = "farming:soil",
+			wet = "farming:soil_wet"
+		},
+		drop = "lib_materials:dirt",
+		sounds = default.node_sound_dirt_defaults({footstep = {name = "default_grass_footstep", gain = 0.25},}),
+	})
+
+
 
 --Mapgen Dirts (farlands)
 	minetest.register_node("lib_materials:dirt_with_grass_fungi", {
@@ -361,12 +553,12 @@ local GRASS_JUNGLE_TEXTURE_SIDE = "lib_materials_grass_jungle_01_side.png"
 	})
 
 -- Rocks/Minerals mod
-	minetest.register_node("lib_materials:dirt_sod", {
-		description = "Dirt - Sod",
-		tiles = {"lib_materials_dirt_sod.png"},
-		groups = {crumbly = 3, soil = 1},
-		sounds = default.node_sound_dirt_defaults(),
-	})
+	-- minetest.register_node("lib_materials:dirt_sod", {
+		-- description = "Dirt - Sod",
+		-- tiles = {"lib_materials_dirt_sod.png"},
+		-- groups = {crumbly = 3, soil = 1},
+		-- sounds = default.node_sound_dirt_defaults(),
+	-- })
 
 -- Add dirts
 local grass_types = {
@@ -395,10 +587,7 @@ local function register_dirts2(readname)
 		},
 	})
 	
-	-- local itemstr_coniferous = itemstr_dirt .. "_with_coniferous_litter"
-	-- local itemstr_rain = itemstr_dirt .. "_with_rainforest_litter"
-	-- local itemstr_snow = itemstr_dirt .. "_with_snow"
-	minetest.register_node(itemstr_dirt .. "_with_coniferous_litter", {
+	minetest.register_node(itemstr_dirt .. "_with_litter_coniferous", {
 		description = readname .. " with Coniferous Litter",
 		tiles = {"lib_materials_litter_coniferous.png", tilestr, tilestr .. "^lib_materials_litter_coniferous_side.png"},
 		is_ground_content = true,
@@ -406,9 +595,49 @@ local function register_dirts2(readname)
 		drop = itemstr_dirt,
 		sounds = lib_materials.node_sound_dirt_defaults({footstep = {name="default_grass_footstep", gain=0.25},}),
 	})
-	minetest.register_node(itemstr_dirt .. "_with_rainforest_litter", {
+	minetest.register_node(itemstr_dirt .. "_with_litter_rainforest", {
 		description = readname .. " with Rainforest Litter",
 		tiles = {"lib_materials_litter_rainforest.png", tilestr, tilestr .. "^lib_materials_litter_rainforest_side.png"},
+		is_ground_content = true,
+		groups = {crumbly=3,soil=1},
+		drop = itemstr_dirt,
+		sounds = lib_materials.node_sound_dirt_defaults({footstep = {name="default_grass_footstep", gain=0.25},}),
+	})
+	minetest.register_node(itemstr_dirt .. "_with_litter_fungi", {
+		description = readname .. " with Fungal Litter",
+		tiles = {"lib_materials_grass_fungi_top.png", tilestr, tilestr .. "^lib_materials_grass_fungi_side.png"},
+		is_ground_content = true,
+		groups = {crumbly=3,soil=1},
+		drop = itemstr_dirt,
+		sounds = lib_materials.node_sound_dirt_defaults({footstep = {name="default_grass_footstep", gain=0.25},}),
+	})
+	minetest.register_node(itemstr_dirt .. "_with_litter_leaf_01", {
+		description = readname .. " with Leaf Litter 01",
+		tiles = {tilestr .. "^lib_materials_litter_leaf_01.png", tilestr, tilestr .. "^lib_materials_litter_coniferous_side.png"},
+		is_ground_content = true,
+		groups = {crumbly=3,soil=1},
+		drop = itemstr_dirt,
+		sounds = lib_materials.node_sound_dirt_defaults({footstep = {name="default_grass_footstep", gain=0.25},}),
+	})
+	minetest.register_node(itemstr_dirt .. "_with_litter_leaf_02", {
+		description = readname .. " with Leaf Litter 02",
+		tiles = {tilestr .. "^lib_materials_litter_leaf_02.png", tilestr, tilestr .. "^lib_materials_litter_coniferous_side.png"},
+		is_ground_content = true,
+		groups = {crumbly=3,soil=1},
+		drop = itemstr_dirt,
+		sounds = lib_materials.node_sound_dirt_defaults({footstep = {name="default_grass_footstep", gain=0.25},}),
+	})
+	minetest.register_node(itemstr_dirt .. "_with_litter_stones", {
+		description = readname .. " with Stone Litter",
+		tiles = {tilestr .. "^lib_materials_litter_stones.png", tilestr, tilestr .. "^lib_materials_litter_stones_side.png"},
+		is_ground_content = true,
+		groups = {crumbly=3,soil=1},
+		drop = itemstr_dirt,
+		sounds = lib_materials.node_sound_dirt_defaults({footstep = {name="default_grass_footstep", gain=0.25},}),
+	})
+	minetest.register_node(itemstr_dirt .. "_with_litter_vine", {
+		description = readname .. " with Vine Litter",
+		tiles = {tilestr .. "^lib_materials_litter_vine.png", tilestr, tilestr .. "^lib_materials_litter_coniferous_side.png"},
 		is_ground_content = true,
 		groups = {crumbly=3,soil=1},
 		drop = itemstr_dirt,
@@ -421,6 +650,34 @@ local function register_dirts2(readname)
 		groups = {crumbly=3,soil=1},
 		drop = itemstr_dirt,
 		sounds = lib_materials.node_sound_dirt_defaults({footstep = {name="default_snow_footstep", gain=0.25},}),
+	})
+	minetest.register_node(itemstr_dirt .. "_with_soil", {
+		description = readname .. " with Soil",
+		tiles = {tilestr .. "^lib_materials_dirt_with_soil.png", tilestr, tilestr},
+		is_ground_content = true,
+		groups = {crumbly=3,soil=1},
+		drop = itemstr_dirt,
+		sounds = lib_materials.node_sound_dirt_defaults({footstep = {name="default_grass_footstep", gain=0.25},}),
+	})
+	minetest.register_node(itemstr_dirt .. "_with_soil_wet", {
+		description = readname .. " with Wet Soil",
+		tiles = {tilestr .. "^lib_materials_dirt_with_soil_wet.png", tilestr, tilestr .. "^lib_materials_dirt_with_soil_wet_side.png"},
+		is_ground_content = true,
+		groups = {crumbly=3,soil=1},
+		drop = itemstr_dirt,
+		sounds = lib_materials.node_sound_dirt_defaults({footstep = {name="default_grass_footstep", gain=0.25},}),
+	})
+	minetest.register_node(itemstr_dirt .. "_with_stone_cobble", {
+		tiles = {"lib_materials_stone_cobble_default.png^(" .. tilestr .. "^[mask:lib_materials_mask_cobble.png)"},
+		description = readname .. " with Stone Cobble",
+		is_ground_content = true,
+		groups = {cracky=3, stone=2},
+	})
+	minetest.register_node(itemstr_dirt .. "_with_stone", {
+		tiles = { "lib_materials_stone_default.png^(" .. tilestr .. "^[mask:lib_materials_mask_stone.png)" },
+		description = readname .. " with Stone",
+		is_ground_content = true,
+		groups = {cracky=3, stone=2},
 	})
 
 	minetest.register_node(itemstr_dirt .. "_with_grass_hot_humid_coastal", {
@@ -940,6 +1197,64 @@ local function register_dirts2(readname)
 	})
 
 
+
+end
+
+	register_dirts2("Dirt")
+	register_dirts2("Dirt_Black")
+	register_dirts2("Dirt_Brown")
+	register_dirts2("Dirt_Clay_Red")
+	register_dirts2("Dirt_Clay_White")
+	register_dirts2("Dirt_Clayey")
+	register_dirts2("Dirt_Coarse")
+	register_dirts2("Dirt_Dark")
+	register_dirts2("Dirt_Dry")
+	register_dirts2("Dirt_Mud_01")
+	register_dirts2("Dirt_Sandy")
+	register_dirts2("Dirt_Silt_01")
+	register_dirts2("Dirt_Silt_02")
+	register_dirts2("Dirt_Silty")
+	register_dirts2("Dirt_Sod")
+	register_dirts2("Dirt_Permafrost")
+
+local function register_dirts(readname)
+	local name = readname:lower()
+	local itemstr_dirt = "lib_materials:" .. name
+	local tilestr = "lib_materials_" .. name .. ".png"
+
+	minetest.register_node(itemstr_dirt, {
+		description = readname,
+		tiles = {tilestr},
+		is_ground_content = true,
+		groups = {crumbly=3,soil=1},
+		sounds = default.node_sound_dirt_defaults(),
+	})
+	
+	minetest.register_node(itemstr_dirt .. "_with_coniferous_litter", {
+		description = readname .. " with Coniferous Litter",
+		tiles = {"lib_materials_litter_coniferous.png", tilestr, tilestr .. "^lib_materials_litter_coniferous_side.png"},
+		is_ground_content = true,
+		groups = {crumbly=3,soil=1},
+		drop = itemstr_dirt,
+		sounds = lib_materials.node_sound_dirt_defaults({footstep = {name="default_grass_footstep", gain=0.25},}),
+	})
+	minetest.register_node(itemstr_dirt .. "_with_rainforest_litter", {
+		description = readname .. " with Rainforest Litter",
+		tiles = {"lib_materials_litter_rainforest.png", tilestr, tilestr .. "^lib_materials_litter_rainforest_side.png"},
+		is_ground_content = true,
+		groups = {crumbly=3,soil=1},
+		drop = itemstr_dirt,
+		sounds = lib_materials.node_sound_dirt_defaults({footstep = {name="default_grass_footstep", gain=0.25},}),
+	})
+	minetest.register_node(itemstr_dirt .. "_with_snow", {
+		description = readname .. " with Snow",
+		tiles = {"lib_materials_snow.png", tilestr, tilestr .. "^lib_materials_snow_side.png"},
+		is_ground_content = true,
+		groups = {crumbly=3,soil=1},
+		drop = itemstr_dirt,
+		sounds = lib_materials.node_sound_dirt_defaults({footstep = {name="default_snow_footstep", gain=0.25},}),
+	})
+
 	minetest.register_node(itemstr_dirt .. "_with_grass_wet_01", {
 		description = readname .. " Dirt with Grass (Wet 01)",
 		tiles = {""..GRASS_JUNGLE_TEXTURE_TOP.."^[colorize:"..GRASS_WET_PALETTE_1.."", tilestr, tilestr .. "^("..GRASS_JUNGLE_TEXTURE_SIDE.."^[colorize:"..GRASS_WET_PALETTE_1..")"},
@@ -1458,61 +1773,9 @@ local function register_dirts2(readname)
 
 end
 
-	register_dirts2("Dirt")
-	register_dirts2("Dirt_Brown")
-	register_dirts2("Dirt_Black")
-	register_dirts2("Dirt_Clay_Red")
-	register_dirts2("Dirt_Clay_White")
-	register_dirts2("Dirt_Clayey")
-	register_dirts2("Dirt_Sandy")
-	register_dirts2("Dirt_Silt_01")
-	register_dirts2("Dirt_Silt_02")
-	register_dirts2("Dirt_Silty")
-
-local function register_dirts(readname)
-	local name = readname:lower()
-	local itemstr_dirt = "lib_materials:" .. name
-	local tilestr = "lib_materials_" .. name .. ".png"
-
-	minetest.register_node(itemstr_dirt, {
-		description = readname,
-		tiles = {tilestr},
-		is_ground_content = true,
-		groups = {crumbly=3,soil=1},
-		sounds = default.node_sound_dirt_defaults(),
-	})
-	
-	minetest.register_node(itemstr_dirt .. "_with_coniferous_litter", {
-		description = readname .. " with Coniferous Litter",
-		tiles = {"lib_materials_litter_coniferous.png", tilestr, tilestr .. "^lib_materials_litter_coniferous_side.png"},
-		is_ground_content = true,
-		groups = {crumbly=3,soil=1},
-		drop = itemstr_dirt,
-		sounds = lib_materials.node_sound_dirt_defaults({footstep = {name="default_grass_footstep", gain=0.25},}),
-	})
-	minetest.register_node(itemstr_dirt .. "_with_rainforest_litter", {
-		description = readname .. " with Rainforest Litter",
-		tiles = {"lib_materials_litter_rainforest.png", tilestr, tilestr .. "^lib_materials_litter_rainforest_side.png"},
-		is_ground_content = true,
-		groups = {crumbly=3,soil=1},
-		drop = itemstr_dirt,
-		sounds = lib_materials.node_sound_dirt_defaults({footstep = {name="default_grass_footstep", gain=0.25},}),
-	})
-	minetest.register_node(itemstr_dirt .. "_with_snow", {
-		description = readname .. " with Snow",
-		tiles = {"lib_materials_snow.png", tilestr, tilestr .. "^lib_materials_snow_side.png"},
-		is_ground_content = true,
-		groups = {crumbly=3,soil=1},
-		drop = itemstr_dirt,
-		sounds = lib_materials.node_sound_dirt_defaults({footstep = {name="default_snow_footstep", gain=0.25},}),
-	})
-
-
-end
-
-	register_dirts("Dirt_Coarse")
-	register_dirts("Dirt_Dark")
-	register_dirts("Dirt_Dry")
-	register_dirts("Dirt_Mud_01")
+	--register_dirts("Dirt_Coarse")
+	--register_dirts("Dirt_Dark")
+	--register_dirts("Dirt_Dry")
+	--register_dirts("Dirt_Mud_01")
 
 

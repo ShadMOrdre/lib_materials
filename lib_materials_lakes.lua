@@ -72,22 +72,30 @@ minetest.register_on_generated(function(minp, maxp, seed)
 						local is_flora = minetest.registered_nodes[nn].groups.flora
 						local is_flower = minetest.registered_nodes[nn].groups.flower
 						local is_growing = minetest.registered_nodes[nn].groups.growing
-						if is_leaves == nil or is_leaves == 0 or is_plant == nil or is_plant == 0 or is_le_plant == nil or is_le_plant == 0 or is_flora == nil or is_flora == 0  or is_flower == nil or is_flower == 0  or is_growing == nil or is_growing == 0  then
+						if is_leaves == nil or is_leaves == 0 then
 							ground_y = y
 							break
 						end
+						-- or is_plant == nil or is_plant == 0 or is_le_plant == nil or is_le_plant == 0 or is_flora == nil or is_flora == 0  or is_flower == nil or is_flower == 0  or is_growing == nil or is_growing == 0 then
 					end
 				end
 				if ground_y and ground_y >= 2 then
 					local p = {x=x,y=ground_y,z=z}
 					local ground_name = minetest.get_node(p)
 					local node_name = minetest.get_node(p).name
-					if ground_name == "default:water_source" or ground_name == "lib_materials:fluid_water_source" then return end
+					if ground_name == "default:water_source" or ground_name == "lib_materials:fluid_water_source" then
+						return
+					end
+					local ground_name = minetest.get_node(p)
+					local node_name = minetest.get_node(p).name
+					if ground_name == "default:water_source" or ground_name == "lib_materials:fluid_water_source" then
+						return
+					end
 					local lx = pr:next(10,30)
 					local lz = pr:next(10,30)
-					if string.match(node_name, "lib_materials:dirt_sandy") then
-						c_fluid_id = c_quick_source
-					end
+					--if string.match(node_name, "lib_materials:dirt_sandy") then
+					--	c_fluid_id = c_quick_source
+					--end
 					--if string.match(node_name, "lib_materials:sand") then
 					--	c_fluid_id = c_quick
 					--end
@@ -118,7 +126,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 					--if string.match(node_name, "lib_materials:dirt_with_grass_warm_semihumid_highland") or string.match(node_name, "lib_materials:dirt_with_grass_temperate_semihumid_highland") then
 					--	c_fluid_id = c_dirty
 					--end
-					if string.match(node_name, "lib_materials:stone_bluestone") then
+					if string.match(node_name, "lib_materials:stone_greenstone") then
 						c_fluid_id = c_lava
 					end
 					if string.match(node_name, "snow") then
