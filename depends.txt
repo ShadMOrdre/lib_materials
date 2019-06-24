@@ -1,2 +1,3 @@
 default?
-carpathian_mapgen?
+stairs?
+game?
