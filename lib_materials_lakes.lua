@@ -11,14 +11,16 @@
 
 local c_air = minetest.get_content_id("air")
 local c_ignore = minetest.get_content_id("ignore")
-local c_lava = minetest.get_content_id("default:lava_source")
-local c_water = minetest.get_content_id("lib_materials:fluid_water_source")
-local c_ice = minetest.get_content_id("lib_materials:ice_default")
-local c_murky = minetest.get_content_id("lib_materials:fluid_water_murky_source")
-local c_dirty = minetest.get_content_id("lib_materials:fluid_water_dirty_source")
-local c_muddy = minetest.get_content_id("lib_materials:fluid_water_river_muddy_source")
-local c_quick_source = minetest.get_content_id("lib_materials:fluid_quicksand_source")
+local c_lava = minetest.get_content_id("lib_materials:liquid_lava_source")
+local c_water = minetest.get_content_id("lib_materials:liquid_water_source")
+local c_ice = minetest.get_content_id("lib_materials:ice")
+local c_murky = minetest.get_content_id("lib_materials:liquid_water_murky_source")
+local c_dirty = minetest.get_content_id("lib_materials:liquid_water_dirty_source")
+local c_river = minetest.get_content_id("lib_materials:liquid_water_river_source")
+local c_muddy = minetest.get_content_id("lib_materials:liquid_water_river_muddy_source")
+local c_quick_source = minetest.get_content_id("lib_materials:liquid_quicksand_source")
 local c_quick = minetest.get_content_id("lib_materials:quicksand")
+local c_mud_boil = minetest.get_content_id("lib_materials:liquid_mud_boiling_flowing") 
 local c_mud_wet = minetest.get_content_id("lib_materials:mud_wet")
 local c_mud_dried = minetest.get_content_id("lib_materials:dirt_mud_dried")
 local c_fluid_id
@@ -80,66 +82,64 @@ minetest.register_on_generated(function(minp, maxp, seed)
 					end
 				end
 				if ground_y and ground_y >= 2 then
+
 					local p = {x=x,y=ground_y,z=z}
 					local ground_name = minetest.get_node(p)
 					local node_name = minetest.get_node(p).name
-					if ground_name == "default:water_source" or ground_name == "lib_materials:fluid_water_source" then
+
+					if ground_name == "default:water_source" or ground_name == "lib_materials:liquid_water_source" then
 						return
 					end
-					local ground_name = minetest.get_node(p)
-					local node_name = minetest.get_node(p).name
-					if ground_name == "default:water_source" or ground_name == "lib_materials:fluid_water_source" then
-						return
-					end
+
 					local lx = pr:next(10,30)
 					local lz = pr:next(10,30)
-					--if string.match(node_name, "lib_materials:dirt_sandy") then
-					--	c_fluid_id = c_quick_source
-					--end
-					--if string.match(node_name, "lib_materials:sand") then
-					--	c_fluid_id = c_quick
-					--end
-					if string.match(node_name, "lib_materials:dirt_with_rainforest_litter") then
+
+					if string.find(node_name, "_black") then
+						c_fluid_id = c_dirty
+					end
+					if string.find(node_name, "_brown") then
+						c_fluid_id = c_dirty
+					end
+					if string.find(node_name, "_rainforest") then
 						c_fluid_id = c_murky
 					end
-					if string.match(node_name, "lib_materials:dirt_mud_01") then
+					if string.find(node_name, "_silt") then
+						c_fluid_id = c_murky
+					end
+					if string.find(node_name, "_mud") then
+						c_fluid_id = c_murky
+					end
+					if string.find(node_name, "_clay") then
 						c_fluid_id = c_muddy
 					end
-					if string.match(node_name, "lib_materials:dirt_clayey") then
-						c_fluid_id = c_muddy
-					end
-					if string.match(node_name, "lib_materials:sand_desert") then
+					if string.find(node_name, "_gravel") then
 						c_fluid_id = c_mud_dried
 					end
-					if string.match(node_name, "lib_materials:sand") then
+					if string.find(node_name, "_sand") then
 						c_fluid_id = c_mud_dried
 					end
-					--if string.match(node_name, "lib_materials:dirt_with_grass_warm_semihumid_coastal") or string.match(node_name, "lib_materials:dirt_with_grass_temperate_semihumid_coastal") then
-					--	c_fluid_id = c_dirty
-					--end
-					--if string.match(node_name, "lib_materials:dirt_with_grass_warm_semihumid_lowland") or string.match(node_name, "lib_materials:dirt_with_grass_temperate_semihumid_lowland") then
-					--	c_fluid_id = c_dirty
-					--end
-					--if string.match(node_name, "lib_materials:dirt_with_grass_warm_semihumid_shelf") or string.match(node_name, "lib_materials:dirt_with_grass_temperate_semihumid_shelf") then
-					--	c_fluid_id = c_dirty
-					--end
-					--if string.match(node_name, "lib_materials:dirt_with_grass_warm_semihumid_highland") or string.match(node_name, "lib_materials:dirt_with_grass_temperate_semihumid_highland") then
-					--	c_fluid_id = c_dirty
-					--end
-					if string.match(node_name, "lib_materials:stone_greenstone") then
+					if string.find(node_name, "stone_") then
 						c_fluid_id = c_lava
 					end
-					if string.match(node_name, "snow") then
+					if string.find(node_name, "snow") then
 						c_fluid_id = c_ice
 					end
 					if ground_y >= lib_materials.minheight_snow then
 						c_fluid_id = c_ice
 					end
+
+					if c_fluid_id then
+					
+					else
+						c_fluid_id = c_river
+					end
+
 					-- if c_water == "" then
 					
 					-- else
 						-- c_water = minetest.get_content_id("default:river_water_source")
 					-- end
+
 					lib_materials.lakes_fill(data, a, p, lx, lz)
 					--c_fluid_id = ""
 				end
@@ -149,6 +149,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 		end
 		-- Write to map
 		vm:set_data(data)
+		vm:update_liquids()
 		vm:write_to_map(data)
 		vm:update_map()
 	end

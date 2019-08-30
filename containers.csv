@@ -1,0 +1,33 @@
+#LiqSrc|LiqFlo|LiqBuck|LiqPot|LiqImg|BuckName|ClaypotName|LiqGrps|LiqFrcRenew
+liquid_lava_cooling_source|liquid_lava_cooling_flowing|lava_cooling|lava_cooling|lib_materials_stone_cobble_default.png^(lib_materials_fluid_lava_source.png^[mask:lib_materials_mask_cobble.png)||||
+liquid_lava_source|liquid_lava_flowing|lava|lava|lib_materials_fluid_lava_source.png||||
+liquid_grease_source|liquid_grease_flowing|grease|grease|lib_materials_fluid_grease_source.png||||
+#liquid_liquid_source|liquid_liquid_flowing|liquid|liquid|lib_materials_fluid_water_source.png^[colorize:#1F1F1F:alpha||||
+liquid_metal_bronze_source|liquid_metal_bronze_flowing|bronze|bronze|lib_materials_fluid_bronze_source.png||||
+liquid_metal_chromium_source|liquid_metal_chromium_flowing|chromium|chromium|lib_materials_fluid_chromium_source.png||||
+liquid_metal_copper_source|liquid_metal_copper_flowing|copper|copper|lib_materials_fluid_copper_source.png||||
+liquid_metal_corium_source|liquid_metal_corium_flowing|corium|corium|lib_materials_fluid_corium_source.png||||
+liquid_metal_gold_source|liquid_metal_gold_flowing|gold|gold|lib_materials_fluid_gold_source.png||||
+liquid_metal_lead_source|liquid_metal_lead_flowing|lead|lead|lib_materials_fluid_lead_source.png||||
+liquid_metal_mercury_source|liquid_metal_mercury_flowing|mercury|mercury|lib_materials_fluid_mercury_source.png||||
+liquid_metal_mese_source|liquid_metal_mese_flowing|mese|mese|lib_materials_fluid_mese_source.png||||
+liquid_metal_mithril_source|liquid_metal_mithril_flowing|mithril|mithril|lib_materials_fluid_mithril_source.png||||
+liquid_metal_obsidian_source|liquid_metal_obsidian_flowing|obsidian|obsidian|lib_materials_fluid_obsidian_source.png||||
+liquid_metal_steel_source|liquid_metal_steel_flowing|steel|steel|lib_materials_fluid_silver_source.png||||
+liquid_metal_silver_source|liquid_metal_silver_flowing|silver|silver|lib_materials_fluid_steel_source.png||||
+liquid_metal_tin_source|liquid_metal_tin_flowing|tin|tin|lib_materials_fluid_tin_source.png||||
+liquid_metal_zinc_source|liquid_metal_zinc_flowing|zinc|zinc|lib_materials_fluid_zinc_source.png||||
+liquid_cement_source|liquid_cement_flowing|cement|cement|lib_materials_fluid_cement_source.png||||
+liquid_mud_source|liquid_mud_flowing|mud|mud|lib_materials_fluid_mud_source.png||||
+liquid_mud_boiling_source|liquid_mud_boiling_flowing|mud_boiling|mud_boiling|lib_materials_fluid_mud_boiling_source.png||||
+liquid_oil_02_source|liquid_oil_02_flowing|oil_02|oil_02|lib_materials_fluid_oil_02_source.png||||
+liquid_oil_03_source|liquid_oil_03_flowing|oil_03|oil_03|lib_materials_fluid_oil_03_source.png||||
+liquid_oil_source|liquid_oil_flowing|oil|oil|lib_materials_fluid_oil_source.png||||
+liquid_quicksand_source|liquid_quicksand_flowing|quicksand|quicksand|lib_materials_fluid_quicksand_source.png||||
+liquid_water_dirty_source|liquid_water_dirty_flowing|water_dirty|water_dirty|lib_materials_fluid_water_dirty_source.png|||water 1|
+liquid_water_murky_source|liquid_water_murky_flowing|water_murky|water_murky|lib_materials_fluid_water_source.png^[colorize:#1F1F00:alpha|||water 1|
+liquid_water_rushing_source|liquid_water_rushing_flowing|water_rushing|water_rushing|lib_materials_fluid_water_rushing_source.png|||water 1|TRUE
+liquid_water_swamp_source|liquid_water_swamp_flowing|water_swamp|water_swamp|lib_materials_fluid_water_swamp_source.png|||water 1|
+liquid_water_river_muddy_source|liquid_water_river_muddy_flowing|water_river_muddy|water_river_muddy|lib_materials_fluid_water_river_muddy_source.png|||water 1|
+liquid_water_river_source|liquid_water_river_flowing|water_river|water_river|lib_materials_fluid_water_river_source.png|||water 1|TRUE
+liquid_water_source|liquid_water_flowing|water|water|lib_materials_fluid_water_source.png|||water 1|

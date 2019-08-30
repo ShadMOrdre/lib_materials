@@ -1,0 +1,128 @@
+#Craft Item|Craft Description|Craft Image|Craft Groups
+#Dirt, clay, Sand Lumps and Bricks|||
+dirt_lump_mud|Dirt - Mud Lump|lib_materials_dirt_lump_mud_dried.png|
+dirt_lump_silt|Dirt - Silt Lump|lib_materials_dirt_lump_silt.png|
+dirt_lump_clay_white|Dirt - clay Lump|lib_materials_dirt_lump_clay.png|
+dirt_lump_clay_potters|Dirt _Potters clay|lib_materials_dirt_lump_clay_potters.png|
+dirt_brick_clay_black|Black Clay Brick|lib_materials_dirt_brick_clay_black.png|
+dirt_brick_clay_red|Red Clay Brick|lib_materials_dirt_brick_clay_red.png|
+dirt_lump_sand_molding|Lump of Molding Sand|lib_materials_dirt_lump_molding_sand.png|
+stone_brick_concrete|Concrete Brick|lib_materials_stone_brick_concrete.png|
+#Molds, Buckets, Tools, Other|||
+mold_clay|Clay Mold|lib_materials_mold_clay.png|
+mold_sand|Sand Mold|lib_materials_mold_sand.png|
+#Metal Lumps and Ingots|||
+metal_albata_ingot|Metal - albata Ingot|lib_materials_metal_albata_ingot.png|ingot 1,albata 1
+metal_aluminium_ingot|Metal - aluminium Ingot|lib_materials_metal_aluminium_ingot.png|ingot 1
+metal_aluminum_ingot|Metal - aluminum Ingot|lib_materials_metal_aluminum_ingot.png|ingot 1
+metal_aluminum_lump|Metal - aluminum Lump|lib_materials_metal_aluminum_lump.png|
+metal_bismuth_bronze_ingot|Metal - bismuth_bronze Ingot|lib_materials_metal_bismuth_bronze_ingot.png|ingot 1
+metal_bismuth_ingot|Metal - bismuth Ingot|lib_materials_metal_bismuth_ingot.png|ingot 1
+metal_brass_ingot|Metal - Brass Ingot|lib_materials_metal_brass_ingot.png|ingot 1
+metal_brass2_ingot|Metal - brass2 Ingot|lib_materials_metal_brass2_ingot.png|ingot 1
+metal_bronze_ingot|Metal - Bronze Ingot|lib_materials_metal_bronze_ingot.png|ingot 1,bronze 1
+metal_bronze2_ingot|Metal - bronze2 Ingot|lib_materials_metal_bronze2_ingot.png|ingot 1,bronze 1
+metal_bronze_black_ingot|Metal - bronze_black Ingot|lib_materials_metal_bronze_black_ingot.png|ingot 1,bronze 1
+metal_cavorite_lump|Metal - Cavorite Lump|lib_materials_metal_cavorite_lump.png|ingot 1
+metal_chromium_ingot|Metal - Chromium Ingot|lib_materials_metal_chromium_ingot.png|ingot 1
+metal_chromium_lump|Metal - Chromium Lump|lib_materials_metal_chromium_lump.png|coal 1,flammable 1
+metal_copper_ingot|Metal - Copper Ingot|lib_materials_metal_copper_ingot.png|ingot 1
+metal_copper_lump|Metal - Copper Lump|lib_materials_metal_copper_lump.png|
+metal_copper2_ingot|Metal - copper2 Ingot|lib_materials_metal_copper2_ingot.png|ingot 1
+metal_copper_native_lump|Metal - Native Copper Lump|lib_materials_metal_native_copper_lump.png|
+metal_gold_ingot|Metal - Gold Ingot|lib_materials_metal_gold_ingot.png|ingot 1
+metal_gold_lump|Metal - Gold Lump|lib_materials_metal_gold_lump.png|
+metal_gold2_ingot|Metal - gold2 Ingot|lib_materials_metal_gold2_ingot.png|ingot 1
+metal_gold_native_lump|Metal - Native Gold Lump|lib_materials_metal_native_gold_lump.png|
+metal_gold_rose_ingot|Metal - gold_rose Ingot|lib_materials_metal_gold_rose_ingot.png|ingot 1
+metal_iron_lump|Metal - Iron Lump|lib_materials_metal_iron_lump.png|
+metal_iron_cast_ingot|Metal - Cast Iron Ingot|lib_materials_metal_iron_cast_ingot.png|ingot 1,iron 1
+metal_iron_pig_ingot|Metal - iron_pig Ingot|lib_materials_metal_iron_pig_ingot.png|ingot 1,iron 1
+metal_iron_wrought_ingot|Metal - Wrought Iron Ingot|lib_materials_metal_iron_wrought_ingot.png|ingot 1,iron 1
+metal_iron_wrought2_ingot|Metal - iron_wrought2 Ingot|lib_materials_metal_iron_wrought2_ingot.png|ingot 1,iron 1
+metal_lead_ingot|Metal - Lead Ingot|lib_materials_metal_lead_ingot.png|ingot 1
+metal_lead_lump|Metal - Lead Lump|lib_materials_metal_lead_lump.png|
+metal_lead2_ingot|Metal - lead2 Ingot|lib_materials_metal_lead2_ingot.png|ingot 1
+metal_monel_ingot|Metal - monel Ingot|lib_materials_metal_monel_ingot.png|ingot 1
+metal_nickel_ingot|Metal - nickel Ingot|lib_materials_metal_nickel_ingot.png|ingot 1
+metal_oroide_ingot|Metal - oroide Ingot|lib_materials_metal_oroide_ingot.png|ingot 1
+metal_platinum_ingot|Metal - platinum Ingot|lib_materials_metal_platinum_ingot.png|ingot 1
+metal_platinum_native_lump|Metal - Native Platinum Lump|lib_materials_metal_native_platinum_lump.png|
+metal_pyrite_ingot|Metal - Pyrite Ingot|lib_materials_metal_pyrite_ingot.png|ingot 1
+metal_pyrite_lump|Metal - Pyrite Lump|lib_materials_metal_pyrite_lump.png|
+metal_silver_ingot|Metal - Silver Ingot|lib_materials_metal_silver_ingot.png|ingot 1
+metal_silver_lump|Metal - Silver Lump|lib_materials_metal_silver_lump.png|
+metal_silver2_ingot|Metal - silver2 Ingot|lib_materials_metal_silver2_ingot.png|ingot 1
+metal_silver_german_ingot|Metal - silver_german Ingot|lib_materials_metal_silver_german_ingot.png|ingot 1
+metal_silver_native_lump|Metal - Native Silver Lump|lib_materials_metal_native_silver_lump.png|
+metal_silver_sterling_ingot|Metal - silver_sterling Ingot|lib_materials_metal_silver_sterling_ingot.png|ingot 1
+metal_steel_ingot|Metal - Steel Ingot|lib_materials_metal_steel_ingot.png|ingot 1,steel 1
+metal_steel2_ingot|Metal - steel2 Ingot|lib_materials_metal_steel2_ingot.png|ingot 1,steel 1
+metal_steel_black_ingot|Metal - steel_black Ingot|lib_materials_metal_steel_black_ingot.png|ingot 1,steel 1
+metal_steel_carbon_ingot|Metal - Carbon Steel Ingot|lib_materials_metal_steel_carbon_ingot.png|ingot 1,steel 1
+metal_steel_stainless_ingot|Metal - Stainless Steel Ingot|lib_materials_metal_steel_stainless_ingot.png|ingot 1,steel 1
+metal_tin_ingot|Metal - Tin Ingot|lib_materials_metal_tin_ingot.png|ingot 1
+metal_tin_lump|Metal - Tin Lump|lib_materials_metal_tin_lump.png|
+metal_tin2_ingot|Metal - tin2 Ingot|lib_materials_metal_tin2_ingot.png|ingot 1
+metal_tin3_ingot|Metal - tin3 Ingot|mapgen_tin_ingot.png|ingot 1
+metal_tin3_lump|Metal - tin3 Lump|mapgen_tin_lump.png|
+metal_tumbaga_ingot|Metal - tumbaga Ingot|lib_materials_metal_tumbaga_ingot.png|ingot 1
+metal_uranium_ingot|Metal - Uranium Ingot|lib_materials_metal_uranium_ingot.png|ingot 1
+metal_uranium_lump|Metal - Uranium Lump|lib_materials_metal_uranium_lump.png|coal 1,flammable 1
+metal_zinc_ingot|Metal - Zinc Ingot|lib_materials_metal_zinc_ingot.png|ingot 1
+metal_zinc_lump|Metal - Zinc Lump|lib_materials_metal_zinc_lump.png|coal 1,flammable 1
+metal_zinc2_ingot|Metal - zinc2 Ingot|lib_materials_metal_zinc2_ingot.png|ingot 1
+#Mineral Lumps, Powders, Crystals, Gems|||
+mineral_anthracite_lump|Mineral - anthracite Lump|lib_materials_mineral_anthracite_lump.png|
+mineral_bauxite_lump|Mineral - bauxite Lump|lib_materials_mineral_bauxite_lump.png|
+mineral_bismuthinite_lump|Mineral - bismuthinite Lump|lib_materials_mineral_bismuthinite_lump.png|
+mineral_bituminous_coal_lump|Mineral - bituminous_coal Lump|lib_materials_mineral_bituminous_coal_lump.png|
+mineral_borax_lump|Mineral - borax Lump|lib_materials_mineral_borax_lump.png|
+mineral_brass_dust|Brass Dust|lib_materials_mineral_brass_dust.png|
+mineral_cassiterite_lump|Mineral - cassiterite Lump|lib_materials_mineral_cassiterite_lump.png|
+mineral_chalk_powder|Chalk Powder|lib_materials_mineral_chalk_powder.png|
+mineral_charcoal_lump|Charcoal|lib_materials_mineral_charcoal_lump.png|
+mineral_charcoal2_lump|Charcoal 2|lib_materials_mineral_charcoal2_lump.png|
+mineral_cinnabar_lump|Mineral - Cinnabar Lump|lib_materials_mineral_cinnabar_lump.png|
+mineral_coal_lump|Mineral - Coal Lump|lib_materials_mineral_coal_lump.png|coal 1,flammable 1
+mineral_cryolite_lump|Mineral - cryolite Lump|lib_materials_mineral_cryolite_lump.png|
+mineral_diamond|Mineral - Diamond|lib_materials_mineral_diamond.png|
+mineral_diamond_2|Mineral - Diamond 2|lib_materials_mineral_diamond_2.png|
+mineral_flint|Mineral - Flint|lib_materials_mineral_flint.png|
+mineral_flux|Mineral - Flux|lib_materials_mineral_flux.png|
+mineral_galena_lump|Mineral - Galena Lump|lib_materials_mineral_galena_lump.png|
+mineral_garnierite_lump|Mineral - garnierite Lump|lib_materials_mineral_garnierite_lump.png|
+mineral_graphite_lump|Mineral - graphite Lump|lib_materials_mineral_graphite_lump.png|
+mineral_gypsum_lump|Mineral - Gypsum Lump|lib_materials_mineral_gypsum_lump.png|
+mineral_hematite_lump|Mineral - hematite Lump|lib_materials_mineral_hematite_lump.png|
+mineral_jet_lump|Mineral - jet Lump|lib_materials_mineral_jet_lump.png|
+mineral_kaolinite_lump|Mineral - kaolinite Lump|lib_materials_mineral_kaolinite_lump.png|
+mineral_kimberlite_lump|Mineral - kimberlite Lump|lib_materials_mineral_kimberlite_lump.png|
+mineral_lapis_stone|Mineral - Lapis Stone|lib_materials_mineral_lapis_stone.png|
+mineral_lazurite_lump|Mineral - lazurite Lump|lib_materials_mineral_lazurite_lump.png|
+mineral_lead_dust|Lead Dust|lib_materials_mineral_lead_dust.png|
+mineral_lignite_lump|Mineral - Lignite Lump|lib_materials_mineral_lignite_lump.png|
+mineral_limonite_lump|Mineral - limonite Lump|lib_materials_mineral_limonite_lump.png|
+mineral_magnetite_lump|Mineral - magnetite Lump|lib_materials_mineral_magnetite_lump.png|
+mineral_malachite_lump|Mineral - malachite Lump|lib_materials_mineral_malachite_lump.png|
+mineral_mese_crystal|Mineral - Mese Crystal|lib_materials_mineral_mese_crystal.png|
+mineral_mese_crystal_fragment|Mineral - Mese Crystal Fragment|lib_materials_mineral_mese_crystal_fragment.png|
+mineral_mese_crystal_2|Mineral - Mese Crystal 2|lib_materials_mineral_mese_crystal_2.png|
+mineral_mese_crystal_fragment_2|Mineral - Mese Crystal Fragment 2|lib_materials_mineral_mese_crystal_fragment_2.png|
+mineral_obsidian_shard|Mineral - Obsidian Shard|lib_materials_mineral_obsidian_shard.png|
+mineral_olivine_lump|Mineral - olivine Lump|lib_materials_mineral_olivine_lump.png|
+mineral_quartz_crystal|Mineral - Quartz Crystal|lib_materials_mineral_quartz_crystal_full.png|
+mineral_petrified_wood|Mineral - petrified_wood|lib_materials_mineral_petrified_wood.png|
+mineral_pitchblende_lump|Mineral - pitchblende Lump|lib_materials_mineral_pitchblende_lump.png|
+mineral_pyrite_dust|Pyrite Dust|lib_materials_mineral_pyrite_dust.png|
+mineral_saltpeter_lump|Mineral - Saltpeter|lib_materials_mineral_saltpeter_lump.png|
+mineral_satin_spar_lump|Mineral - satin_spar Lump|lib_materials_mineral_satin_spar_lump.png|
+mineral_selenite_lump|Mineral - selenite Lump|lib_materials_mineral_selenite_lump.png|
+mineral_serpentine_lump|Mineral - serpentine Lump|lib_materials_mineral_serpentine_lump.png|
+mineral_sphalerite_lump|Mineral - sphalerite Lump|lib_materials_mineral_sphalerite_lump.png|
+mineral_sulfur_lump|Mineral - Sulfur Lump|lib_materials_metal_sulfur_lump.png|coal 1,flammable 1
+mineral_sulfur2_lump|Mineral - Sulfur2 Lump|lib_materials_mineral_sulfur2_lump.png|
+mineral_sulfur_dust|Sulfur Dust|lib_materials_mineral_sulfur_dust.png|
+mineral_sylvite_lump|Mineral - sylvite Lump|lib_materials_mineral_sylvite_lump.png|
+mineral_tenorite_lump|Mineral - tenorite Lump|lib_materials_mineral_tenorite_lump.png|
+mineral_tetrahedrite_lump|Mineral - tetrahedrite Lump|lib_materials_mineral_tetrahedrite_lump.png|
