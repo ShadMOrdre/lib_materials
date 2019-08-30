@@ -89,96 +89,97 @@ end
 minetest.log(S("[MOD] lib_materials:  Loading..."))
 
 
-lib_materials.read_csv = dofile(lib_materials.path .. "/csv.lua")
+	lib_materials.read_csv = dofile(lib_materials.path .. "/csv.lua")
 
-dofile(lib_materials.path.."/lib_materials_sound_defaults.lua")
+	dofile(lib_materials.path.."/lib_materials_sound_defaults.lua")
 
-	--dofile(lib_materials.path.."/type_fluids.lua")
-	--dofile(lib_materials.path.."/type_stone.lua")
+	dofile(lib_materials.path.."/lib_materials_nodeio.lua")
+	dofile(lib_materials.path.."/lib_materials_fluid_lib.lua")
 
 	--dofile(lib_materials.path.."/lib_materials_toolcap_modifier.lua")
 	--dofile(lib_materials.path.."/lib_materials_tool_ranks.lua")
 
-dofile(lib_materials.path.."/lib_materials_node_registration.lua")
+	dofile(lib_materials.path.."/lib_materials_node_registration.lua")
 
-	--game.lib.node.register_csv("|", lib_materials.path.."/nodes.csv")
+		--game.lib.node.register_csv("|", lib_materials.path.."/nodes.csv")
 	
-	--dofile(lib_materials.path.."/type_stone_deco.lua")
-	--dofile(lib_materials.path.."/type_dirt.lua")
-	--dofile(lib_materials.path.."/type_sand.lua")
-	--dofile(lib_materials.path.."/type_ice_snow.lua")
-	--dofile(lib_materials.path.."/type_ore.lua")
-	--dofile(lib_materials.path.."/type_glass.lua")
+		--dofile(lib_materials.path.."/type_stone_deco.lua")
+		--dofile(lib_materials.path.."/type_dirt.lua")
+		--dofile(lib_materials.path.."/type_sand.lua")
+		--dofile(lib_materials.path.."/type_ice_snow.lua")
+		--dofile(lib_materials.path.."/type_ore.lua")
+		--dofile(lib_materials.path.."/type_glass.lua")
 
-dofile(lib_materials.path.."/lib_materials_liquid_containers.lua")
+	dofile(lib_materials.path.."/lib_materials_liquid_containers.lua")
 
-dofile(lib_materials.path.."/lib_materials_vessels.lua")
+	dofile(lib_materials.path.."/lib_materials_vessels.lua")
 
-dofile(lib_materials.path.."/lib_materials_water_dynamics.lua")
-dofile(lib_materials.path.."/lib_materials_fire.lua")
+	dofile(lib_materials.path.."/lib_materials_water_dynamics.lua")
 
-dofile(lib_materials.path.."/lib_materials_craftitems.lua")
---dofile(lib_materials.path.."/lib_materials_tools.lua")
+	dofile(lib_materials.path.."/lib_materials_fire.lua")
 
---dofile(lib_materials.path.."/lib_materials_craftfire.lua")
+	dofile(lib_materials.path.."/lib_materials_craftitems.lua")
 
-dofile(lib_materials.path.."/lib_materials_craftrecipes.lua")
+		--dofile(lib_materials.path.."/lib_materials_tools.lua")
 
-dofile(lib_materials.path.."/lib_materials_schematics.lua")
+		--dofile(lib_materials.path.."/lib_materials_craftfire.lua")
 
+	dofile(lib_materials.path.."/lib_materials_craftrecipes.lua")
 
-dofile(lib_materials.path.."/lib_materials_biomes.lua")
+	dofile(lib_materials.path.."/lib_materials_schematics.lua")
 
-	--game.lib.biomes.register_csv("|", lib_materials.path.."/biomes.csv")
-	--dofile(lib_materials.path.."/lib_materials_ore_defs_ORIG.lua")
+	dofile(lib_materials.path.."/lib_materials_biomes.lua")
 
-dofile(lib_materials.path.."/lib_materials_ore_defs.lua")
+		--game.lib.biomes.register_csv("|", lib_materials.path.."/biomes.csv")
+		--dofile(lib_materials.path.."/lib_materials_ore_defs_ORIG.lua")
 
-dofile(lib_materials.path.."/lib_materials_ecosystems.lua")
+	dofile(lib_materials.path.."/lib_materials_ore_defs.lua")
 
-dofile(lib_materials.path.."/lib_materials_lakes.lua")
+	dofile(lib_materials.path.."/lib_materials_ecosystems.lua")
 
-	----dofile(lib_materials.path.."/lib_materials_ore_defs_ORIG.lua")
-	----dofile(lib_materials.path.."/lib_materials_ecosystems.lua")
-	--dofile(lib_materials.path.."/lvm_voxel.lua")
-	--dofile(lib_materials.path.."/burli_voxel.lua")
-	--dofile(lib_materials.path.."/lib_materials_lakes.lua")
+	dofile(lib_materials.path.."/lib_materials_lakes.lua")
 
-dofile(lib_materials.path.."/lib_materials_utils.lua")
+		----dofile(lib_materials.path.."/lib_materials_ore_defs_ORIG.lua")
+		----dofile(lib_materials.path.."/lib_materials_ecosystems.lua")
+		--dofile(lib_materials.path.."/lvm_voxel.lua")
+		--dofile(lib_materials.path.."/burli_voxel.lua")
+		--dofile(lib_materials.path.."/lib_materials_lakes.lua")
 
-dofile(lib_materials.path.."/lib_materials_rivers.lua")
+	dofile(lib_materials.path.."/lib_materials_utils.lua")
 
-dofile(lib_materials.path.."/lib_materials_abms.lua")
+	dofile(lib_materials.path.."/lib_materials_rivers.lua")
 
-dofile(lib_materials.path.."/lib_materials_chatcommands.lua")
+	dofile(lib_materials.path.."/lib_materials_abms.lua")
 
-
-
+	dofile(lib_materials.path.."/lib_materials_chatcommands.lua")
 
 
 
 
 
-minetest.register_alias("mapgen_stone", "lib_materials:stone")
-minetest.register_alias("mapgen_water_source", "lib_materials:liquid_water_source")
-minetest.register_alias("mapgen_river_water_source", "lib_materials:liquid_water_river_source")
-minetest.register_alias("mapgen_lava_source", "lib_materials:liquid_lava_source")
 
 
 
-default.node_sound_stone_defaults = lib_materials.node_sound_stone_defaults
-default.node_sound_dirt_defaults = lib_materials.node_sound_dirt_defaults
-default.node_sound_gravel_defaults = lib_materials.node_sound_gravel_defaults
-default.node_sound_sand_defaults = lib_materials.node_sound_sand_defaults
+	minetest.register_alias("mapgen_stone", "lib_materials:stone")
+	minetest.register_alias("mapgen_water_source", "lib_materials:liquid_water_source")
+	minetest.register_alias("mapgen_river_water_source", "lib_materials:liquid_water_river_source")
+	minetest.register_alias("mapgen_lava_source", "lib_materials:liquid_lava_source")
 
-default.node_sound_snow_defaults = lib_materials.node_sound_snow_defaults
 
-default.node_sound_leaves_defaults = lib_materials.node_sound_leaves_defaults
-default.node_sound_wood_defaults = lib_materials.node_sound_wood_defaults
 
-default.node_sound_metal_defaults = lib_materials.node_sound_metal_defaults
-default.node_sound_glass_defaults = lib_materials.node_sound_glass_defaults
-default.node_sound_water_defaults = lib_materials.node_sound_water_defaults
+	default.node_sound_stone_defaults = lib_materials.node_sound_stone_defaults
+	default.node_sound_dirt_defaults = lib_materials.node_sound_dirt_defaults
+	default.node_sound_gravel_defaults = lib_materials.node_sound_gravel_defaults
+	default.node_sound_sand_defaults = lib_materials.node_sound_sand_defaults
+
+	default.node_sound_snow_defaults = lib_materials.node_sound_snow_defaults
+
+	default.node_sound_leaves_defaults = lib_materials.node_sound_leaves_defaults
+	default.node_sound_wood_defaults = lib_materials.node_sound_wood_defaults
+
+	default.node_sound_metal_defaults = lib_materials.node_sound_metal_defaults
+	default.node_sound_glass_defaults = lib_materials.node_sound_glass_defaults
+	default.node_sound_water_defaults = lib_materials.node_sound_water_defaults
 
 
 
