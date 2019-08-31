@@ -145,6 +145,8 @@ minetest.log(S("[MOD] lib_materials:  Loading..."))
 		--dofile(lib_materials.path.."/burli_voxel.lua")
 		--dofile(lib_materials.path.."/lib_materials_lakes.lua")
 
+	dofile(lib_materials.path.."/lib_materials_caves.lua")
+
 	dofile(lib_materials.path.."/lib_materials_utils.lua")
 
 		--dofile(lib_materials.path.."/lib_materials_rivers.lua")
