@@ -136,6 +136,10 @@ local S = lib_materials.intllib
 
 
 
+-- Push an element onto a stack (table).
+function push(t, x)
+	t[#t+1] = x
+end
 
 
 ----------------------
