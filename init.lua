@@ -167,6 +167,10 @@ minetest.log(S("[MOD] lib_materials:  Loading..."))
 
 
 
+	if not minetest.global_exists("default") then
+		default = {}
+	end
+
 	default.node_sound_stone_defaults = lib_materials.node_sound_stone_defaults
 	default.node_sound_dirt_defaults = lib_materials.node_sound_dirt_defaults
 	default.node_sound_gravel_defaults = lib_materials.node_sound_gravel_defaults
