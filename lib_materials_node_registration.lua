@@ -748,6 +748,15 @@ for i, stone in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/nodes
 
 	end
 
+	if string.find(node_name, "block") or string.find(node_name, "brick") then
+		if minetest.global_exists("lib_shapes") then
+			lib_shapes.register_basic_set("lib_materials:"..node_name.."")
+			--lib_shapes.register_fancy_set("lib_materials:"..node_name.."")
+			--lib_shapes.register_doors_set("lib_materials:"..node_name.."")
+			--lib_shapes.register_furniture_set("lib_materials:"..node_name.."")
+		end
+	end
+
 
 	if alias_mod and alias_node then
 		minetest.register_alias(""..alias_mod..":"..alias_node.."", "lib_materials:"..node_name.."")

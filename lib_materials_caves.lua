@@ -67,7 +67,7 @@ minetest.register_craft({
 	},
 })
 
-
+--[[
 minetest.register_node("lib_materials:stone_with_moss", {
 	description = "Cave Stone with Moss",
 	tiles = {"lib_materials_stone_default.png^valc_moss.png"},
@@ -142,4 +142,4 @@ minetest.register_node("lib_materials:stone_with_salt", {
 		 footstep = {name="default_stone_footstep", gain=0.25},
 	 }),
  })
-
+--]]

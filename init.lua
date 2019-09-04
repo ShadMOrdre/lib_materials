@@ -15,15 +15,15 @@ lib_materials.path = lib_materials.path_mod
 --local S = minetest.get_translator(lib_materials.name)
 local S
 local NS
-if minetest.get_modpath("game") then
-	S = game.intllib
-else
-	if minetest.get_modpath("intllib") then
-		S = intllib.Getter()
-	else
+--if minetest.get_modpath("game") then
+--	S = game.intllib
+--else
+--	if minetest.get_modpath("intllib") then
+--		S = intllib.Getter()
+--	else
 		S, NS = dofile(lib_materials.path.."/intllib.lua")
-	end
-end
+--	end
+--end
 lib_materials.intllib = S or minetest.get_translator(lib_materials.name)
 
 lib_materials.mgv7_mapgen_scale_factor = minetest.setting_get("lib_materials_mgv7_mapgen_scale_factor") or 8
@@ -114,7 +114,7 @@ minetest.log(S("[MOD] lib_materials:  Loading..."))
 
 	dofile(lib_materials.path.."/lib_materials_vessels.lua")
 
-	dofile(lib_materials.path.."/lib_materials_water_dynamics.lua")
+	--dofile(lib_materials.path.."/lib_materials_water_dynamics.lua")
 
 	dofile(lib_materials.path.."/lib_materials_fire.lua")
 
@@ -137,6 +137,8 @@ minetest.log(S("[MOD] lib_materials:  Loading..."))
 
 	dofile(lib_materials.path.."/lib_materials_ecosystems.lua")
 
+	--dofile(lib_materials.path.."/voxel_BAK.lua")
+
 	dofile(lib_materials.path.."/lib_materials_lakes.lua")
 
 		----dofile(lib_materials.path.."/lib_materials_ore_defs_ORIG.lua")
@@ -149,7 +151,7 @@ minetest.log(S("[MOD] lib_materials:  Loading..."))
 
 	dofile(lib_materials.path.."/lib_materials_utils.lua")
 
-		--dofile(lib_materials.path.."/lib_materials_rivers.lua")
+	--dofile(lib_materials.path.."/lib_materials_rivers.lua")
 
 	dofile(lib_materials.path.."/lib_materials_abms.lua")
 
@@ -161,11 +163,33 @@ minetest.log(S("[MOD] lib_materials:  Loading..."))
 
 
 
-
+--Base Mapgen Nodes
 	minetest.register_alias("mapgen_stone", "lib_materials:stone")
 	minetest.register_alias("mapgen_water_source", "lib_materials:liquid_water_source")
 	minetest.register_alias("mapgen_river_water_source", "lib_materials:liquid_water_river_source")
+--Cave Mapgen Nodes
 	minetest.register_alias("mapgen_lava_source", "lib_materials:liquid_lava_source")
+--Dungeon Mapgen Nodes
+	minetest.register_alias("mapgen_cobble", "lib_materials:stone_cobble")
+	minetest.register_alias("mapgen_stair_cobble", "lib_materials:stone_cobble_stair")
+	minetest.register_alias("mapgen_mossycobble", "lib_materials:stone_cobble_mossy")
+	minetest.register_alias("mapgen_desert_stone", "lib_materials:stone_desert")
+	minetest.register_alias("mapgen_stair_desert_stone", "lib_materials:stone_desert_stair")
+	minetest.register_alias("mapgen_sandstone", "lib_materials:stone_sandstone")
+	minetest.register_alias("mapgen_sandstonebrick", "lib_materials:stone_sandstone_brick")
+	minetest.register_alias("mapgen_stair_sandstone_block", "lib_materials:stone_sandstone_block")
+
+--v6 Mapgen Nodes
+	minetest.register_alias("mapgen_dirt", "lib_materials:dirt")
+	minetest.register_alias("mapgen_dirt_with_grass", "lib_materials:dirt_with_grass")
+	minetest.register_alias("mapgen_sand", "lib_materials:sand")
+	minetest.register_alias("mapgen_gravel", "lib_materials:stone_gravel")
+	minetest.register_alias("mapgen_desert_sand", "lib_materials:sand_desert")
+	minetest.register_alias("mapgen_dirt_with_snow", "lib_materials:dirt_with_snow")
+	minetest.register_alias("mapgen_snowblock", "lib_materials:snow_brick")
+	minetest.register_alias("mapgen_snow", "lib_materials:snow")
+	minetest.register_alias("mapgen_ice", "lib_materials:ice")
+
 
 
 
