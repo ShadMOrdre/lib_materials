@@ -139,7 +139,7 @@ minetest.log(S("[MOD] lib_materials:  Loading..."))
 
 	--dofile(lib_materials.path.."/voxel_BAK.lua")
 
-	dofile(lib_materials.path.."/lib_materials_lakes.lua")
+	--dofile(lib_materials.path.."/lib_materials_lakes.lua")
 
 		----dofile(lib_materials.path.."/lib_materials_ore_defs_ORIG.lua")
 		----dofile(lib_materials.path.."/lib_materials_ecosystems.lua")
