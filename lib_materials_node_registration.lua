@@ -585,13 +585,12 @@ for i, stone in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/nodes
 			local full =  node_name .. "_with_" .. id
 			local new_cloned_node = table.copy(minetest.registered_nodes["lib_materials:"..node_name..""])
 	
-			new_cloned_node.description = descript .. " with " .. sl[1]
+			new_cloned_node.description = descript .. " with " .. sl[2]
 
 			if sl[4] then
 				new_cloned_node.tiles = {
 						new_tile1 .. "^" .. sl[3],
-						new_tile1,
-						new_tile1 .. "^" .. sl[4]
+						new_tile1 .. "^" .. sl[4],
 					}
 			else
 				new_cloned_node.tiles = {
@@ -637,6 +636,12 @@ for i, stone in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/nodes
 				}
 	
 			minetest.register_node("lib_materials:" .. full .. "", new_cloned_node)
+			if full == "dirt_with_grass" then
+				minetest.register_alias("default:dirt_with_grass", "lib_materials:"..full.."")
+			end
+			if full == "dirt_with_grass_dry" then
+				minetest.register_alias("default:dirt_with_dry_grass", "lib_materials:"..full.."")
+			end
 		end
 
 		for _, sd in pairs(stone_dirts) do
@@ -760,7 +765,7 @@ for i, stone in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/nodes
 
 	if alias_mod and alias_node then
 		minetest.register_alias(""..alias_mod..":"..alias_node.."", "lib_materials:"..node_name.."")
-		minetest.register_alias(""..alias_node.."", "lib_materials:"..node_name.."")
+		--minetest.register_alias(""..alias_node.."", "lib_materials:"..node_name.."")
 	end
 
 
