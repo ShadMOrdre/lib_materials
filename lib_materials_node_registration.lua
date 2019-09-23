@@ -418,6 +418,8 @@ for i, stone in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/nodes
 			new_node_def.sounds = lib_materials.node_sound_gravel_defaults()
 		elseif sounds == "glass" then
 			new_node_def.sounds = lib_materials.node_sound_glass_defaults()
+		elseif sounds == "grass" then
+			new_node_def.sounds = lib_materials.node_sound_leaves_defaults()
 		elseif sounds == "metal" then
 			new_node_def.sounds = lib_materials.node_sound_metal_defaults()
 		elseif sounds == "water" then
@@ -546,9 +548,10 @@ for i, stone in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/nodes
 		{"snow", "Snow", "lib_materials_snow.png", "lib_materials_snow_side.png"},
 	}
 	--Soil Top with Soil Sides masked over Dirt
+		--lib_materials_ground_soil_wet.png	lib_materials_ground_soil_wet_side.png
 	local soils = {
-		{"soil", "Soil", "lib_materials_ground_soil.png"},
-		{"soil_wet", "Wet Soil", "lib_materials_ground_soil_wet.png", "lib_materials_ground_soil_wet_side.png"},
+		{"soil", "Soil", "lib_materials_dirt_soil_mask.png"},
+		{"soil_wet", "Wet Soil", "lib_materials_dirt_soil_wet_mask.png", "lib_materials_dirt_with_soil_wet_side.png"},
 	}
 
 
@@ -753,12 +756,46 @@ for i, stone in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/nodes
 
 	end
 
-	if string.find(node_name, "block") or string.find(node_name, "brick") then
-		if minetest.global_exists("lib_shapes") then
-			lib_shapes.register_basic_set("lib_materials:"..node_name.."")
-			--lib_shapes.register_fancy_set("lib_materials:"..node_name.."")
-			--lib_shapes.register_doors_set("lib_materials:"..node_name.."")
-			--lib_shapes.register_furniture_set("lib_materials:"..node_name.."")
+	if minetest.global_exists("lib_shapes") then
+		if string.find(node_name, "stone") then
+			if (string.find(node_name, "block") or string.find(node_name, "brick") or string.find(node_name, "cobble")) then
+
+				--lib_shapes.register_node("lib_materials:"..node_name.."", "stairs")
+				--lib_shapes.register_node("lib_materials:"..node_name.."", "slab")
+				--lib_shapes.register_node("lib_materials:"..node_name.."", "pillar_with_wall")
+				--lib_shapes.register_node("lib_materials:"..node_name.."", "pillar_with_wall_thick")
+				--lib_shapes.register_node("lib_materials:"..node_name.."", "wall")
+				--lib_shapes.register_node("lib_materials:"..node_name.."", "wall_thick")
+	
+				lib_shapes.register_basic_set("lib_materials:"..node_name.."")
+				--lib_shapes.register_fancy_set("lib_materials:"..node_name.."")
+				--lib_shapes.register_doors_set("lib_materials:"..node_name.."")
+				--lib_shapes.register_furniture_set("lib_materials:"..node_name.."")
+
+			end
+		end
+		if node_name == "lib_materials:stone" then
+			lib_shapes.register_node("lib_materials:"..node_name.."", "stairs")
+			lib_shapes.register_node("lib_materials:"..node_name.."", "stairs_inner")
+			lib_shapes.register_node("lib_materials:"..node_name.."", "stairs_outer")
+			lib_shapes.register_node("lib_materials:"..node_name.."", "slab")
+		end
+		if string.find(node_name, "roof") then
+			lib_shapes.register_node("lib_materials:"..node_name.."", "stairs")
+			lib_shapes.register_node("lib_materials:"..node_name.."", "stairs_inner")
+			lib_shapes.register_node("lib_materials:"..node_name.."", "stairs_outer")
+			lib_shapes.register_node("lib_materials:"..node_name.."", "slab")
+		end
+		if string.find(node_name, "glass") then
+			lib_shapes.register_node("lib_materials:"..node_name.."", "pane")
+			lib_shapes.register_node("lib_materials:"..node_name.."", "pane_centered")
+			lib_shapes.register_door_node("lib_materials:"..node_name.."", "door_centered")
+			lib_shapes.register_door_node("lib_materials:"..node_name.."", "door_centered_right")
+			lib_shapes.register_door_node("lib_materials:"..node_name.."", "door_centered_with_window")
+			lib_shapes.register_door_node("lib_materials:"..node_name.."", "door_centered_with_window_right")
+			lib_shapes.register_door_node("lib_materials:"..node_name.."", "door_centered_sliding")
+			lib_shapes.register_door_node("lib_materials:"..node_name.."", "door_centered_sliding_right")
+			lib_shapes.register_door_node("lib_materials:"..node_name.."", "trapdoor_solid")
 		end
 	end
 

@@ -20,7 +20,7 @@ local c_river = minetest.get_content_id("lib_materials:liquid_water_river_source
 local c_muddy = minetest.get_content_id("lib_materials:liquid_water_river_muddy_source")
 local c_quick_source = minetest.get_content_id("lib_materials:liquid_quicksand_source")
 local c_quick = minetest.get_content_id("lib_materials:quicksand")
-local c_mud_boil = minetest.get_content_id("lib_materials:liquid_mud_boiling_flowing") 
+local c_mud_boil = minetest.get_content_id("lib_materials:liquid_mud_boiling_source") 
 local c_mud_wet = minetest.get_content_id("lib_materials:mud_wet")
 local c_mud_dried = minetest.get_content_id("lib_materials:dirt_mud_dried")
 local c_fluid_id
@@ -87,7 +87,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 					local ground_name = minetest.get_node(p)
 					local node_name = minetest.get_node(p).name
 
-					if ground_name == "default:water_source" or ground_name == "lib_materials:liquid_water_source" then
+					if ground_name == "lib_materials:liquid_water_source" then
 						return
 					end
 

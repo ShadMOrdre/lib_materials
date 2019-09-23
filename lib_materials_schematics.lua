@@ -2,7 +2,7 @@
 
 local S = lib_materials.intllib
 
-local __ = {name = "air",param2 = 0,prob = 0}
+local __ = {name = "air",param2 = 0,prob = 254}
 local S0 = {name = "lib_materials:stone_desert", param2 = 0, prob = 254}
 local S1 = {name = "lib_materials:stone_desert", param2 = 0, prob = 192}
 local S2 = {name = "lib_materials:stone_desert", param2 = 0, prob = 128}

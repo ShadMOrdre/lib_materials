@@ -3,10 +3,577 @@
 local S = lib_materials.intllib
 
 
+
+local __ = {name = "air",param2 = 0,prob = 254}
+local D0 = {name = "lib_materials:dirt", param2 = 0, prob = 254}
+local S0 = {name = "lib_materials:stone", param2 = 0, prob = 254}
+local C0 = {name = "lib_materials:stone_brick", param2 = 0, prob = 254}
+local T0 = {name = "lib_materials:dirt_compacted", param2 = 0, prob = 254}
+local W0 = {name = "lib_materials:liquid_water_river_source", param2 = 0, prob = 254, force_place = true}
+local M0 = {name = "lib_materials:dirt_mud_01", param2 = 0, prob = 254}
+le_temp_schem = {
+	size = {x = 3, y = 2, z = 3},
+	data = {
+		C0, C0, C0,
+		C0, C0, C0,
+
+		C0, C0, C0,
+		C0, C0, C0,
+
+		C0, C0, C0,
+		C0, C0, C0
+	},
+	yslice_prob = {
+		{ypos = 0,prob = 254},
+		{ypos = 1,prob = 254}
+	}
+}
+
+minetest.register_decoration({
+   deco_type = "schematic",
+   place_on = {"group:soil"},
+   sidelen = 1,
+   noise_params = {
+      offset = 100.0,
+      scale = -24000.0,
+      spread = {x = 256, y = 256, z = 256},
+      seed = 5349,
+      octaves = 1,
+      persist = 0.5,
+      lacunarity = 2.11,
+      flags = "defaults, absvalue"
+   },
+   y_max = 140,
+   y_min = 5,
+   place_offset_y = -1,
+   flags = "force_placement, place_center_x, place_center_z",
+   schematic = le_temp_schem,
+})
+minetest.register_decoration({
+   deco_type = "simple",
+   place_on = {"group:soil"},
+   sidelen = 1,
+   noise_params = {
+      offset = 100.0,
+      scale = -22000.0,
+      spread = {x = 256, y = 256, z = 256},
+      seed = 513337,
+      octaves = 1,
+      persist = 0.5,
+      lacunarity = 2.22,
+      flags = "defaults, absvalue"
+   },
+   y_max = 140,
+   y_min = 5,
+   place_offset_y = -1,
+   flags = "force_placement",
+   decoration = "lib_materials:stone_cobble",
+})
+minetest.register_decoration({
+   deco_type = "simple",
+   place_on = {"group:soil"},
+   sidelen = 1,
+   noise_params = {
+      offset = 100.0,
+      scale = -24000.0,
+      spread = {x = 256, y = 256, z = 256},
+      seed = 733315,
+      octaves = 1,
+      persist = 0.5,
+      lacunarity = 2.48,
+      flags = "defaults, absvalue"
+   },
+   y_max = 140,
+   y_min = 5,
+   place_offset_y = -1,
+   flags = "force_placement",
+   decoration = "lib_materials:dirt_with_stone_cobble",
+})
+minetest.register_decoration({
+   deco_type = "simple",
+   place_on = {"group:soil"},
+   sidelen = 1,
+   noise_params = {
+      offset = 100.0,
+      scale = -26000.0,
+      spread = {x = 256, y = 256, z = 256},
+      seed = -513337,
+      octaves = 1,
+      persist = 0.5,
+      lacunarity = 2.15,
+      flags = "defaults, absvalue"
+   },
+   y_max = 140,
+   y_min = 5,
+   place_offset_y = -1,
+   flags = "force_placement",
+   decoration = "lib_materials:dirt_compacted",
+})
+
+
+le_temp_schem = {
+	size = {x = 9, y = 12, z = 9},
+	data = {
+		M0, M0, M0, M0, M0, M0, M0, M0, M0,
+		M0, M0, M0, W0, W0, W0, M0, M0, M0,
+		M0, M0, W0, W0, W0, W0, W0, M0, M0,
+		M0, W0, W0, W0, W0, W0, W0, W0, M0,
+		W0, W0, W0, W0, W0, W0, W0, W0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, W0, W0, W0, W0, W0, W0, W0, W0,
+		__, __, __, __, __, __, __, __, __,
+		__, __, __, __, __, __, __, __, __,
+		__, __, __, __, __, __, __, __, __,
+
+		M0, M0, M0, M0, M0, M0, M0, M0, M0,
+		M0, M0, M0, W0, W0, W0, M0, M0, M0,
+		M0, M0, W0, W0, W0, W0, W0, M0, M0,
+		M0, W0, W0, W0, W0, W0, W0, W0, M0,
+		W0, W0, W0, W0, W0, W0, W0, W0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, W0, W0, W0, W0, W0, W0, W0, W0,
+		__, __, __, __, __, __, __, __, __,
+		__, __, __, __, __, __, __, __, __,
+		__, __, __, __, __, __, __, __, __,
+
+		M0, M0, M0, M0, M0, M0, M0, M0, M0,
+		M0, M0, M0, W0, W0, W0, M0, M0, M0,
+		M0, M0, W0, W0, W0, W0, W0, M0, M0,
+		M0, W0, W0, W0, W0, W0, W0, W0, M0,
+		W0, W0, W0, W0, W0, W0, W0, W0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, W0, W0, W0, W0, W0, W0, W0, W0,
+		__, __, __, __, __, __, __, __, __,
+		__, __, __, __, __, __, __, __, __,
+		__, __, __, __, __, __, __, __, __,
+
+		M0, M0, M0, M0, M0, M0, M0, M0, M0,
+		M0, M0, M0, W0, W0, W0, M0, M0, M0,
+		M0, M0, W0, W0, W0, W0, W0, M0, M0,
+		M0, W0, W0, W0, W0, W0, W0, W0, M0,
+		W0, W0, W0, W0, W0, W0, W0, W0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, W0, W0, W0, W0, W0, W0, W0, W0,
+		__, __, __, __, __, __, __, __, __,
+		__, __, __, __, __, __, __, __, __,
+		__, __, __, __, __, __, __, __, __,
+
+		M0, M0, M0, M0, M0, M0, M0, M0, M0,
+		M0, M0, M0, W0, W0, W0, M0, M0, M0,
+		M0, M0, W0, W0, W0, W0, W0, M0, M0,
+		M0, W0, W0, W0, W0, W0, W0, W0, M0,
+		W0, W0, W0, W0, W0, W0, W0, W0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, W0, W0, W0, W0, W0, W0, W0, W0,
+		__, __, __, __, __, __, __, __, __,
+		__, __, __, __, __, __, __, __, __,
+		__, __, __, __, __, __, __, __, __,
+
+		M0, M0, M0, M0, M0, M0, M0, M0, M0,
+		M0, M0, M0, W0, W0, W0, M0, M0, M0,
+		M0, M0, W0, W0, W0, W0, W0, M0, M0,
+		M0, W0, W0, W0, W0, W0, W0, W0, M0,
+		W0, W0, W0, W0, W0, W0, W0, W0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, W0, W0, W0, W0, W0, W0, W0, W0,
+		__, __, __, __, __, __, __, __, __,
+		__, __, __, __, __, __, __, __, __,
+		__, __, __, __, __, __, __, __, __,
+
+		M0, M0, M0, M0, M0, M0, M0, M0, M0,
+		M0, M0, M0, W0, W0, W0, M0, M0, M0,
+		M0, M0, W0, W0, W0, W0, W0, M0, M0,
+		M0, W0, W0, W0, W0, W0, W0, W0, M0,
+		W0, W0, W0, W0, W0, W0, W0, W0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, W0, W0, W0, W0, W0, W0, W0, W0,
+		__, __, __, __, __, __, __, __, __,
+		__, __, __, __, __, __, __, __, __,
+		__, __, __, __, __, __, __, __, __,
+
+		M0, M0, M0, M0, M0, M0, M0, M0, M0,
+		M0, M0, M0, W0, W0, W0, M0, M0, M0,
+		M0, M0, W0, W0, W0, W0, W0, M0, M0,
+		M0, W0, W0, W0, W0, W0, W0, W0, M0,
+		W0, W0, W0, W0, W0, W0, W0, W0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, W0, W0, W0, W0, W0, W0, W0, W0,
+		__, __, __, __, __, __, __, __, __,
+		__, __, __, __, __, __, __, __, __,
+		__, __, __, __, __, __, __, __, __,
+
+		M0, M0, M0, M0, M0, M0, M0, M0, M0,
+		M0, M0, M0, W0, W0, W0, M0, M0, M0,
+		M0, M0, W0, W0, W0, W0, W0, M0, M0,
+		M0, W0, W0, W0, W0, W0, W0, W0, M0,
+		W0, W0, W0, W0, W0, W0, W0, W0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, M0, M0, M0, M0, M0, M0, M0, W0,
+		W0, W0, W0, W0, W0, W0, W0, W0, W0,
+		__, __, __, __, __, __, __, __, __,
+		__, __, __, __, __, __, __, __, __,
+		__, __, __, __, __, __, __, __, __
+	},
+	yslice_prob = {
+		{ypos = 0,prob = 254},
+		{ypos = 1,prob = 254},
+		{ypos = 2,prob = 254},
+		{ypos = 3,prob = 254},
+		{ypos = 4,prob = 254},
+		{ypos = 5,prob = 254},
+		{ypos = 6,prob = 254},
+		{ypos = 7,prob = 254},
+		{ypos = 8,prob = 254},
+		{ypos = 9,prob = 254},
+		{ypos = 10,prob = 254},
+		{ypos = 11,prob = 254}
+	}
+}
+minetest.register_decoration({
+   deco_type = "schematic",
+   place_on = {"group:soil", "group:dirt", "group:stone", "group:sand"},
+   sidelen = 1,
+   noise_params = {
+      offset = 100.0,
+      scale = -20000.0,
+      spread = {x = 256, y = 256, z = 256},
+      seed = 5934,
+      octaves = 1,
+      persist = 0.5,
+      lacunarity = 2.22,
+      flags = "defaults, absvalue"
+   },
+   y_max = 30,
+   y_min = -9,
+   place_offset_y = -10,
+   flags = "force_placement, place_center_x, place_center_z",
+   schematic = le_temp_schem,
+})
+
+__ = {name = "air",param2 = 0,prob = 254, force_place = true}
+le_temp_schem = {
+	size = {x = 7, y = 9, z = 7},
+	data = {
+		M0, M0, M0, M0, M0, M0, M0,
+		M0, M0, W0, W0, W0, M0, M0,
+		M0, W0, W0, W0, W0, W0, M0,
+		W0, W0, W0, W0, W0, W0, M0,
+		W0, W0, W0, W0, W0, W0, W0,
+		W0, W0, W0, W0, W0, W0, W0,
+		__, __, __, __, __, __, __,
+		__, __, __, __, __, __, __,
+		__, __, __, __, __, __, __,
+
+		M0, M0, M0, M0, M0, M0, M0,
+		M0, M0, W0, W0, W0, M0, M0,
+		M0, W0, W0, W0, W0, W0, M0,
+		W0, W0, W0, W0, W0, W0, W0,
+		W0, W0, W0, W0, W0, W0, W0,
+		W0, W0, W0, W0, W0, W0, W0,
+		__, __, __, __, __, __, __,
+		__, __, __, __, __, __, __,
+		__, __, __, __, __, __, __,
+
+		M0, M0, M0, M0, M0, M0, M0,
+		M0, M0, W0, W0, W0, M0, M0,
+		M0, W0, W0, W0, W0, W0, M0,
+		M0, W0, W0, W0, W0, W0, W0,
+		W0, W0, W0, W0, W0, W0, W0,
+		W0, W0, W0, W0, W0, W0, W0,
+		__, __, __, __, __, __, __,
+		__, __, __, __, __, __, __,
+		__, __, __, __, __, __, __,
+
+		M0, M0, M0, M0, M0, M0, M0,
+		M0, M0, W0, W0, W0, M0, M0,
+		M0, W0, W0, W0, W0, W0, M0,
+		M0, W0, W0, W0, W0, W0, W0,
+		W0, W0, W0, W0, W0, W0, W0,
+		W0, W0, W0, W0, W0, W0, W0,
+		__, __, __, __, __, __, __,
+		__, __, __, __, __, __, __,
+		__, __, __, __, __, __, __,
+
+		M0, M0, M0, M0, M0, M0, M0,
+		M0, M0, W0, W0, W0, M0, M0,
+		M0, W0, W0, W0, W0, W0, M0,
+		W0, W0, W0, W0, W0, W0, W0,
+		W0, W0, W0, W0, W0, W0, W0,
+		W0, W0, W0, W0, W0, W0, W0,
+		__, __, __, __, __, __, __,
+		__, __, __, __, __, __, __,
+		__, __, __, __, __, __, __,
+
+		M0, M0, M0, M0, M0, M0, M0,
+		M0, M0, W0, W0, W0, M0, M0,
+		M0, W0, W0, W0, W0, W0, M0,
+		W0, W0, W0, W0, W0, W0, M0,
+		W0, W0, W0, W0, W0, W0, W0,
+		W0, W0, W0, W0, W0, W0, W0,
+		__, __, __, __, __, __, __,
+		__, __, __, __, __, __, __,
+		__, __, __, __, __, __, __,
+
+		M0, M0, M0, M0, M0, M0, M0,
+		M0, M0, W0, W0, W0, M0, M0,
+		M0, W0, W0, W0, W0, W0, M0,
+		W0, W0, W0, W0, W0, W0, M0,
+		W0, W0, W0, W0, W0, W0, W0,
+		W0, W0, W0, W0, W0, W0, W0,
+		__, __, __, __, __, __, __,
+		__, __, __, __, __, __, __,
+		__, __, __, __, __, __, __
+	},
+	yslice_prob = {
+		{ypos = 0,prob = 254},
+		{ypos = 1,prob = 254},
+		{ypos = 2,prob = 254},
+		{ypos = 3,prob = 254},
+		{ypos = 4,prob = 254},
+		{ypos = 5,prob = 254},
+		{ypos = 6,prob = 254},
+		{ypos = 7,prob = 254},
+		{ypos = 8,prob = 254}
+	}
+}
+minetest.register_decoration({
+   deco_type = "schematic",
+   place_on = {"group:soil", "group:dirt", "group:stone", "group:sand"},
+   sidelen = 1,
+   noise_params = {
+      offset = 100.0,
+      scale = -20000.0,
+      spread = {x = 256, y = 256, z = 256},
+      seed = 5934,
+      octaves = 1,
+      persist = 0.5,
+      flags = "defaults, absvalue"
+   },
+   y_max = 60,
+   y_min = 30,
+   place_offset_y = -7,
+   flags = "force_placement, place_center_x, place_center_z",
+   schematic = le_temp_schem,
+})
+
+
+le_temp_schem = {
+	size = {x = 5, y = 7, z = 5},
+	data = {
+		M0, M0, M0, M0, M0,
+		M0, M0, W0, M0, M0,
+		M0, W0, W0, W0, W0,
+		W0, W0, W0, W0, W0,
+		__, __, __, __, __,
+		__, __, __, __, __,
+		__, __, __, __, __,
+
+		M0, M0, M0, M0, M0,
+		M0, M0, W0, M0, M0,
+		W0, W0, W0, W0, M0,
+		W0, W0, W0, W0, W0,
+		__, __, __, __, __,
+		__, __, __, __, __,
+		__, __, __, __, __,
+
+		M0, M0, M0, M0, M0,
+		M0, M0, W0, M0, M0,
+		W0, W0, W0, W0, M0,
+		W0, W0, W0, W0, W0,
+		__, __, __, __, __,
+		__, __, __, __, __,
+		__, __, __, __, __,
+
+		M0, M0, M0, M0, M0,
+		M0, M0, W0, M0, M0,
+		W0, W0, W0, W0, W0,
+		W0, W0, W0, W0, W0,
+		__, __, __, __, __,
+		__, __, __, __, __,
+		__, __, __, __, __,
+
+		M0, M0, M0, M0, M0,
+		M0, M0, W0, M0, M0,
+		W0, W0, W0, W0, W0,
+		W0, W0, W0, W0, W0,
+		__, __, __, __, __,
+		__, __, __, __, __,
+		__, __, __, __, __
+	},
+	yslice_prob = {
+		{ypos = 0,prob = 254},
+		{ypos = 1,prob = 254},
+		{ypos = 2,prob = 254},
+		{ypos = 3,prob = 254},
+		{ypos = 4,prob = 254},
+		{ypos = 5,prob = 254},
+		{ypos = 6,prob = 254}
+	}
+}
+minetest.register_decoration({
+   deco_type = "schematic",
+   place_on = {"group:soil", "group:dirt", "group:stone", "group:sand"},
+   sidelen = 1,
+   noise_params = {
+      offset = 100.0,
+      scale = -20000.0,
+      spread = {x = 256, y = 256, z = 256},
+      seed = 5934,
+      octaves = 1,
+      persist = 0.5,
+      flags = "defaults, absvalue"
+   },
+   y_max = 80,
+   y_min = 60,
+   place_offset_y = -5,
+   flags = "force_placement, place_center_x, place_center_z",
+   schematic = le_temp_schem,
+})
+le_temp_schem = {
+	size = {x = 3, y = 6, z = 3},
+	data = {
+		M0, W0, M0,
+		W0, W0, W0,
+		W0, W0, W0,
+		__, __, __,
+		__, __, __,
+		__, __, __,
+
+		M0, W0, M0,
+		W0, W0, W0,
+		W0, W0, W0,
+		__, __, __,
+		__, __, __,
+		__, __, __,
+
+		M0, W0, M0,
+		W0, W0, W0,
+		W0, W0, W0,
+		__, __, __,
+		__, __, __,
+		__, __, __
+	},
+	yslice_prob = {
+		{ypos = 0,prob = 254},
+		{ypos = 1,prob = 254},
+		{ypos = 2,prob = 254},
+		{ypos = 3,prob = 254},
+		{ypos = 4,prob = 254},
+		{ypos = 5,prob = 254}
+	}
+}
+minetest.register_decoration({
+   deco_type = "schematic",
+   place_on = {"group:soil", "group:dirt", "group:stone", "group:sand"},
+   sidelen = 1,
+   noise_params = {
+      offset = 100.0,
+      scale = -20000.0,
+      spread = {x = 256, y = 256, z = 256},
+      seed = 5934,
+      octaves = 1,
+      persist = 0.5,
+      flags = "defaults, absvalue"
+   },
+   y_max = 100,
+   y_min = 80,
+   place_offset_y = -4,
+   flags = "force_placement, place_center_x, place_center_z",
+   schematic = le_temp_schem,
+})
+le_temp_schem = {
+	size = {x = 1, y = 4, z = 1},
+	data = {
+		W0,
+		__,
+		__,
+		__,
+
+		W0,
+		__,
+		__,
+		__,
+
+		W0,
+		__,
+		__,
+		__
+	},
+	yslice_prob = {
+		{ypos = 0,prob = 254},
+		{ypos = 1,prob = 254},
+		{ypos = 2,prob = 254},
+		{ypos = 3,prob = 254}
+	}
+}
+minetest.register_decoration({
+   deco_type = "schematic",
+   place_on = {"group:soil", "group:dirt", "group:stone", "group:sand"},
+   sidelen = 1,
+   noise_params = {
+      offset = 100.0,
+      scale = -20000.0,
+      spread = {x = 256, y = 256, z = 256},
+      seed = 5934,
+      octaves = 1,
+      persist = 0.5,
+      flags = "defaults, absvalue"
+   },
+   y_max = 140,
+   y_min = 100,
+   place_offset_y = -1,
+   flags = "force_placement, place_center_x, place_center_z",
+   schematic = le_temp_schem,
+})
+--[[
+minetest.register_decoration({
+   deco_type = "simple",
+   place_on = {"group:soil"},
+   sidelen = 1,
+   noise_params = {
+      offset = 100.0,
+      scale = -20000.0,
+      spread = {x = 256, y = 256, z = 256},
+      seed = 5934,
+      octaves = 1,
+      persist = 0.5,
+      flags = "defaults, absvalue"
+   },
+   y_max = 140,
+   y_min = 80,
+   place_offset_y = -1,
+   flags = "force_placement",
+   decoration = "lib_materials:liquid_water_river_source",
+})
+--]]
+
+
+
+
+
 	minetest.register_node("lib_materials:litter_rock", {
 		description = S("Litter - Rock"),
 		drawtype = "nodebox",
 		tiles = {"lib_materials_litter_rock.png"},
+		inventory_image = "lib_materials_litter_rock.png",
+		wield_image = "lib_materials_litter_rock.png",
 		sunlight_propagates = true,
 		paramtype = "light",
 		paramtype2 = "facedir",
@@ -27,6 +594,8 @@ local S = lib_materials.intllib
 		description = S("Litter - Rocks"),
 		drawtype = "nodebox",
 		tiles = {"lib_materials_litter_rocks.png"},
+		inventory_image = "lib_materials_litter_rocks.png",
+		wield_image = "lib_materials_litter_rocks.png",
 		sunlight_propagates = true,
 		paramtype = "light",
 		paramtype2 = "facedir",
@@ -48,6 +617,8 @@ local S = lib_materials.intllib
 		description = S("Litter - Stick"),
 		drawtype = "nodebox",
 		tiles = {"lib_materials_litter_stick.png"},
+		inventory_image = "lib_materials_litter_stick.png",
+		wield_image = "lib_materials_litter_stick.png",
 		sunlight_propagates = true,
 		paramtype = "light",
 		paramtype2 = "facedir",
@@ -61,6 +632,68 @@ local S = lib_materials.intllib
 			type = "fixed",
 			fixed = {
 			{-0.5,-0.5,-0.5,0.5,-0.49,0.5}
+			}
+		},
+		on_place = function(itemstack, placer, pointed_thing)
+			local sound_pos = pointed_thing.above or placer:get_pos()
+			minetest.sound_play(
+				"default_tool_breaks",
+				{pos = sound_pos, gain = 0.5, max_hear_distance = 8}
+			)
+			local player_name = placer:get_player_name()
+			if pointed_thing.type == "node" then
+				local node_under = minetest.get_node(pointed_thing.under).name
+				local nodedef = minetest.registered_nodes[node_under]
+				if not nodedef then
+					return
+				end
+				if minetest.is_protected(pointed_thing.under, player_name) then
+					minetest.chat_send_player(player_name, "This area is protected")
+					return
+				end
+				if node_under == "lib_materials:litter_stick" then
+					if minetest.get_node(pointed_thing.above).name == "air" then
+						minetest.set_node(pointed_thing.under, {name = "lib_materials:litter_sticks"})
+					end
+				else
+					if minetest.get_node(pointed_thing.above).name == "air" then
+						minetest.set_node(pointed_thing.above, {name = "lib_materials:litter_stick"})
+					end
+				end
+			end
+			if not (creative and creative.is_enabled_for
+					and creative.is_enabled_for(player_name)) then
+				-- Wear tool
+				local wdef = itemstack:get_definition()
+				itemstack:add_wear(2000)
+				-- Tool break sound
+				if itemstack:get_count() == 0 and wdef.sound and wdef.sound.breaks then
+					minetest.sound_play(wdef.sound.breaks, {pos = sound_pos, gain = 0.5})
+				end
+				return itemstack
+			end
+		end,
+	})
+	
+	minetest.register_node("lib_materials:litter_sticks", {
+		description = S("Litter - Sticks"),
+		drawtype = "nodebox",
+		tiles = {"lib_materials_litter_stick.png^(lib_materials_litter_stick.png^[transformFX)"},
+		inventory_image = "lib_materials_litter_stick.png^(lib_materials_litter_stick.png^[transformFX)",
+		wield_image = "lib_materials_litter_stick.png^(lib_materials_litter_stick.png^[transformFX)",
+		sunlight_propagates = true,
+		paramtype = "light",
+		paramtype2 = "facedir",
+		visual_scale = 2.0,
+		walkable = false,
+		buildable_to = true,
+		floodable = true,
+		groups = {choppy = 1, snappy = 1, ground_litter = 1, stick = 1, sticks = 1, oddly_breakable_by_hand = 1},
+		sounds = lib_materials.node_sound_wood_defaults(),
+		node_box = {
+			type = "fixed",
+			fixed = {
+				{-0.5,-0.5,-0.5,0.5,-0.49,0.5}
 			}
 		},
 	})

@@ -2,10 +2,10 @@
 
 -- What's a cave without speleothems?
 local spel = {
-	{type1="stalactite", type2="stalagmite", tile="default_stone.png"},
+	{type1="stalactite", type2="stalagmite", tile="lib_materials_stone_default.png"},
 	{type1="stalactite_slimy", type2="stalagmite_slimy", tile="lib_materials_stone_default.png^valc_algae.png"},
 	{type1="stalactite_mossy", type2="stalagmite_mossy", tile="lib_materials_stone_default.png^valc_moss.png"},
-	{type1="icicle_down", type2="icicle_up", desc="Icicle", tile="caverealms_thin_ice.png", drop="default:ice"},
+	{type1="icicle_down", type2="icicle_up", desc="Icicle", tile="lib_materials_ice2.png", drop="lib_materials:ice_2"},
 }
 
 for _, desc in pairs(spel) do
@@ -16,7 +16,7 @@ for _, desc in pairs(spel) do
 		walkable = false,
 		paramtype = "light",
 		--light_source = 14,
-		drop = (desc.drop or "lib_ecology:stalactite"),
+		drop = (desc.drop or "lib_materials:stalactite"),
 		drawtype = "nodebox",
 		node_box = { type = "fixed", 
 			fixed = {
@@ -35,7 +35,7 @@ for _, desc in pairs(spel) do
 		walkable = false,
 		paramtype = "light",
 		--light_source = 14,
-		drop = "lib_ecology:stalagmite",
+		drop = "lib_materials:stalagmite",
 		drawtype = "nodebox",
 		node_box = { type = "fixed", 
 			fixed = {
@@ -53,8 +53,8 @@ minetest.register_craft({
 	output = "lib_materials:stone_cobble",
 	recipe = {
 		{"", "", ""},
-		{"lib_ecology:stalactite", "lib_ecology:stalactite", ""},
-		{"lib_ecology:stalactite", "lib_ecology:stalactite", ""},
+		{"lib_materials:stalactite", "lib_materials:stalactite", ""},
+		{"lib_materials:stalactite", "lib_materials:stalactite", ""},
 	},
 })
 
@@ -62,8 +62,8 @@ minetest.register_craft({
 	output = "lib_materials:stone_cobble",
 	recipe = {
 		{"", "", ""},
-		{"lib_ecology:stalagmite", "lib_ecology:stalagmite", ""},
-		{"lib_ecology:stalagmite", "lib_ecology:stalagmite", ""},
+		{"lib_materials:stalagmite", "lib_materials:stalagmite", ""},
+		{"lib_materials:stalagmite", "lib_materials:stalagmite", ""},
 	},
 })
 

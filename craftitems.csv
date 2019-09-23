@@ -11,6 +11,8 @@ stone_brick_concrete|Concrete Brick|lib_materials_stone_brick_concrete.png|
 #Molds, Buckets, Tools, Other|||
 mold_clay|Clay Mold|lib_materials_mold_clay.png|
 mold_sand|Sand Mold|lib_materials_mold_sand.png|
+#Matter - Unclassified Resources|||
+matter_ash|Matter - Ash|lib_materials_matter_ash.png|ash 1
 #Metal Lumps and Ingots|||
 metal_albata_ingot|Metal - albata Ingot|lib_materials_metal_albata_ingot.png|ingot 1,albata 1
 metal_aluminium_ingot|Metal - aluminium Ingot|lib_materials_metal_aluminium_ingot.png|ingot 1

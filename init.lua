@@ -96,8 +96,8 @@ minetest.log(S("[MOD] lib_materials:  Loading..."))
 	dofile(lib_materials.path.."/lib_materials_nodeio.lua")
 	dofile(lib_materials.path.."/lib_materials_fluid_lib.lua")
 
-	--dofile(lib_materials.path.."/lib_materials_toolcap_modifier.lua")
-	--dofile(lib_materials.path.."/lib_materials_tool_ranks.lua")
+		--dofile(lib_materials.path.."/lib_materials_toolcap_modifier.lua")
+		--dofile(lib_materials.path.."/lib_materials_tool_ranks.lua")
 
 	dofile(lib_materials.path.."/lib_materials_node_registration.lua")
 
@@ -114,7 +114,7 @@ minetest.log(S("[MOD] lib_materials:  Loading..."))
 
 	dofile(lib_materials.path.."/lib_materials_vessels.lua")
 
-		--dofile(lib_materials.path.."/lib_materials_water_dynamics.lua")
+	dofile(lib_materials.path.."/lib_materials_water_dynamics.lua")
 
 	dofile(lib_materials.path.."/lib_materials_fire.lua")
 
@@ -139,7 +139,7 @@ minetest.log(S("[MOD] lib_materials:  Loading..."))
 
 		--dofile(lib_materials.path.."/voxel_BAK.lua")
 
-	--dofile(lib_materials.path.."/lib_materials_lakes.lua")
+	dofile(lib_materials.path.."/lib_materials_lakes.lua")
 
 		----dofile(lib_materials.path.."/lib_materials_ore_defs_ORIG.lua")
 		----dofile(lib_materials.path.."/lib_materials_ecosystems.lua")
@@ -161,34 +161,49 @@ minetest.log(S("[MOD] lib_materials:  Loading..."))
 
 
 
+--
+-- Aliases for map generators
+--
+
+minetest.register_alias("mapgen_stone", "lib_materials:stone")
+minetest.register_alias("mapgen_dirt", "lib_materials:dirt")
+minetest.register_alias("mapgen_dirt_with_grass", "lib_materials:dirt_with_grass")
+minetest.register_alias("mapgen_sand", "lib_materials:sand")
+minetest.register_alias("mapgen_water_source", "lib_materials:liquid_water_source")
+minetest.register_alias("mapgen_river_water_source", "lib_materials:liquid_water_river_source")
+minetest.register_alias("mapgen_lava_source", "lib_materials:liquid_lava_source")
+--minetest.register_alias("mapgen_gravel", "lib_materials:stone_gravel")
+--minetest.register_alias("mapgen_desert_stone", "lib_materials:stone_desert")
+--minetest.register_alias("mapgen_desert_sand", "lib_materials:sand_desert")
+--minetest.register_alias("mapgen_dirt_with_snow", "lib_materials:dirt_with_snow")
+--minetest.register_alias("mapgen_snowblock", "lib_materials:snowblock")
+--minetest.register_alias("mapgen_snow", "lib_materials:snow")
+--minetest.register_alias("mapgen_ice", "lib_materials:ice")
+--minetest.register_alias("mapgen_sandstone", "lib_materials:stone_sandstone")
+
+-- Flora
+
+--minetest.register_alias("mapgen_tree", "default:tree")
+--minetest.register_alias("mapgen_leaves", "default:leaves")
+--minetest.register_alias("mapgen_apple", "default:apple")
+--minetest.register_alias("mapgen_jungletree", "default:jungletree")
+--minetest.register_alias("mapgen_jungleleaves", "default:jungleleaves")
+--minetest.register_alias("mapgen_junglegrass", "default:junglegrass")
+--minetest.register_alias("mapgen_pine_tree", "default:pine_tree")
+--minetest.register_alias("mapgen_pine_needles", "default:pine_needles")
+
+-- Dungeons
+
+--minetest.register_alias("mapgen_cobble", "lib_materials:stone_cobble")
+--minetest.register_alias("mapgen_stair_cobble", "lib_materials:stone_cobble_stairs")
+--minetest.register_alias("mapgen_mossycobble", "lib_materials:stone_cobble_mossy")
+--minetest.register_alias("mapgen_stair_desert_stone", "lib_materials:stone_desert_stairs")
+--minetest.register_alias("mapgen_sandstonebrick", "lib_materials:stone_sandstone_brick")
+--minetest.register_alias("mapgen_stair_sandstone_block", "lib_materials:stone_sandstone_block_stairs")
 
 
---Base Mapgen Nodes
-	minetest.register_alias("mapgen_stone", "lib_materials:stone")
-	minetest.register_alias("mapgen_water_source", "lib_materials:liquid_water_source")
-	minetest.register_alias("mapgen_river_water_source", "lib_materials:liquid_water_river_source")
---Cave Mapgen Nodes
-	minetest.register_alias("mapgen_lava_source", "lib_materials:liquid_lava_source")
---Dungeon Mapgen Nodes
-	minetest.register_alias("mapgen_cobble", "lib_materials:stone_cobble")
-	minetest.register_alias("mapgen_stair_cobble", "lib_materials:stone_cobble_stair")
-	minetest.register_alias("mapgen_mossycobble", "lib_materials:stone_cobble_mossy")
-	minetest.register_alias("mapgen_desert_stone", "lib_materials:stone_desert")
-	minetest.register_alias("mapgen_stair_desert_stone", "lib_materials:stone_desert_stair")
-	minetest.register_alias("mapgen_sandstone", "lib_materials:stone_sandstone")
-	minetest.register_alias("mapgen_sandstonebrick", "lib_materials:stone_sandstone_brick")
-	minetest.register_alias("mapgen_stair_sandstone_block", "lib_materials:stone_sandstone_block")
 
---v6 Mapgen Nodes
-	minetest.register_alias("mapgen_dirt", "lib_materials:dirt")
-	minetest.register_alias("mapgen_dirt_with_grass", "lib_materials:dirt_with_grass")
-	minetest.register_alias("mapgen_sand", "lib_materials:sand")
-	minetest.register_alias("mapgen_gravel", "lib_materials:stone_gravel")
-	minetest.register_alias("mapgen_desert_sand", "lib_materials:sand_desert")
-	minetest.register_alias("mapgen_dirt_with_snow", "lib_materials:dirt_with_snow")
-	minetest.register_alias("mapgen_snowblock", "lib_materials:snow_brick")
-	minetest.register_alias("mapgen_snow", "lib_materials:snow")
-	minetest.register_alias("mapgen_ice", "lib_materials:ice")
+
 
 
 
