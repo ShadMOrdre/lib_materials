@@ -383,7 +383,17 @@ local D0 = {name = "lib_materials:dirt", param2 = 0, prob = 254}
 		}
 	}
 
+
+
 	
+	__ = {name = "air",param2 = 0,prob = 254}
+	S0 = {name = "lib_materials:stone", param2 = 0, prob = 254}
+	S1 = {name = "lib_materials:stone", param2 = 0, prob = 192}
+	S2 = {name = "lib_materials:stone", param2 = 0, prob = 128}
+	S0 = {name = "lib_materials:stone", param2 = 0, prob = 96}
+	D0 = {name = "lib_materials:dirt", param2 = 0, prob = 254}
+
+
 	lib_materials.schem_rock_01 = {
 		size = {x = 3,y = 3,z = 3},
 		data = {

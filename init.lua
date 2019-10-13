@@ -35,6 +35,14 @@ lib_materials.clear_ores = minetest.setting_get("lib_materials_clear_ores") or t
 lib_materials.color_grass_reg = minetest.setting_get("lib_materials_color_grass_reg") or false
 lib_materials.color_grass_use = minetest.setting_get("lib_materials_color_grass_use") or false
 
+lib_materials.enable_lakes = minetest.setting_get("lib_materials_enable_lakes") or false
+lib_materials.enable_rivers = minetest.setting_get("lib_materials_enable_rivers") or false
+lib_materials.enable_waterdynamics = minetest.setting_get("lib_materials_enable_waterdynamics") or false
+lib_materials.enable_waterfalls = minetest.setting_get("lib_materials_enable_waterfalls") or false
+lib_materials.enable_lib_shapes = minetest.setting_get("lib_materials_enable_lib_shapes_support") or true
+lib_materials.enable_mapgen_aliases = minetest.setting_get("lib_materials_enable_mapgen_aliases") or true
+
+
 lib_materials.mg_params = minetest.get_mapgen_params()
 lib_materials.mg_seed = lib_materials.mg_params.seed
 
@@ -96,33 +104,19 @@ minetest.log(S("[MOD] lib_materials:  Loading..."))
 	dofile(lib_materials.path.."/lib_materials_nodeio.lua")
 	dofile(lib_materials.path.."/lib_materials_fluid_lib.lua")
 
-		--dofile(lib_materials.path.."/lib_materials_toolcap_modifier.lua")
-		--dofile(lib_materials.path.."/lib_materials_tool_ranks.lua")
-
 	dofile(lib_materials.path.."/lib_materials_node_registration.lua")
-
-		--game.lib.node.register_csv("|", lib_materials.path.."/nodes.csv")
-	
-		--dofile(lib_materials.path.."/type_stone_deco.lua")
-		--dofile(lib_materials.path.."/type_dirt.lua")
-		--dofile(lib_materials.path.."/type_sand.lua")
-		--dofile(lib_materials.path.."/type_ice_snow.lua")
-		--dofile(lib_materials.path.."/type_ore.lua")
-		--dofile(lib_materials.path.."/type_glass.lua")
 
 	dofile(lib_materials.path.."/lib_materials_liquid_containers.lua")
 
 	dofile(lib_materials.path.."/lib_materials_vessels.lua")
 
-	dofile(lib_materials.path.."/lib_materials_water_dynamics.lua")
+	if lib_materials.enable_waterdynamics == true then
+		dofile(lib_materials.path.."/lib_materials_water_dynamics.lua")
+	end
 
 	dofile(lib_materials.path.."/lib_materials_fire.lua")
 
 	dofile(lib_materials.path.."/lib_materials_craftitems.lua")
-
-		--dofile(lib_materials.path.."/lib_materials_tools.lua")
-
-		--dofile(lib_materials.path.."/lib_materials_craftfire.lua")
 
 	dofile(lib_materials.path.."/lib_materials_craftrecipes.lua")
 
@@ -130,82 +124,99 @@ minetest.log(S("[MOD] lib_materials:  Loading..."))
 
 	dofile(lib_materials.path.."/lib_materials_biomes.lua")
 
-		--game.lib.biomes.register_csv("|", lib_materials.path.."/biomes.csv")
-		--dofile(lib_materials.path.."/lib_materials_ore_defs_ORIG.lua")
-
 	dofile(lib_materials.path.."/lib_materials_ore_defs.lua")
 
 	dofile(lib_materials.path.."/lib_materials_ecosystems.lua")
 
-		--dofile(lib_materials.path.."/voxel_BAK.lua")
+	if lib_materials.enable_lakes == true then
+		dofile(lib_materials.path.."/lib_materials_lakes.lua")
+	end
 
-	dofile(lib_materials.path.."/lib_materials_lakes.lua")
-
-		----dofile(lib_materials.path.."/lib_materials_ore_defs_ORIG.lua")
-		----dofile(lib_materials.path.."/lib_materials_ecosystems.lua")
 		--dofile(lib_materials.path.."/lvm_voxel.lua")
 		--dofile(lib_materials.path.."/burli_voxel.lua")
 		--dofile(lib_materials.path.."/lib_materials_lakes.lua")
 
 	dofile(lib_materials.path.."/lib_materials_caves.lua")
 
-	dofile(lib_materials.path.."/lib_materials_utils.lua")
+		--dofile(lib_materials.path.."/lib_materials_ravines.lua")
 
-		--dofile(lib_materials.path.."/lib_materials_rivers.lua")
+	if lib_materials.enable_waterfalls == true then
+		dofile(lib_materials.path.."/lib_materials_waterfalls.lua")
+	end
 
 	dofile(lib_materials.path.."/lib_materials_abms.lua")
 
+	--	minetest.register_ore({
+	--		ore_type         = "blob",
+	--		ore              = "air",
+	--		wherein          = {"group:dirt", "group:soil", "group:sand"},
+	--		clust_scarcity   = 4 * 4 * 4,
+	--		clust_num_ores = 64,
+	--		clust_size       = 6,
+	--		y_min            = 1,
+	--		y_max            = 50,
+	--		noise_params     = {
+	--			offset = 100.0,
+	--			scale = -20000.0,
+	--			spread = {x = 256, y = 256, z = 256},
+	--			seed = 5934,
+	--			octaves = 1,
+	--			persist = 0.5,
+	--			lacunarity = 2.22,
+	--			flags = "defaults, noeased, absvalue",
+	--		},
+	--		random_factor = 1.0,
+	--	})
+
+	if lib_materials.enable_rivers == true then
+		dofile(lib_materials.path.."/lib_materials_rivers.lua")
+	end
+
+	dofile(lib_materials.path.."/lib_materials_utils.lua")
+
 	dofile(lib_materials.path.."/lib_materials_chatcommands.lua")
-
-
-
 
 
 --
 -- Aliases for map generators
 --
-
-minetest.register_alias("mapgen_stone", "lib_materials:stone")
-minetest.register_alias("mapgen_dirt", "lib_materials:dirt")
-minetest.register_alias("mapgen_dirt_with_grass", "lib_materials:dirt_with_grass")
-minetest.register_alias("mapgen_sand", "lib_materials:sand")
-minetest.register_alias("mapgen_water_source", "lib_materials:liquid_water_source")
-minetest.register_alias("mapgen_river_water_source", "lib_materials:liquid_water_river_source")
-minetest.register_alias("mapgen_lava_source", "lib_materials:liquid_lava_source")
---minetest.register_alias("mapgen_gravel", "lib_materials:stone_gravel")
---minetest.register_alias("mapgen_desert_stone", "lib_materials:stone_desert")
---minetest.register_alias("mapgen_desert_sand", "lib_materials:sand_desert")
---minetest.register_alias("mapgen_dirt_with_snow", "lib_materials:dirt_with_snow")
---minetest.register_alias("mapgen_snowblock", "lib_materials:snowblock")
---minetest.register_alias("mapgen_snow", "lib_materials:snow")
---minetest.register_alias("mapgen_ice", "lib_materials:ice")
---minetest.register_alias("mapgen_sandstone", "lib_materials:stone_sandstone")
-
--- Flora
-
---minetest.register_alias("mapgen_tree", "default:tree")
---minetest.register_alias("mapgen_leaves", "default:leaves")
---minetest.register_alias("mapgen_apple", "default:apple")
---minetest.register_alias("mapgen_jungletree", "default:jungletree")
---minetest.register_alias("mapgen_jungleleaves", "default:jungleleaves")
---minetest.register_alias("mapgen_junglegrass", "default:junglegrass")
---minetest.register_alias("mapgen_pine_tree", "default:pine_tree")
---minetest.register_alias("mapgen_pine_needles", "default:pine_needles")
-
--- Dungeons
-
---minetest.register_alias("mapgen_cobble", "lib_materials:stone_cobble")
---minetest.register_alias("mapgen_stair_cobble", "lib_materials:stone_cobble_stairs")
---minetest.register_alias("mapgen_mossycobble", "lib_materials:stone_cobble_mossy")
---minetest.register_alias("mapgen_stair_desert_stone", "lib_materials:stone_desert_stairs")
---minetest.register_alias("mapgen_sandstonebrick", "lib_materials:stone_sandstone_brick")
---minetest.register_alias("mapgen_stair_sandstone_block", "lib_materials:stone_sandstone_block_stairs")
-
-
-
-
-
-
+	if lib_materials.enable_mapgen_aliases == true then
+		minetest.register_alias("mapgen_stone", "lib_materials:stone")
+		minetest.register_alias("mapgen_dirt", "lib_materials:dirt")
+		minetest.register_alias("mapgen_dirt_with_grass", "lib_materials:dirt_with_grass")
+		minetest.register_alias("mapgen_sand", "lib_materials:sand")
+		minetest.register_alias("mapgen_water_source", "lib_materials:liquid_water_source")
+		minetest.register_alias("mapgen_river_water_source", "lib_materials:liquid_water_river_source")
+		minetest.register_alias("mapgen_lava_source", "lib_materials:liquid_lava_source")
+		minetest.register_alias("mapgen_gravel", "lib_materials:stone_gravel")
+		minetest.register_alias("mapgen_desert_stone", "lib_materials:stone_desert")
+		minetest.register_alias("mapgen_desert_sand", "lib_materials:sand_desert")
+		minetest.register_alias("mapgen_dirt_with_snow", "lib_materials:dirt_with_snow")
+		minetest.register_alias("mapgen_snowblock", "lib_materials:snowblock")
+		minetest.register_alias("mapgen_snow", "lib_materials:snow")
+		minetest.register_alias("mapgen_ice", "lib_materials:ice")
+		minetest.register_alias("mapgen_sandstone", "lib_materials:stone_sandstone")
+		
+		-- Flora
+		
+		--minetest.register_alias("mapgen_tree", "default:tree")
+		--minetest.register_alias("mapgen_leaves", "default:leaves")
+		--minetest.register_alias("mapgen_apple", "default:apple")
+		--minetest.register_alias("mapgen_jungletree", "default:jungletree")
+		--minetest.register_alias("mapgen_jungleleaves", "default:jungleleaves")
+		--minetest.register_alias("mapgen_junglegrass", "default:junglegrass")
+		--minetest.register_alias("mapgen_pine_tree", "default:pine_tree")
+		--minetest.register_alias("mapgen_pine_needles", "default:pine_needles")
+		
+		-- Dungeons
+		
+		minetest.register_alias("mapgen_cobble", "lib_materials:stone_cobble")
+		minetest.register_alias("mapgen_stair_cobble", "lib_materials:stone_cobble_stairs")
+		minetest.register_alias("mapgen_mossycobble", "lib_materials:stone_cobble_mossy")
+		minetest.register_alias("mapgen_stair_desert_stone", "lib_materials:stone_desert_stairs")
+		minetest.register_alias("mapgen_sandstonebrick", "lib_materials:stone_sandstone_brick")
+		minetest.register_alias("mapgen_stair_sandstone_block", "lib_materials:stone_sandstone_block_stairs")
+	end
 
 
 	if not minetest.global_exists("default") then

@@ -45,35 +45,67 @@ local function read_node_str(node_str)
 	end
 end
 
-for i, biome in ipairs(lib_materials.read_csv(",", lib_materials.path .. "/biomes.csv")) do
-	local a, b, c, d, e, f, g, h, i, j, k, l = unpack(biome)
+for i, biome in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/biomes.csv")) do
+
+	--#Name|Dust|NodeTop|NodeTopDepth|Filler|FillerDepth|Stone|WaterTop|WaterTopDepth|Water|River water|RiverBed|RiverBedDepth|CaveLiquid|DungeonNode|DungeonAlt|DungeonStair|Y-min|Y-max|Temperature|Humidity|MaxPos|MinPos|VerticalBlend
+	local a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x = unpack(biome)
 	--minetest.log(a .. ", " .. b .. ", " .. c .. ", " .. d .. ", " .. e .. ", " .. f .. ", " .. g .. ", " .. h .. ", " .. i .. ", " .. j .. ", " .. k .. ", " .. l)
 
 	-- Parse node names: transform empty strings into nil and separate node and count
-	b = read_node_str(b)
-	local c1, c2 = read_node_str(c)
-	local d1, d2 = read_node_str(d)
-	e = read_node_str(e)
-	local f1, f2 = read_node_str(f)
-	g = read_node_str(g)
-	h = read_node_str(h)
+--	b = read_node_str(b)
+--	local c1, c2 = read_node_str(c)
+--	local d1, d2 = read_node_str(d)
+--	e = read_node_str(e)
+--	local f1, f2 = read_node_str(f)
+--	g = read_node_str(g)
+--	h = read_node_str(h)
 
 	minetest.register_biome({
 		name = a,
-		node_dust = b,
-		node_top = c1,
-		depth_top = c2,
-		node_filler = d1,
-		depth_filler = d2,
-		node_stone = e,
-		node_water_top = f1,
-		depth_water_top = f2,
-		node_water = g,
-		node_river_water = h,
-		y_min = tonumber(i) or heights[i],
-		y_max = tonumber(j) or heights[j],
-		vertical_blend = lib_materials.biome_vertical_blend,
-		heat_point = tonumber(k) or temperatures[k],
-		humidity_point = tonumber(l) or humidities[l],
+		node_dust = b or nil,
+		node_top = c or nil,
+		depth_top = tonumber(d),
+		node_filler = e or nil,
+		depth_filler = tonumber(f),
+		node_stone = g or nil,
+		node_water_top = h or nil,
+		depth_water_top = tonumber(i),
+		node_water = j or nil,
+		node_river_water = k or nil,
+		node_riverbed = l or nil,
+		depth_riverbed = tonumber(m),
+		node_cave_liquid = n or nil,
+		node_dungeon = o or nil,
+		node_dungeon_alt = p or nil,
+		node_dungeon_stair = q or nil,
+		y_min = tonumber(i) or heights[r],
+		y_max = tonumber(j) or heights[s],
+		heat_point = tonumber(k) or temperatures[t],
+		humidity_point = tonumber(l) or humidities[u],
+		max_pos = tonumber(v),
+		min_pos = tonumber(w),
+		vertical_blend = x or lib_materials.biome_vertical_blend,
 	})
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

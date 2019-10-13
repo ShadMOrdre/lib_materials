@@ -142,13 +142,32 @@ function lib_materials.vessels.register_vessel(data)
 
 	if not minetest.registered_items[item_name] then
 		-- Register base item
-		minetest.register_craftitem(item_name, {
-			description     = vessel_desc.." (Empty)\nThis item holds millibuckets of fluid.",
-			inventory_image = textures[1].."^"..textures[2].."^[makealpha:255,0,0,",        --inventory_image = textures[1].."^[noalpha^"..textures[2].."^[makealpha:255,0,0,",
+--		minetest.register_craftitem(item_name, {
+--			description     = vessel_desc.." (Empty)\nThis item holds millibuckets of fluid.",
+--			inventory_image = textures[1].."^"..textures[2].."^[makealpha:255,0,0,",        --inventory_image = textures[1].."^[noalpha^"..textures[2].."^[makealpha:255,0,0,",
+--			_vessel_capacity = capacity,
+--			_vessel_source   = nil,
+--			stack_max       = 1,
+--			groups          = {vessel = 1, vessel_blank = 1}
+--		})
+		minetest.register_node(item_name, {
+			description = vessel_desc.." (Empty)\nThis item holds millibuckets of fluid.",
+			drawtype = "plantlike",
+			tiles = {textures[1].."^"..textures[2].."^[makealpha:255,0,0,"},
+			inventory_image = textures[1].."^"..textures[2].."^[makealpha:255,0,0,",
+			wield_image = textures[1].."^"..textures[2].."^[makealpha:255,0,0,",
+			paramtype = "light",
+			is_ground_content = false,
+			walkable = false,
+			stack_max = 1,
 			_vessel_capacity = capacity,
 			_vessel_source   = nil,
-			stack_max       = 1,
-			groups          = {vessel = 1, vessel_blank = 1}
+			selection_box = {
+				type = "fixed",
+				fixed = {-0.25, -0.5, -0.25, 0.25, 0.4, 0.25}
+			},
+			groups = {vessel=1,vessel_blank = 1,dig_immediate=3,attached_node=1},
+			sounds = lib_materials.node_sound_glass_defaults(),
 		})
 	end
 
@@ -186,11 +205,73 @@ end
 
 
 -- Register florbs for all fluids
+--lib_materials.vessels.register_vessel({
+--	vessel_name        = "vessel_glass_bottle",
+--	vessel_description = "Glass Bottle Vessel",
+--	capacity          = 1000,
+--	tiles             = {"lib_materials_vessel_glass_bottle.png", "lib_materials_vessel_glass_bottle_mask.png"}
+--})
+
+
 lib_materials.vessels.register_vessel({
-	vessel_name        = "vessel_glass_bottle",
+	vessel_name        = "vessel_beaker_glass",
+	vessel_description = "Glass Beaker Vessel",
+	capacity          = 1000,
+	textures             = {"lib_materials_vessel_beaker_glass.png", "lib_materials_vessel_beaker_glass_mask.png"}
+})
+lib_materials.vessels.register_vessel({
+	vessel_name        = "vessel_vial_glass",
+	vessel_description = "Glass Vial Vessel",
+	capacity          = 1000,
+	textures             = {"lib_materials_vessel_vial_glass.png", "lib_materials_vessel_beaker_vial_mask.png"}
+})
+lib_materials.vessels.register_vessel({
+	vessel_name        = "vessel_cup_glass",
+	vessel_description = "Glass Cup Vessel",
+	capacity          = 1000,
+	textures             = {"lib_materials_vessel_cup_glass.png", "lib_materials_vessel_cup_glass_mask.png"}
+})
+lib_materials.vessels.register_vessel({
+	vessel_name        = "vessel_glass_glass",
+	vessel_description = "Glass Glass Vessel",
+	capacity          = 1000,
+	textures             = {"lib_materials_vessel_glass_glass.png", "lib_materials_vessel_glass_glass_mask.png"}
+})
+lib_materials.vessels.register_vessel({
+	vessel_name        = "vessel_mug_glass",
+	vessel_description = "Glass Mug Vessel",
+	capacity          = 1000,
+	textures             = {"lib_materials_vessel_mug_glass.png", "lib_materials_vessel_mug_glass_mask.png"}
+})
+lib_materials.vessels.register_vessel({
+	vessel_name        = "vessel_jar_glass",
+	vessel_description = "Glass Jar Vessel",
+	capacity          = 1000,
+	textures             = {"lib_materials_vessel_jar_glass.png", "lib_materials_vessel_jar_glass_mask.png"}
+})
+lib_materials.vessels.register_vessel({
+	vessel_name        = "vessel_jar_obsidian",
+	vessel_description = "Obsidian Jar Vessel",
+	capacity          = 1000,
+	textures             = {"lib_materials_vessel_jar_obsidian.png", "lib_materials_vessel_jar_obsidian_mask.png"}
+})
+lib_materials.vessels.register_vessel({
+	vessel_name        = "vessel_jug_glass",
+	vessel_description = "Glass Jug Vessel",
+	capacity          = 1000,
+	textures             = {"lib_materials_vessel_jug_glass.png", "lib_materials_vessel_jug_glass_mask.png"}
+})
+lib_materials.vessels.register_vessel({
+	vessel_name        = "vessel_bottle_glass",
 	vessel_description = "Glass Bottle Vessel",
 	capacity          = 1000,
-	tiles             = {"lib_materials_vessel_glass_bottle.png", "lib_materials_vessel_glass_bottle_mask.png"}
+	textures             = {"lib_materials_vessel_bottle_glass.png", "lib_materials_vessel_bottle_glass_mask.png"}
+})
+lib_materials.vessels.register_vessel({
+	vessel_name        = "vessel_bottle_obsidian",
+	vessel_description = "Obsidian Bottle Vessel",
+	capacity          = 1000,
+	textures             = {"lib_materials_vessel_bottle_obsidian.png", "lib_materials_vessel_bottle_obsidian_mask.png"}
 })
 
 

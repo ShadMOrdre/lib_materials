@@ -2,17 +2,12 @@
 
 #[mgv7 Mapgen Scale Factor (Integer.  Recommended Values between 1 and 8) - Defines the scale factor for mgv7 based maps.]
 #Scales mgv7 Terrain_Base and Terrain_Alt spread values.
-
 lib_materials_mgv7_mapgen_scale_factor (Defines the  scale factor for mgv7 based maps) int 8
-
-
 
 #[Biome Altitude Range (Integer.  Recommended Value greater than +10) - Defines the height range for biomes based on altitude.]
 #Each Temperature/Humidy range is subdivided by altitude, (height), to further refine biome definitions.  This value is used to determine
 #the altitude range for these biomes.
-
 lib_materials_biome_altitude_range (Defines the height range for biomes based on altitude) int 40
-
 
 #If enabled, will clear all registered biomes.
 lib_materials_clear_biomes (Enable to clear registered biomes.  true / false) bool true
@@ -29,6 +24,22 @@ lib_materials_color_grass_use (Enable to use colored grass nodes.  true / false)
 #If enabled, will register colored grass nodes.  Ignored if Use Grass enabled.
 lib_materials_color_grass_reg (Enable to register colored grass nodes.  true / false) bool false
 
+#If enabled, will fill terrain depressions with liquids.
+lib_materials_enable_lakes (Enable to fill terrain depressions with liquids.  true / false) bool false
 
+#If enabled, will draw rivers on the map.
+lib_materials_enable_rivers (Enable to draw rivers on the map.  true / false) bool false
+
+#If enabled, will use water dynamics functionality for rushing water.
+lib_materials_enable_waterdynamics (Enable to use water dynamics functionality for rushing water.  true / false) bool false
+
+#If enabled, will let rushing water erode terrain.
+lib_materials_enable_waterfalls (Enable to let rushing water erode terrain.  true / false) bool false
+
+#If enabled, will use lib_shapes to register nodebox shaped nodes.  Use this for stairs, slabs, walls, doors, fences, and furniture.
+lib_materials_enable_lib_shapes_support (Enable to register shaped nodes.  true / false) bool true
+
+#If enabled, will use lib_shapes to register nodebox shaped nodes.  Use this for stairs, slabs, walls, doors, fences, and furniture.
+lib_materials_enable_mapgen_aliases (Enable to register mapgen aliases.  true / false) bool true
 
 

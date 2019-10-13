@@ -9,8 +9,8 @@ lib_materials.waterplus.finite_water_steps=32 --how many finite water steps
 lib_materials.waterplus.finite_water_inc_skip=1  --how many waters to skip before inc
 
 
-lib_materials.waterplus.base_fluid = "default:river_water_source"
-lib_materials.waterplus.base_fluid_flowing = "default:river_water_flowing"
+lib_materials.waterplus.base_fluid = "lib_materials:liquid_water_rushing_source"
+lib_materials.waterplus.base_fluid_flowing = "lib_materials:liquid_water_rushing_flowing"
 
 
 -- Setup Finite

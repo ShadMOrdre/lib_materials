@@ -81,6 +81,52 @@ minetest.register_node("lib_materials:fire_flame_basic", {
 	on_flood = flood_flame,
 })
 
+minetest.register_node("lib_materials:fire_flame_large_basic", {
+	drawtype = "firelike",
+	tiles = {
+		{
+			name = "lib_materials_flame_large_basic_animated.png",
+			animation = {
+				type = "vertical_frames",
+				aspect_w = 16,
+				aspect_h = 16,
+				length = 1
+			},
+		},
+	},
+	visual_scale = 4.0,
+	inventory_image = "lib_materials_flame_large_basic.png",
+	paramtype = "light",
+	light_source = 13,
+	walkable = false,
+	buildable_to = true,
+	sunlight_propagates = true,
+	floodable = true,
+	damage_per_second = 4,
+	groups = {igniter = 2, dig_immediate = 3, not_in_creative_inventory = 1},
+	drop = "",
+
+	on_timer = function(pos)
+		local f = minetest.find_node_near(pos, 1, {"group:flammable"})
+		if not fire_enabled or not f then
+			minetest.remove_node(pos)
+			return
+		end
+		-- Restart timer
+		return true
+	end,
+
+	on_construct = function(pos)
+		if not fire_enabled then
+			minetest.remove_node(pos)
+		else
+			minetest.get_node_timer(pos):start(math.random(30, 60))
+		end
+	end,
+
+	on_flood = flood_flame,
+})
+
 minetest.register_node("lib_materials:fire_flame_permanent", {
 	description = "Permanent Flame",
 	drawtype = "firelike",
@@ -112,7 +158,7 @@ minetest.register_node("lib_materials:fire_flame_permanent", {
 
 -- Flint and steel
 
-minetest.register_tool("lib_materials:fire_flint_and_steel", {
+minetest.register_tool("lib_materials:tool_flint_and_steel", {
 	description = "Flint and Steel",
 	inventory_image = "lib_materials_tool_flint_steel.png",
 	sound = {breaks = "default_tool_breaks"},
@@ -163,10 +209,16 @@ minetest.register_craft({
 })
 
 
+minetest.register_alias("fire:basic_flame", "lib_materials:fire_flame_basic")
+minetest.register_alias("fire:permanent_flame", "lib_materials:fire_flame_permanent")
+minetest.register_alias("fire:flint_and_steel", "lib_materials:fire_flint_and_steel")
+
+
+
 -- Override coalblock to enable permanent flame above
 -- Coalblock is non-flammable to avoid unwanted flame_basic nodes
 
-minetest.override_item("default:coalblock", {
+minetest.override_item("lib_materials:mineral_coal_block", {
 	after_destruct = function(pos, oldnode)
 		pos.y = pos.y + 1
 		if minetest.get_node(pos).name == "lib_materials:fire_flame_permanent" then

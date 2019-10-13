@@ -14,10 +14,134 @@ local function read_node_str(node_str)
 	end
 end
 
---game.library.csv.read
---lib_materials.read_csv
 
---for i, stone in ipairs(game.lib.csv.read("|", lib_materials.path .. "/nodes.csv")) do
+--##  register dirt nodes for with grass, with litter, and with ground cover and for biome specific ground cover.
+--##  Dirts:
+--##      Dirt,Black Dirt,Brown Dirt,Clay Dirt,Clayey Dirt,Red Clay,White Clay,Coarse Dirt,Compacted Dirt, Dark Dirt,
+--##      Dried Dirt,Dry Dirt,Loam,Mud 01,Mud 02,Dried Mud,Peat,Permafrost,Red Dirt,Sandy Dirt,Silt 01,Silt 02,Silt 03,Silty Dirt,Sod
+--##  Dirts are registered as standalone nodes, as well as, with each of several grass or other ground cover types, listed below.
+--##      Grass(es)(Bamboo,Brown,Cold,Crystal,Dry,Fiery,Grass(Default),Gray,Green,Grove,Jungle 01,Mushroom,Prairie),
+--##      Coniferous Litter,Fungal Litter,Leaf Litter 01,Leaf Litter 02,Rainforest Litter,Stones,Vines,Snow,Soil,Wet Soil,Stone,Cobblestone,Desert Cobblestone
+--##  Dirts are also registered for each biome ground cover, according to temperature, humidity and altitude.  Example: 'dirt_with_grass_warm_humid_lowland'.
+
+local temperatures = {"hot", "warm", "temperate", "cool"}
+local humidities = {"humid", "semihumid", "temperate", "semiarid"}
+local elevations = {"coastal", "lowland", "shelf", "highland"}
+local palettes1 = {
+	hot_humid = "#93fc54:80",
+	hot_semihumid = "#fcd953:80",
+	hot_temperate = "#fc9754:80",
+	hot_semiarid = "#fc5458:80",
+	warm_humid = "#81da62:72",
+	warm_semihumid = "#dacf61:72",
+	warm_temperate = "#daa062:72",
+	warm_semiarid = "#da6e62:72",
+	temperate_humid = "#36e44b:64",
+	temperate_semihumid = "#b1e436:64",
+	temperate_temperate = "#e4d136:64",
+	temperate_semiarid = "#e48836:64",
+	cool_humid = "#43e9a5:48",
+	cool_semihumid = "#69e942:48",
+	cool_temperate = "#ace943:48",
+	cool_semiarid = "#e9df43:48",
+}
+
+local textures = {}
+if lib_materials.color_grass_use then
+		textures = {
+			coastal = {
+				"lib_materials_grass_jungle_01_top.png", "lib_materials_grass_jungle_01_side.png"
+			},
+			lowland = {
+				"lib_materials_grass_default_top.png", "lib_materials_grass_default_side.png"
+			},
+			shelf = {
+				"lib_materials_grass_dry_default_top.png", "lib_materials_grass_dry_default_side.png"
+			},
+			highland = {
+				"lib_materials_grass_brown_top.png", "lib_materials_grass_brown_side.png"
+			}
+		}
+else
+		textures = {
+			coastal = {
+				"lib_materials_grass_coastal_top.png", "lib_materials_grass_coastal_side.png"
+			},
+			lowland = {
+				"lib_materials_grass_lowland_top.png", "lib_materials_grass_lowland_side.png"
+			},
+			shelf = {
+				"lib_materials_grass_shelf_top.png", "lib_materials_grass_shelf_side.png"
+			},
+			highland = {
+				"lib_materials_grass_highland_top.png", "lib_materials_grass_highland_side.png"
+			}
+		}
+end
+local palettes2 = {
+	{
+		"#43e9a5:80", "#36e44b:80", "#81da62:80", "#93fc54:80"
+	},
+	{
+		"#69e942:80", "#b1e436:80", "#dacf61:80", "#fcd953:80"
+	},
+	{
+		"#ace943:80", "#e4d136:80", "#daa062:80", "#fc9754:80"
+	},
+	{
+		"#e9df43:80", "#e48836:80", "#da6e62:80", "#fc5458:80"
+	}
+}
+local grasses = {
+	{"Wet", "lib_materials_grass_jungle_01_top.png", "lib_materials_grass_jungle_01_side.png"},
+	{"Lush", "lib_materials_grass_default_top.png", "lib_materials_grass_default_side.png"},
+	{"Dry", "lib_materials_grass_dry_default_top.png", "lib_materials_grass_dry_default_side.png"},
+	{"Brown", "lib_materials_grass_brown_top.png", "lib_materials_grass_brown_side.png"}
+}
+--Grass Top with Grass Sides over Dirt
+local covers = {
+	{"grass", "Grass", "lib_materials_grass_default_top.png", "lib_materials_grass_default_side.png"},
+	{"grass_bamboo", "Bamboo Grass", "lib_materials_grass_bamboo_top.png", "lib_materials_grass_bamboo_side.png"},
+	{"grass_brown", "Brown Grass", "lib_materials_grass_brown_top.png", "lib_materials_grass_brown_side.png"},
+	{"grass_cold", "Cold Grass", "lib_materials_grass_cold_top.png", "lib_materials_grass_cold_side.png"},
+	{"grass_crystal", "Crystal Grass", "lib_materials_grass_crystal_top.png", "lib_materials_grass_crystal_side.png"},
+	{"grass_dry", "Dry Grass", "lib_materials_grass_dry_default_top.png", "lib_materials_grass_dry_default_side.png"},
+	{"grass_fiery", "Fiery Grass", "lib_materials_grass_fiery_top.png", "lib_materials_grass_fiery_side.png"},
+	{"grass_gray", "Gray Grass", "lib_materials_grass_gray_top.png", "lib_materials_grass_gray_side.png"},
+	{"grass_green", "Green Grass", "lib_materials_grass_green_top.png", "lib_materials_grass_green_side.png"},
+	{"grass_grove", "Grove Grass", "lib_materials_grass_grove_top.png", "lib_materials_grass_grove_side.png"},
+	{"grass_jungle_01", "Jungle Grass 01", "lib_materials_grass_jungle_01_top.png", "lib_materials_grass_jungle_01_side.png"},
+	{"grass_mushroom", "Mushroom Grass", "lib_materials_grass_mushroom_top.png", "lib_materials_grass_mushroom_side.png"},
+	{"grass_prairie", "Prairie Grass", "lib_materials_grass_prairie_top.png", "lib_materials_grass_prairie_side.png"},
+	{"litter_coniferous", "Coniferous Litter", "lib_materials_litter_coniferous.png", "lib_materials_litter_coniferous_side.png"},
+	{"litter_rainforest", "Rainforest Litter", "lib_materials_litter_rainforest.png", "lib_materials_litter_rainforest_side.png"},
+	{"snow", "Snow", "lib_materials_snow.png", "lib_materials_snow_side.png"},
+}
+--Soil Top with Soil Sides masked over Dirt
+	--lib_materials_ground_soil_wet.png	lib_materials_ground_soil_wet_side.png
+local soils = {
+	{"soil", "Soil", "lib_materials_dirt_soil_mask.png"},
+	{"soil_wet", "Wet Soil", "lib_materials_dirt_soil_wet_mask.png", "lib_materials_dirt_with_soil_wet_side.png"},
+}
+
+
+--Dirt with Stone nodes.  Uses mask over dirt.
+local stone_dirts = {
+	{"stone", "Stone", "lib_materials_stone_default.png^(", "^[mask:lib_materials_mask_stone.png)"},
+	{"stone_cobble", "Cobblestone", "lib_materials_stone_cobble_default.png^(", "^[mask:lib_materials_mask_cobble.png)"},
+	{"stone_desert_cobble", "Desert Cobblestone", "lib_materials_stone_desert_cobble.png^(", "^[mask:lib_materials_mask_cobble.png)"},
+}
+--Dirt with Litter nodes that use alpha texture over dirt.
+local alpha_litter_dirts = {
+	{"litter_fungi", "Fungal Litter", "lib_materials_litter_vine.png", "lib_materials_grass_fungi_side.png"},
+	{"litter_leaf_01", "Leaf Litter 01", "lib_materials_litter_leaf_01.png", "lib_materials_litter_coniferous_side.png"},
+	{"litter_leaf_02", "Leaf Litter 02", "lib_materials_litter_leaf_02.png", "lib_materials_litter_coniferous_side.png"},
+	{"litter_stones", "Stones", "lib_materials_litter_stones.png", "lib_materials_litter_stones_side.png"},
+	{"litter_vine", "Vines", "lib_materials_litter_vine.png", "lib_materials_litter_coniferous_side.png"},
+}
+
+
+
 for i, stone in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/nodes.csv")) do
 
 	--Node_Name|Description|Alias_Mod|Alias_Node|Tile_String|Draw_Type|Param_Type|ParamType2|LightSource|Walkable|Pointable|Climbable|Diggable|Buildable|Use_Alpha|Alpha|Sun_Prop|Damage_Per_Second|Grnd_Cnt|Legacy|Groups|Groups2|Max_Drops|Drops|Sounds|Group_Cracky|Group_Crumbly|Group_Choppy|Group_Snappy|Group_Bendy|Group_Oddly_Breakable_by_Hand|Group_Level|Group_Stone|Group_Sand|Group_Glass|Group_Ore|Group_Metal|Group_Mineral|Group_Ice|Group_Snowy|Group_Dirt|Group_Grass|Group_Soil|Group_BakedClay|Group_Liquid|Group_Lava|Group_Igniter|Group_Mud|Group_Oil|Group_Flammable|Group_Quicksand|Group_Water|Group_Puts_Out_FIre|Group_Cools_Lava|Group_Falling_Node|Group_Not_In_Creative_Inventory|Group_Drown|Group_Disable_Jump|Group_Mohs|Group_RockType|Grp_MatType|LiquidType|LiquidViscosity|LiquidRange|LiquidRenew|LiquidAltSource|LiquidAltFlow|PostEffectColor
@@ -445,131 +569,6 @@ for i, stone in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/nodes
 
 
 
-	--##  register dirt nodes for with grass, with litter, and with ground cover and for biome specific ground cover.
-	--##  Dirts:
-	--##      Dirt,Black Dirt,Brown Dirt,Clayey Dirt,Red Clay,White Clay,Coarse Dirt,Dark Dirt,
-	--##      Dried Dirt,Dry Dirt,Mud,Dried Mud,Permafrost,Sandy Dirt,Silt 01,Silt 02,Silty Dirt,Sod
-	--##  Dirts are registered as standalone nodes, as well as, with each of several grass or other ground cover types, listed below.
-	--##      Grass(es)(Bamboo,Brown,Cold,Crystal,Dry,Fiery,Gray,Green,Grove,Jungle 01,Mushroom,Prairie),
-	--##      Coniferous Litter,Fungal Litter,Leaf Litter 01,Leaf Litter 02,Rainforest Litter,Stones,Vines,Snow,Soil,Wet Soil,Stone,Cobblestone,Desert Cobblestone
-	--##  Dirts are also registered for each biome ground cover, according to temperature, humidity and altitude.  Example: 'dirt_with_grass_warm_humid_lowland'.
-
-	local temperatures = {"hot", "warm", "temperate", "cool"}
-	local humidities = {"humid", "semihumid", "temperate", "semiarid"}
-	local elevations = {"coastal", "lowland", "shelf", "highland"}
-	local palettes1 = {
-		hot_humid = "#93fc54:80",
-		hot_semihumid = "#fcd953:80",
-		hot_temperate = "#fc9754:80",
-		hot_semiarid = "#fc5458:80",
-		warm_humid = "#81da62:72",
-		warm_semihumid = "#dacf61:72",
-		warm_temperate = "#daa062:72",
-		warm_semiarid = "#da6e62:72",
-		temperate_humid = "#36e44b:64",
-		temperate_semihumid = "#b1e436:64",
-		temperate_temperate = "#e4d136:64",
-		temperate_semiarid = "#e48836:64",
-		cool_humid = "#43e9a5:48",
-		cool_semihumid = "#69e942:48",
-		cool_temperate = "#ace943:48",
-		cool_semiarid = "#e9df43:48",
-	}
-
-	local textures = {}
-	if lib_materials.color_grass_use then
-			textures = {
-				coastal = {
-					"lib_materials_grass_jungle_01_top.png", "lib_materials_grass_jungle_01_side.png"
-				},
-				lowland = {
-					"lib_materials_grass_default_top.png", "lib_materials_grass_default_side.png"
-				},
-				shelf = {
-					"lib_materials_grass_dry_default_top.png", "lib_materials_grass_dry_default_side.png"
-				},
-				highland = {
-					"lib_materials_grass_brown_top.png", "lib_materials_grass_brown_side.png"
-				}
-			}
-	else
-			textures = {
-				coastal = {
-					"lib_materials_grass_coastal_top.png", "lib_materials_grass_coastal_side.png"
-				},
-				lowland = {
-					"lib_materials_grass_lowland_top.png", "lib_materials_grass_lowland_side.png"
-				},
-				shelf = {
-					"lib_materials_grass_shelf_top.png", "lib_materials_grass_shelf_side.png"
-				},
-				highland = {
-					"lib_materials_grass_highland_top.png", "lib_materials_grass_highland_side.png"
-				}
-			}
-	end
-	local palettes2 = {
-		{
-			"#43e9a5:80", "#36e44b:80", "#81da62:80", "#93fc54:80"
-		},
-		{
-			"#69e942:80", "#b1e436:80", "#dacf61:80", "#fcd953:80"
-		},
-		{
-			"#ace943:80", "#e4d136:80", "#daa062:80", "#fc9754:80"
-		},
-		{
-			"#e9df43:80", "#e48836:80", "#da6e62:80", "#fc5458:80"
-		}
-	}
-	local grasses = {
-		{"Wet", "lib_materials_grass_jungle_01_top.png", "lib_materials_grass_jungle_01_side.png"},
-		{"Lush", "lib_materials_grass_default_top.png", "lib_materials_grass_default_side.png"},
-		{"Dry", "lib_materials_grass_dry_default_top.png", "lib_materials_grass_dry_default_side.png"},
-		{"Brown", "lib_materials_grass_brown_top.png", "lib_materials_grass_brown_side.png"}
-	}
-	--Grass Top with Grass Sides over Dirt
-	local covers = {
-		{"grass", "Grass", "lib_materials_grass_default_top.png", "lib_materials_grass_default_side.png"},
-		{"grass_bamboo", "Bamboo Grass", "lib_materials_grass_bamboo_top.png", "lib_materials_grass_bamboo_side.png"},
-		{"grass_brown", "Brown Grass", "lib_materials_grass_brown_top.png", "lib_materials_grass_brown_side.png"},
-		{"grass_cold", "Cold Grass", "lib_materials_grass_cold_top.png", "lib_materials_grass_cold_side.png"},
-		{"grass_crystal", "Crystal Grass", "lib_materials_grass_crystal_top.png", "lib_materials_grass_crystal_side.png"},
-		{"grass_dry", "Dry Grass", "lib_materials_grass_dry_default_top.png", "lib_materials_grass_dry_default_side.png"},
-		{"grass_fiery", "Fiery Grass", "lib_materials_grass_fiery_top.png", "lib_materials_grass_fiery_side.png"},
-		{"grass_gray", "Gray Grass", "lib_materials_grass_gray_top.png", "lib_materials_grass_gray_side.png"},
-		{"grass_green", "Green Grass", "lib_materials_grass_green_top.png", "lib_materials_grass_green_side.png"},
-		{"grass_grove", "Grove Grass", "lib_materials_grass_grove_top.png", "lib_materials_grass_grove_side.png"},
-		{"grass_jungle_01", "Jungle Grass 01", "lib_materials_grass_jungle_01_top.png", "lib_materials_grass_jungle_01_side.png"},
-		{"grass_mushroom", "Mushroom Grass", "lib_materials_grass_mushroom_top.png", "lib_materials_grass_mushroom_side.png"},
-		{"grass_prairie", "Prairie Grass", "lib_materials_grass_prairie_top.png", "lib_materials_grass_prairie_side.png"},
-		{"litter_coniferous", "Coniferous Litter", "lib_materials_litter_coniferous.png", "lib_materials_litter_coniferous_side.png"},
-		{"litter_rainforest", "Rainforest Litter", "lib_materials_litter_rainforest.png", "lib_materials_litter_rainforest_side.png"},
-		{"snow", "Snow", "lib_materials_snow.png", "lib_materials_snow_side.png"},
-	}
-	--Soil Top with Soil Sides masked over Dirt
-		--lib_materials_ground_soil_wet.png	lib_materials_ground_soil_wet_side.png
-	local soils = {
-		{"soil", "Soil", "lib_materials_dirt_soil_mask.png"},
-		{"soil_wet", "Wet Soil", "lib_materials_dirt_soil_wet_mask.png", "lib_materials_dirt_with_soil_wet_side.png"},
-	}
-
-
-	--Dirt with Stone nodes.  Uses mask over dirt.
-	local stone_dirts = {
-		{"stone", "Stone", "lib_materials_stone_default.png^(", "^[mask:lib_materials_mask_stone.png)"},
-		{"stone_cobble", "Cobblestone", "lib_materials_stone_cobble_default.png^(", "^[mask:lib_materials_mask_cobble.png)"},
-		{"stone_desert_cobble", "Desert Cobblestone", "lib_materials_stone_desert_cobble.png^(", "^[mask:lib_materials_mask_cobble.png)"},
-	}
-	--Dirt with Litter nodes that use alpha texture over dirt.
-	local alpha_litter_dirts = {
-		{"litter_fungi", "Fungal Litter", "lib_materials_litter_vine.png", "lib_materials_grass_fungi_side.png"},
-		{"litter_leaf_01", "Leaf Litter 01", "lib_materials_litter_leaf_01.png", "lib_materials_litter_coniferous_side.png"},
-		{"litter_leaf_02", "Leaf Litter 02", "lib_materials_litter_leaf_02.png", "lib_materials_litter_coniferous_side.png"},
-		{"litter_stones", "Stones", "lib_materials_litter_stones.png", "lib_materials_litter_stones_side.png"},
-		{"litter_vine", "Vines", "lib_materials_litter_vine.png", "lib_materials_litter_coniferous_side.png"},
-	}
-
 	if new_node_type == 2 then
 		new_node_def.soil = {
 				base = node_name,
@@ -578,9 +577,7 @@ for i, stone in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/nodes
 		}
 
 		minetest.register_node("lib_materials:"..node_name.."", new_node_def)
-		minetest.register_alias(""..node_name.."", "lib_materials:"..node_name.."")
-		--game.lib.node.register("lib_materials:"..node_name.."", new_node_def)
-		--game.lib.node.register_alias("lib_materials", node_name, alias_mod, alias_node)
+		minetest.register_alias(node_name, "lib_materials:"..node_name.."")
 
 		for _, sl in pairs(soils) do
 
@@ -607,8 +604,11 @@ for i, stone in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/nodes
 					dry = "lib_materials:"..node_name.."_with_soil",
 					wet = "lib_materials:"..node_name.."_with_soil_wet"
 				}
+			new_cloned_node.groups["not_in_creative_inventory"] = 1
 	
 			minetest.register_node("lib_materials:" .. full .. "", new_cloned_node)
+			minetest.register_alias(full, "lib_materials:"..full.."")
+
 		end
 
 		for _, cv in pairs(covers) do
@@ -637,14 +637,11 @@ for i, stone in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/nodes
 					dry = "lib_materials:"..node_name.."_with_soil",
 					wet = "lib_materials:"..node_name.."_with_soil_wet"
 				}
+			new_cloned_node.groups["not_in_creative_inventory"] = 1
 	
 			minetest.register_node("lib_materials:" .. full .. "", new_cloned_node)
-			if full == "dirt_with_grass" then
-				minetest.register_alias("default:dirt_with_grass", "lib_materials:"..full.."")
-			end
-			if full == "dirt_with_grass_dry" then
-				minetest.register_alias("default:dirt_with_dry_grass", "lib_materials:"..full.."")
-			end
+			minetest.register_alias(full, "lib_materials:"..full.."")
+
 		end
 
 		for _, sd in pairs(stone_dirts) do
@@ -660,8 +657,11 @@ for i, stone in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/nodes
 					dry = "lib_materials:"..node_name.."_with_soil",
 					wet = "lib_materials:"..node_name.."_with_soil_wet"
 				}
+			new_cloned_node.groups["not_in_creative_inventory"] = 1
 	
 			minetest.register_node("lib_materials:" .. full .. "", new_cloned_node)
+			minetest.register_alias(full, "lib_materials:"..full.."")
+
 		end
 
 		for _, alph in pairs(alpha_litter_dirts) do
@@ -683,8 +683,11 @@ for i, stone in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/nodes
 					dry = "lib_materials:"..node_name.."_with_soil",
 					wet = "lib_materials:"..node_name.."_with_soil_wet"
 				}
+			new_cloned_node.groups["not_in_creative_inventory"] = 1
 	
 			minetest.register_node("lib_materials:" .. full .. "", new_cloned_node)
+			minetest.register_alias(full, "lib_materials:"..full.."")
+
 		end
 
 		for _, t in pairs(temperatures) do
@@ -706,9 +709,11 @@ for i, stone in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/nodes
 						dry = "lib_materials:"..node_name.."_with_soil",
 						wet = "lib_materials:"..node_name.."_with_soil_wet"
 					}
+					new_cloned_node.groups["not_in_creative_inventory"] = 1
 			
 					minetest.register_node("lib_materials:" .. id .. "", new_cloned_node)
-	
+					minetest.register_alias(id, "lib_materials:"..id.."")
+
 				end
 			end
 		end
@@ -737,9 +742,10 @@ for i, stone in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/nodes
 								dry = "lib_materials:"..node_name.."_with_soil",
 								wet = "lib_materials:"..node_name.."_with_soil_wet"
 							}
+						new_cloned_node.groups["not_in_creative_inventory"] = 1
 				
 						minetest.register_node("lib_materials:" .. full .. "", new_cloned_node)
-		
+						minetest.register_alias(full, "lib_materials:"..full.."")
 		
 						count = count + 1
 					end
@@ -751,65 +757,158 @@ for i, stone in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/nodes
 
 		minetest.register_node("lib_materials:"..node_name.."", new_node_def)
 		minetest.register_alias(""..node_name.."", "lib_materials:"..node_name.."")
-		--game.lib.node.register("lib_materials:"..node_name.."", new_node_def)
-		--game.lib.node.register_alias("lib_materials", node_name, alias_mod, alias_node)
 
 	end
 
-	if minetest.global_exists("lib_shapes") then
-		if string.find(node_name, "stone") then
-			if (string.find(node_name, "block") or string.find(node_name, "brick") or string.find(node_name, "cobble")) then
-
-				--lib_shapes.register_node("lib_materials:"..node_name.."", "stairs")
-				--lib_shapes.register_node("lib_materials:"..node_name.."", "slab")
-				--lib_shapes.register_node("lib_materials:"..node_name.."", "pillar_with_wall")
-				--lib_shapes.register_node("lib_materials:"..node_name.."", "pillar_with_wall_thick")
-				--lib_shapes.register_node("lib_materials:"..node_name.."", "wall")
-				--lib_shapes.register_node("lib_materials:"..node_name.."", "wall_thick")
-	
-				lib_shapes.register_basic_set("lib_materials:"..node_name.."")
-				--lib_shapes.register_fancy_set("lib_materials:"..node_name.."")
-				--lib_shapes.register_doors_set("lib_materials:"..node_name.."")
-				--lib_shapes.register_furniture_set("lib_materials:"..node_name.."")
-
+	if lib_materials.enable_lib_shapes == true then
+		if minetest.global_exists("lib_shapes") then
+			if string.find(node_name, "stone") then
+				if (string.find(node_name, "block") or string.find(node_name, "brick") or string.find(node_name, "cobble")) then
+					--lib_shapes.register_node("lib_materials:"..node_name.."", "stairs")
+					--lib_shapes.register_node("lib_materials:"..node_name.."", "slab")
+					--lib_shapes.register_node("lib_materials:"..node_name.."", "pillar_with_wall")
+					--lib_shapes.register_node("lib_materials:"..node_name.."", "pillar_with_wall_thick")
+					--lib_shapes.register_node("lib_materials:"..node_name.."", "wall")
+					--lib_shapes.register_node("lib_materials:"..node_name.."", "wall_thick")
+					lib_shapes.register_basic_set("lib_materials:"..node_name.."")
+					--lib_shapes.register_fancy_set("lib_materials:"..node_name.."")
+					--lib_shapes.register_doors_set("lib_materials:"..node_name.."")
+					--lib_shapes.register_furniture_set("lib_materials:"..node_name.."")
+				end
+			end
+			if node_name == "lib_materials:stone" or node_name == "lib_materials:stone_desert" or node_name == "lib_materials:stone_sandstone"
+					 or node_name == "lib_materials:stone_sandstone_desert" or node_name == "lib_materials:stone_sandstone_silver" or node_name == "lib_materials:stone_obsidian" then
+				lib_shapes.register_node("lib_materials:"..node_name.."", "stairs")
+				lib_shapes.register_node("lib_materials:"..node_name.."", "stairs_inner")
+				lib_shapes.register_node("lib_materials:"..node_name.."", "stairs_outer")
+				lib_shapes.register_node("lib_materials:"..node_name.."", "slab")
+			end
+			if string.find(node_name, "roof") then
+				lib_shapes.register_node("lib_materials:"..node_name.."", "stairs")
+				lib_shapes.register_node("lib_materials:"..node_name.."", "stairs_inner")
+				lib_shapes.register_node("lib_materials:"..node_name.."", "stairs_outer")
+				lib_shapes.register_node("lib_materials:"..node_name.."", "slab")
+			end
+			if string.find(node_name, "glass") then
+				lib_shapes.register_node("lib_materials:"..node_name.."", "pane")
+				lib_shapes.register_node("lib_materials:"..node_name.."", "pane_centered")
+				lib_shapes.register_door_node("lib_materials:"..node_name.."", "door_centered")
+				lib_shapes.register_door_node("lib_materials:"..node_name.."", "door_centered_right")
+				lib_shapes.register_door_node("lib_materials:"..node_name.."", "door_centered_with_window")
+				lib_shapes.register_door_node("lib_materials:"..node_name.."", "door_centered_with_window_right")
+				lib_shapes.register_door_node("lib_materials:"..node_name.."", "door_centered_sliding")
+				lib_shapes.register_door_node("lib_materials:"..node_name.."", "door_centered_sliding_right")
+				lib_shapes.register_door_node("lib_materials:"..node_name.."", "trapdoor_solid")
 			end
 		end
-		if node_name == "lib_materials:stone" then
-			lib_shapes.register_node("lib_materials:"..node_name.."", "stairs")
-			lib_shapes.register_node("lib_materials:"..node_name.."", "stairs_inner")
-			lib_shapes.register_node("lib_materials:"..node_name.."", "stairs_outer")
-			lib_shapes.register_node("lib_materials:"..node_name.."", "slab")
-		end
-		if string.find(node_name, "roof") then
-			lib_shapes.register_node("lib_materials:"..node_name.."", "stairs")
-			lib_shapes.register_node("lib_materials:"..node_name.."", "stairs_inner")
-			lib_shapes.register_node("lib_materials:"..node_name.."", "stairs_outer")
-			lib_shapes.register_node("lib_materials:"..node_name.."", "slab")
-		end
-		if string.find(node_name, "glass") then
-			lib_shapes.register_node("lib_materials:"..node_name.."", "pane")
-			lib_shapes.register_node("lib_materials:"..node_name.."", "pane_centered")
-			lib_shapes.register_door_node("lib_materials:"..node_name.."", "door_centered")
-			lib_shapes.register_door_node("lib_materials:"..node_name.."", "door_centered_right")
-			lib_shapes.register_door_node("lib_materials:"..node_name.."", "door_centered_with_window")
-			lib_shapes.register_door_node("lib_materials:"..node_name.."", "door_centered_with_window_right")
-			lib_shapes.register_door_node("lib_materials:"..node_name.."", "door_centered_sliding")
-			lib_shapes.register_door_node("lib_materials:"..node_name.."", "door_centered_sliding_right")
-			lib_shapes.register_door_node("lib_materials:"..node_name.."", "trapdoor_solid")
-		end
 	end
-
 
 	if alias_mod and alias_node then
 		minetest.register_alias(""..alias_mod..":"..alias_node.."", "lib_materials:"..node_name.."")
-		--minetest.register_alias(""..alias_node.."", "lib_materials:"..node_name.."")
 	end
-
-
-
 
 end
 
+
+	--minetest.register_alias(""..node_name.."", "lib_materials:"..node_name.."")
+	--minetest.register_alias(""..node_name.."", "lib_materials:"..node_name.."")
+
+	minetest.register_alias("default:dirt_with_grass", "lib_materials:dirt_with_grass")
+	minetest.register_alias("default:dirt_with_dry_grass", "lib_materials:dirt_with_grass_dry")
+
+	if lib_materials.enable_lib_shapes == true then
+		if minetest.global_exists("lib_shapes") then
+			minetest.register_alias("stairs:stair_stone", "lib_materials:stone_stairs")
+			minetest.register_alias("stairs:stair_inner_stone", "lib_materials:stone_stairs_inner")
+			minetest.register_alias("stairs:stair_outer_stone", "lib_materials:stone_stairs_outer")
+			minetest.register_alias("stairs:slab_stone", "lib_materials:stone_slab")
+			minetest.register_alias("stairs:stair_stone_block", "lib_materials:stone_block_stairs")
+			minetest.register_alias("stairs:stair_inner_stone_block", "lib_materials:stone_block_stairs_inner")
+			minetest.register_alias("stairs:stair_outer_stone_block", "lib_materials:stone_block_stairs_outer")
+			minetest.register_alias("stairs:slab_stone_block", "lib_materials:stone_block_slab")
+			minetest.register_alias("stairs:stair_stonebrick", "lib_materials:stone_brick_stairs")
+			minetest.register_alias("stairs:stair_inner_stonebrick", "lib_materials:stone_brick_stairs_inner")
+			minetest.register_alias("stairs:stair_outer_stonebrick", "lib_materials:stone_brick_stairs_outer")
+			minetest.register_alias("stairs:slab_stonebrick", "lib_materials:stone_brick_slab")
+			minetest.register_alias("stairs:stair_cobble", "lib_materials:stone_cobble_stairs")
+			minetest.register_alias("stairs:stair_inner_cobble", "lib_materials:stone_cobble_stairs_inner")
+			minetest.register_alias("stairs:stair_outer_cobble", "lib_materials:stone_cobble_stairs_outer")
+			minetest.register_alias("stairs:slab_cobble", "lib_materials:stone_cobble_slab")
+			minetest.register_alias("stairs:stair_mossycobble", "lib_materials:stone_cobble_mossy_stairs")
+			minetest.register_alias("stairs:stair_inner_mossycobble", "lib_materials:stone_cobble_mossy_stairs_inner")
+			minetest.register_alias("stairs:stair_outer_mossycobble", "lib_materials:stone_cobble_mossy_stairs_outer")
+			minetest.register_alias("stairs:slab_mossycobble", "lib_materials:stone_cobble_mossy_slab")
+			
+			minetest.register_alias("stairs:stair_desert_stone", "lib_materials:stone_desert_stairs")
+			minetest.register_alias("stairs:stair_inner_desert_stone", "lib_materials:stone_desert_stairs_inner")
+			minetest.register_alias("stairs:stair_outer_desert_stone", "lib_materials:stone_desert_stairs_outer")
+			minetest.register_alias("stairs:slab_desert_stone", "lib_materials:stone_desert_slab")
+			minetest.register_alias("stairs:stair_desert_stone_block", "lib_materials:stone_desert_block_stairs")
+			minetest.register_alias("stairs:stair_inner_desert_stone_block", "lib_materials:stone_desert_block_stairs_inner")
+			minetest.register_alias("stairs:stair_outer_desert_stone_block", "lib_materials:stone_desert_block_stairs_outer")
+			minetest.register_alias("stairs:slab_desert_stone_block", "lib_materials:stone_desert_block_slab")
+			minetest.register_alias("stairs:stair_desert_stonebrick", "lib_materials:stone_desert_brick_stairs")
+			minetest.register_alias("stairs:stair_inner_desert_stonebrick", "lib_materials:stone_desert_brick_stairs_inner")
+			minetest.register_alias("stairs:stair_outer_desert_stonebrick", "lib_materials:stone_desert_brick_stairs_outer")
+			minetest.register_alias("stairs:slab_desert_stonebrick", "lib_materials:stone_desert_brick_slab")
+			minetest.register_alias("stairs:stair_desert_cobble", "lib_materials:stone_desert_cobble_stairs")
+			minetest.register_alias("stairs:stair_inner_desert_cobble", "lib_materials:stone_desert_cobble_stairs_inner")
+			minetest.register_alias("stairs:stair_outer_desert_cobble", "lib_materials:stone_desert_cobble_stairs_outer")
+			minetest.register_alias("stairs:slab_desert_cobble", "lib_materials:stone_desert_cobble_slab")
+			
+			minetest.register_alias("stairs:stair_sandstone", "lib_materials:stone_sandstone_stairs")
+			minetest.register_alias("stairs:stair_inner_sandstone", "lib_materials:stone_sandstone_stairs_inner")
+			minetest.register_alias("stairs:stair_outer_sandstone", "lib_materials:stone_sandstone_stairs_outer")
+			minetest.register_alias("stairs:slab_sandstone", "lib_materials:stone_sandstone_slab")
+			minetest.register_alias("stairs:stair_sandstone_block", "lib_materials:stone_sandstone_block_stairs")
+			minetest.register_alias("stairs:stair_inner_sandstone_block", "lib_materials:stone_sandstone_block_stairs_inner")
+			minetest.register_alias("stairs:stair_outer_sandstone_block", "lib_materials:stone_sandstone_block_stairs_outer")
+			minetest.register_alias("stairs:slab_sandstone_block", "lib_materials:stone_sandstone_block_slab")
+			minetest.register_alias("stairs:stair_sandstonebrick", "lib_materials:stone_sandstone_brick_stairs")
+			minetest.register_alias("stairs:stair_inner_sandstonebrick", "lib_materials:stone_sandstone_brick_stairs_inner")
+			minetest.register_alias("stairs:stair_outer_sandstonebrick", "lib_materials:stone_sandstone_brick_stairs_outer")
+			minetest.register_alias("stairs:slab_sandstonebrick", "lib_materials:stone_sandstone_brick_slab")
+			
+			minetest.register_alias("stairs:stair_desert_sandstone", "lib_materials:stone_sandstone_desert_stairs")
+			minetest.register_alias("stairs:stair_inner_desert_sandstone", "lib_materials:stone_sandstone_desert_stairs_inner")
+			minetest.register_alias("stairs:stair_outer_desert_sandstone", "lib_materials:stone_sandstone_desert_stairs_outer")
+			minetest.register_alias("stairs:slab_desert_sandstone", "lib_materials:stone_sandstone_desert_slab")
+			minetest.register_alias("stairs:stair_desert_sandstone_block", "lib_materials:stone_sandstone_desert_block_stairs")
+			minetest.register_alias("stairs:stair_inner_desert_sandstone_block", "lib_materials:stone_sandstone_desert_block_stairs_inner")
+			minetest.register_alias("stairs:stair_outer_desert_sandstone_block", "lib_materials:stone_sandstone_desert_block_stairs_outer")
+			minetest.register_alias("stairs:slab_desert_sandstone_block", "lib_materials:stone_sandstone_desert_block_slab")
+			minetest.register_alias("stairs:stair_desert_sandstone_brick", "lib_materials:stone_sandstone_desert_brick_stairs")
+			minetest.register_alias("stairs:stair_inner_desert_sandstone_brick", "lib_materials:stone_sandstone_desert_brick_stairs_inner")
+			minetest.register_alias("stairs:stair_outer_desert_sandstone_brick", "lib_materials:stone_sandstone_desert_brick_stairs_outer")
+			minetest.register_alias("stairs:slab_desert_sandstone_brick", "lib_materials:stone_sandstone_desert_brick_slab")
+			
+			minetest.register_alias("stairs:stair_silver_sandstone", "lib_materials:stone_sandstone_silver_stairs")
+			minetest.register_alias("stairs:stair_inner_silver_sandstone", "lib_materials:stone_sandstone_silver_stairs_inner")
+			minetest.register_alias("stairs:stair_outer_silver_sandstone", "lib_materials:stone_sandstone_silver_stairs_outer")
+			minetest.register_alias("stairs:slab_silver_sandstone", "lib_materials:stone_sandstone_silver_slab")
+			minetest.register_alias("stairs:stair_silver_sandstone_block", "lib_materials:stone_sandstone_silver_block_stairs")
+			minetest.register_alias("stairs:stair_inner_silver_sandstone_block", "lib_materials:stone_sandstone_silver_block_stairs_inner")
+			minetest.register_alias("stairs:stair_outer_silver_sandstone_block", "lib_materials:stone_sandstone_silver_block_stairs_outer")
+			minetest.register_alias("stairs:slab_silver_sandstone_block", "lib_materials:stone_sandstone_silver_block_slab")
+			minetest.register_alias("stairs:stair_silver_sandstone_brick", "lib_materials:stone_sandstone_silver_brick_stairs")
+			minetest.register_alias("stairs:stair_inner_silver_sandstone_brick", "lib_materials:stone_sandstone_silver_brick_stairs_inner")
+			minetest.register_alias("stairs:stair_outer_silver_sandstone_brick", "lib_materials:stone_sandstone_silver_brick_stairs_outer")
+			minetest.register_alias("stairs:slab_silver_sandstone_brick", "lib_materials:stone_sandstone_silver_brick_slab")
+			
+			minetest.register_alias("stairs:stair_obsidian", "lib_materials:stone_obsidian_stairs")
+			minetest.register_alias("stairs:stair_inner_obsidian", "lib_materials:stone_obsidian_stairs_inner")
+			minetest.register_alias("stairs:stair_outer_obsidian", "lib_materials:stone_obsidian_stairs_outer")
+			minetest.register_alias("stairs:slab_obsidian", "lib_materials:stone_obsidian_slab")
+			minetest.register_alias("stairs:stair_obsidian_block", "lib_materials:stone_obsidian_block_stairs")
+			minetest.register_alias("stairs:stair_inner_obsidian_block", "lib_materials:stone_obsidian_block_stairs_inner")
+			minetest.register_alias("stairs:stair_outer_obsidian_block", "lib_materials:stone_obsidian_block_stairs_outer")
+			minetest.register_alias("stairs:slab_obsidian_block", "lib_materials:stone_obsidian_block_slab")
+			minetest.register_alias("stairs:stair_obsidianbrick", "lib_materials:stone_obsidian_brick_stairs")
+			minetest.register_alias("stairs:stair_inner_obsidianbrick", "lib_materials:stone_obsidian_brick_stairs_inner")
+			minetest.register_alias("stairs:stair_outer_obsidianbrick", "lib_materials:stone_obsidian_brick_stairs_outer")
+			minetest.register_alias("stairs:slab_obsidianbrick", "lib_materials:stone_obsidian_brick_slab")
+		end
+	end
 
 
 

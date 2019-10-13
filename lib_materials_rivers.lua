@@ -1,124 +1,597 @@
 
 
+local S = lib_materials.intllib
 
-local neighbors_p = {
-					{x=1},{x=-1},
-					{z=1},{z=-1}
-					}
 
-local neighbors_p2 = {
-					{x=2},{x=-2},
-					{z=2},{z=-2}
-					}
+	local __ = {name = "air",param2 = 0,prob = 254}
+	local D0 = {name = "lib_materials:dirt", param2 = 0, prob = 254}
+	local S0 = {name = "lib_materials:stone", param2 = 0, prob = 254}
+	local C0 = {name = "lib_materials:stone_brick", param2 = 0, prob = 254}
+	local T0 = {name = "lib_materials:dirt_compacted", param2 = 0, prob = 254}
+	local WW = {name = "lib_materials:liquid_water_river_source", param2 = 0, prob = 254, force_place = true}
+	local WW = {name = "lib_materials:dirt_mud_01", param2 = 0, prob = 254}
 
-local neighbors_d = {
-					{x=1,z=1},
-					{x=1,z=-1},
-					{x=-1,z=1},
-					{x=-1,z=-1}
-					}
+	local aa = {name = "air",param2 = 0,prob = 0}
+	local WW = {name = "lib_materials:liquid_water_river_source", param2 = 0, prob = 254, force_place = true}
 
-local pos_shift = function(pos,vec)
-	vec.x=vec.x or 0
-	vec.y=vec.y or 0
-	vec.z=vec.z or 0
-	return {x=pos.x+vec.x,
-			y=pos.y+vec.y,
-			z=pos.z+vec.z}
-end
 
-local get_nodename_off = function(pos,vec)
-	return minetest.get_node(pos_shift(pos,vec)).name
-end
 
-local get_neighbors_walkable = function(pos)
-	local ret = 0
-	for _,v in ipairs(neighbors_p) do
-		if minetest.registered_nodes[get_nodename_off(pos,v)].walkable then
-			ret = ret+1
-		end
-	end
-	return ret
-end
-
-minetest.register_abm({
-	label="Erosion_crumb",
-	nodenames = {"group:crumbly","group:snowy"},
-	neighbors = {"lib_materials:liquid_water_rushing_flowing", "lib_materials:liquid_water_rushing_source"},
-	interval = 0.2,
-    chance = 1,
-	catch_up = false,
-	action = function(pos, node, active_object_count, active_object_count_wider)
-
-		local node1up = get_nodename_off(pos,{y=1})
-		if minetest.registered_nodes[node1up].drawtype == "flowingliquid" then
-			if get_neighbors_walkable(pos) < 4 then
-				minetest.remove_node(pos)
-				for _,v in ipairs(neighbors_p) do
-					local node = get_nodename_off(pos,v)
-					local v2=table.copy(v)
-					v2.y = v2.y+1
-					local node2 = get_nodename_off(pos,v2)
-					if (minetest.get_item_group(node,"crumbly")>0 or
-					minetest.get_item_group(node,"snowy")>0) and not
-					minetest.registered_nodes[node2].walkable then
-						minetest.remove_node(pos_shift(pos,v))
-						minetest.remove_node(pos_shift(pos,v2))
-					end
-				end
-			end
-		end
-	end
-})
-
-minetest.register_abm({
-	label="Erosion_stone",
-	nodenames = {"group:stone","default:ice"},
-	neighbors = {"lib_materials:liquid_water_rushing_source"},
-	interval = 1,
-    chance = 2,
-	catch_up = false,
-	action = function(pos, node, active_object_count, active_object_count_wider)
+	__ = {name = "air",param2 = 0,prob = 254, force_place = true}
+	le_temp_schem = {
+		size = {x = 9, y = 15, z = 9},
+		data = {
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
 	
-		local node2up = minetest.get_node(pos_shift(pos,{y=2}))
-		local node1up = minetest.get_node(pos_shift(pos,{y=1}))
-		
-		if pos.y % 4 ~= 0 then
-			if minetest.registered_nodes[node1up.name].drawtype == "liquid" and
-			get_neighbors_walkable(pos) <= 2 then
-				minetest.remove_node(pos)
-				return
-			end
-		end
-		
-		if minetest.registered_nodes[node2up.name].drawtype ~= "liquid" and
-			minetest.registered_nodes[node1up.name].drawtype == "liquid" then
-			local node
-			local vec
-			
-			for _,v in ipairs(neighbors_p) do
-				node = minetest.get_node(pos_shift(pos,v))
-				if minetest.registered_nodes[node.name].drawtype == "liquid" then
-					vec = {x=v.x*-1,y=v.y+1,z=v.z*-1}
-					node = minetest.get_node(pos_shift(pos,vec))
-					if minetest.registered_nodes[node.name].walkable then
-						minetest.remove_node(pos)
-						return
-					end
-				end
-			end
-		end
-	end
-})
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+	
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+	
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+	
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+	
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+	
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+	
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+	
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW, WW, WW,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __,
+			__, __, __, __, __, __, __, __, __
+		},
+		yslice_prob = {
+			{ypos = 0,prob = 254},
+			{ypos = 1,prob = 254},
+			{ypos = 2,prob = 254},
+			{ypos = 3,prob = 254},
+			{ypos = 4,prob = 254},
+			{ypos = 5,prob = 254},
+			{ypos = 6,prob = 254},
+			{ypos = 7,prob = 254},
+			{ypos = 8,prob = 254},
+			{ypos = 9,prob = 254},
+			{ypos = 10,prob = 254},
+			{ypos = 11,prob = 254},
+			{ypos = 12,prob = 254},
+			{ypos = 13,prob = 254},
+			{ypos = 14,prob = 254}
+		}
+	}
+	minetest.register_decoration({
+	   deco_type = "schematic",
+	   place_on = {"group:dirt", "group:soil", "group:sand"},
+	   sidelen = 1,
+	   noise_params = {
+	      offset = 100.0,
+	      scale = -20000.0,
+	      spread = {x = 256, y = 256, z = 256},
+	      seed = 5934,
+	      octaves = 1,
+	      persist = 0.5,
+	      lacunarity = 2.22,
+	      flags = "defaults, noeased, absvalue"
+	   },
+	   y_max = 20,
+	   y_min = 2,
+	   place_offset_y = -12,
+	   flags = "force_placement, place_center_x, place_center_z",
+	   schematic = le_temp_schem,
+	})
 
-minetest.register_abm({
-	label="Erosion_flora",
-	nodenames = {"group:attached_node"},
-	neighbors = {"lib_materials:liquid_water_rushing_flowing", "lib_materials:liquid_water_rushing_source"},
-	interval = 0.2,
-    chance = 1,
-	catch_up = false,
-	action = function(pos, node, active_object_count, active_object_count_wider)
-		minetest.remove_node(pos)
-	end
-})	
+
+
+	__ = {name = "air",param2 = 0,prob = 254, force_place = true}
+	le_temp_schem = {
+		size = {x = 7, y = 13, z = 7},
+		data = {
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+	
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+	
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+	
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+	
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+	
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+	
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW, WW, WW,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __,
+			__, __, __, __, __, __, __
+		},
+		yslice_prob = {
+			{ypos = 0,prob = 254},
+			{ypos = 1,prob = 254},
+			{ypos = 2,prob = 254},
+			{ypos = 3,prob = 254},
+			{ypos = 4,prob = 254},
+			{ypos = 5,prob = 254},
+			{ypos = 6,prob = 254},
+			{ypos = 7,prob = 254},
+			{ypos = 8,prob = 254},
+			{ypos = 9,prob = 254},
+			{ypos = 10,prob = 254},
+			{ypos = 11,prob = 254},
+			{ypos = 12,prob = 254}
+		}
+	}
+	minetest.register_decoration({
+	   deco_type = "schematic",
+	   place_on = {"group:dirt", "group:sand"},
+	   sidelen = 1,
+	   noise_params = {
+	      offset = 100.0,
+	      scale = -20000.0,
+	      spread = {x = 256, y = 256, z = 256},
+	      seed = 5934,
+	      octaves = 1,
+	      persist = 0.5,
+	      flags = "defaults, noeased, absvalue"
+	   },
+	   y_max = 40,
+	   y_min = 20,
+	   place_offset_y = -10,
+	   flags = "force_placement, place_center_x, place_center_z",
+	   schematic = le_temp_schem,
+	})
+
+
+	le_temp_schem = {
+		size = {x = 5, y = 9, z = 5},
+		data = {
+			WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW,
+			__, __, __, __, __,
+			__, __, __, __, __,
+			__, __, __, __, __,
+			__, __, __, __, __,
+	
+			WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW,
+			__, __, __, __, __,
+			__, __, __, __, __,
+			__, __, __, __, __,
+			__, __, __, __, __,
+	
+			WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW,
+			__, __, __, __, __,
+			__, __, __, __, __,
+			__, __, __, __, __,
+			__, __, __, __, __,
+	
+			WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW,
+			__, __, __, __, __,
+			__, __, __, __, __,
+			__, __, __, __, __,
+			__, __, __, __, __,
+	
+			WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW,
+			WW, WW, WW, WW, WW,
+			__, __, __, __, __,
+			__, __, __, __, __,
+			__, __, __, __, __,
+			__, __, __, __, __
+		},
+		yslice_prob = {
+			{ypos = 0,prob = 254},
+			{ypos = 1,prob = 254},
+			{ypos = 2,prob = 254},
+			{ypos = 3,prob = 254},
+			{ypos = 4,prob = 254},
+			{ypos = 5,prob = 254},
+			{ypos = 6,prob = 254},
+			{ypos = 7,prob = 254},
+			{ypos = 8,prob = 254}
+		}
+	}
+	minetest.register_decoration({
+	   deco_type = "schematic",
+	   place_on = {"group:dirt", "group:sand"},
+	   sidelen = 1,
+	   noise_params = {
+	      offset = 100.0,
+	      scale = -20000.0,
+	      spread = {x = 256, y = 256, z = 256},
+	      seed = 5934,
+	      octaves = 1,
+	      persist = 0.5,
+	      flags = "defaults, noeased, absvalue"
+	   },
+	   y_max = 60,
+	   y_min = 40,
+	   place_offset_y = -7,
+	   flags = "force_placement, place_center_x, place_center_z",
+	   schematic = le_temp_schem,
+	})
+
+	le_temp_schem = {
+		size = {x = 3, y = 7, z = 3},
+		data = {
+			WW, WW, WW,
+			WW, WW, WW,
+			WW, WW, WW,
+			__, __, __,
+			__, __, __,
+			__, __, __,
+			__, __, __,
+	
+			WW, WW, WW,
+			WW, WW, WW,
+			WW, WW, WW,
+			__, __, __,
+			__, __, __,
+			__, __, __,
+			__, __, __,
+	
+			WW, WW, WW,
+			WW, WW, WW,
+			WW, WW, WW,
+			__, __, __,
+			__, __, __,
+			__, __, __,
+			__, __, __
+		},
+		yslice_prob = {
+			{ypos = 0,prob = 254},
+			{ypos = 1,prob = 254},
+			{ypos = 2,prob = 254},
+			{ypos = 3,prob = 254},
+			{ypos = 4,prob = 254},
+			{ypos = 5,prob = 254},
+			{ypos = 6,prob = 254}
+		}
+	}
+	minetest.register_decoration({
+	   deco_type = "schematic",
+	   place_on = {"group:dirt", "group:sand"},
+	   sidelen = 1,
+	   noise_params = {
+	      offset = 100.0,
+	      scale = -20000.0,
+	      spread = {x = 256, y = 256, z = 256},
+	      seed = 5934,
+	      octaves = 1,
+	      persist = 0.5,
+	      flags = "defaults, noeased, absvalue"
+	   },
+	   y_max = 80,
+	   y_min = 60,
+	   place_offset_y = -5,
+	   flags = "force_placement, place_center_x, place_center_z",
+	   schematic = le_temp_schem,
+	})
+
+
+
+	WW = {name = "lib_materials:liquid_water_river_source", param2 = 0, prob = 254, force_place = true}
+
+
+	le_temp_schem = {
+		size = {x = 2, y = 5, z = 2},
+		data = {
+			WW, WW,
+			__, __,
+			__, __,
+			__, __,
+			__, __,
+	
+			WW, WW,
+			__, __,
+			__, __,
+			__, __,
+			__, __
+		},
+		yslice_prob = {
+			{ypos = 0,prob = 254},
+			{ypos = 1,prob = 254},
+			{ypos = 2,prob = 254},
+			{ypos = 3,prob = 254},
+			{ypos = 4,prob = 254}
+		}
+	}
+	minetest.register_decoration({
+	   deco_type = "schematic",
+	   place_on = {"group:dirt", "group:sand"},
+	   sidelen = 1,
+	   noise_params = {
+	      offset = 100.0,
+	      scale = -20000.0,
+	      spread = {x = 256, y = 256, z = 256},
+	      seed = 5934,
+	      octaves = 1,
+	      persist = 0.5,
+	      flags = "defaults, noeased, absvalue"
+	   },
+	   y_max = 110,
+	   y_min = 80,
+	   place_offset_y = -4,
+	   flags = "force_placement, place_center_x, place_center_z",
+	   schematic = le_temp_schem,
+	})
+
+
+	le_temp_schem = {
+		size = {x = 1, y = 5, z = 1},
+		data = {
+			WW,
+			__,
+			__,
+			__,
+			__
+		},
+		yslice_prob = {
+			{ypos = 0,prob = 254},
+			{ypos = 1,prob = 254},
+			{ypos = 2,prob = 254},
+			{ypos = 3,prob = 254},
+			{ypos = 4,prob = 254}
+		}
+	}
+	minetest.register_decoration({
+	   deco_type = "schematic",
+	   place_on = {"group:dirt", "group:sand"},
+	   sidelen = 1,
+	   noise_params = {
+	      offset = 100.0,
+	      scale = -20000.0,
+	      spread = {x = 256, y = 256, z = 256},
+	      seed = 5934,
+	      octaves = 1,
+	      persist = 0.5,
+	      flags = "defaults, noeased, absvalue"
+	   },
+	   y_max = 140,
+	   y_min = 110,
+	   place_offset_y = -4,
+	   flags = "force_placement, place_center_x, place_center_z",
+	   schematic = le_temp_schem,
+	})
+
+
+--[[
+	minetest.register_decoration({
+	   deco_type = "simple",
+	   place_on = {"group:soil"},
+	   sidelen = 1,
+	   noise_params = {
+	      offset = 100.0,
+	      scale = -20000.0,
+	      spread = {x = 256, y = 256, z = 256},
+	      seed = 5934,
+	      octaves = 1,
+	      persist = 0.5,
+	      flags = "defaults, absvalue"
+	   },
+	   y_max = 140,
+	   y_min = 120,
+	   place_offset_y = -1,
+	   flags = "force_placement",
+	   decoration = "lib_materials:liquid_water_river_source",
+	})
+--]]
+
