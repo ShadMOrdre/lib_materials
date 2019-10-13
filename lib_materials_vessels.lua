@@ -223,7 +223,7 @@ lib_materials.vessels.register_vessel({
 	vessel_name        = "vessel_vial_glass",
 	vessel_description = "Glass Vial Vessel",
 	capacity          = 1000,
-	textures             = {"lib_materials_vessel_vial_glass.png", "lib_materials_vessel_beaker_vial_mask.png"}
+	textures             = {"lib_materials_vessel_vial_glass.png", "lib_materials_vessel_vial_mask.png"}
 })
 lib_materials.vessels.register_vessel({
 	vessel_name        = "vessel_cup_glass",
