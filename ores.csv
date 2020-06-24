@@ -17,6 +17,12 @@ dirt_sandy|sand|sheet|||8|0.8|0|100|0|1|5||0.6|128|128|128|56|28|0.5||
 dirt_silty|dirt|sheet|||8|0.8|0|100|0|1|5||0.6|128|128|128|56|28|0.5||
 dirt_silt_01|dirt_silty|sheet|||8|0.8|0|100|0|1|5||0.6|128|128|128|56|28|0.5||
 dirt_silt_02|dirt_silty|sheet|||8|0.8|0|100|0|1|5||0.6|128|128|128|56|28|0.5||
+dirt_with_grass_dry|dirt_with_grass|sheet|||8|0.8|0|100|0|1|5||0.6|128|128|128|56|28|0.5||
+dirt_with_litter_coniferous|dirt_with_grass|sheet|||8|0.8|0|100|0|1|5||0.6|128|128|128|56|28|0.5||
+dirt_with_litter_rainforest|dirt_with_grass|sheet|||8|0.8|0|100|0|1|5||0.6|128|128|128|56|28|0.5||
+dirt_with_grass|dirt_with_grass_dry|sheet|||8|0.8|0|100|0|1|5||0.6|128|128|128|56|28|0.5||
+dirt_with_litter_coniferous|dirt_with_grass_dry|sheet|||8|0.8|0|100|0|1|5||0.6|128|128|128|56|28|0.5||
+sand_desert|dirt_with_grass_dry|sheet|||8|0.8|0|100|0|1|5||0.6|128|128|128|56|28|0.5||
 stone_sandstone|stone|sheet|||8|0.8|0|100|0|1|5||0.6|128|128|128|56|28|0.5||
 stone_sandstone_desert|stone|sheet|||8|0.8|0|100|0|1|5||0.6|128|128|128|56|28|0.5||
 stone_sandstone_silver|stone|sheet|||8|0.8|0|100|0|1|5||0.6|128|128|128|56|28|0.5||

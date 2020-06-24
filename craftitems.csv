@@ -1,13 +1,13 @@
 #Craft Item|Craft Description|Craft Image|Craft Groups
 #Dirt, clay, Sand Lumps and Bricks|||
-dirt_lump_mud|Dirt - Mud Lump|lib_materials_dirt_lump_mud_dried.png|
-dirt_lump_silt|Dirt - Silt Lump|lib_materials_dirt_lump_silt.png|
-dirt_lump_clay_white|Dirt - clay Lump|lib_materials_dirt_lump_clay.png|
-dirt_lump_clay_potters|Dirt _Potters clay|lib_materials_dirt_lump_clay_potters.png|
-dirt_brick_clay_black|Black Clay Brick|lib_materials_dirt_brick_clay_black.png|
-dirt_brick_clay_red|Red Clay Brick|lib_materials_dirt_brick_clay_red.png|
-dirt_lump_sand_molding|Lump of Molding Sand|lib_materials_dirt_lump_molding_sand.png|
-stone_brick_concrete|Concrete Brick|lib_materials_stone_brick_concrete.png|
+dirt_lump_mud|Dirt - Mud Lump|lib_materials_lump_mud_dried.png|
+dirt_lump_silt|Dirt - Silt Lump|lib_materials_lump_silt.png|
+dirt_lump_clay_white|Dirt - clay Lump|lib_materials_lump_clay.png|
+dirt_lump_clay_potters|Dirt _Potters clay|lib_materials_lump_clay_potters.png|
+dirt_brick_clay_black|Black Clay Brick|lib_materials_brick_clay_black.png|
+dirt_brick_clay_red|Red Clay Brick|lib_materials_brick_clay_red.png|
+dirt_lump_sand_molding|Lump of Molding Sand|lib_materials_lump_molding_sand.png|
+stone_brick_concrete|Concrete Brick|lib_materials_brick_concrete.png|
 #Molds, Buckets, Tools, Other|||
 mold_clay|Clay Mold|lib_materials_mold_clay.png|
 mold_sand|Sand Mold|lib_materials_mold_sand.png|

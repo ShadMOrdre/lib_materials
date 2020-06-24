@@ -68,17 +68,24 @@ minetest.register_on_generated(function(minp, maxp, seed)
 						--	ground_y = y
 						--	break
 						--end
-						local is_leaves = minetest.registered_nodes[nn].groups.leaves
-						local is_plant = minetest.registered_nodes[nn].groups.plant
-						local is_le_plant = minetest.registered_nodes[nn].groups.lib_ecology_plant
-						local is_flora = minetest.registered_nodes[nn].groups.flora
-						local is_flower = minetest.registered_nodes[nn].groups.flower
-						local is_growing = minetest.registered_nodes[nn].groups.growing
-						if is_leaves == nil or is_leaves == 0 then
+						local is_removable
+						is_removable = minetest.registered_nodes[nn].groups.leaves
+						is_removable = minetest.registered_nodes[nn].groups.tree
+						is_removable = minetest.registered_nodes[nn].groups.sapling
+						is_removable = minetest.registered_nodes[nn].groups.plant
+						is_removable = minetest.registered_nodes[nn].groups.lib_ecology_tree
+						is_removable = minetest.registered_nodes[nn].groups.lib_ecology_sapling
+						is_removable = minetest.registered_nodes[nn].groups.lib_ecology_leaves
+						is_removable = minetest.registered_nodes[nn].groups.lib_ecology_fruit
+						is_removable = minetest.registered_nodes[nn].groups.lib_ecology_plant
+						is_removable = minetest.registered_nodes[nn].groups.flora
+						is_removable = minetest.registered_nodes[nn].groups.flower
+						is_removable = minetest.registered_nodes[nn].groups.growing
+
+						if is_removable == nil or is_removable == 0 then
 							ground_y = y
 							break
 						end
-						-- or is_plant == nil or is_plant == 0 or is_le_plant == nil or is_le_plant == 0 or is_flora == nil or is_flora == 0  or is_flower == nil or is_flower == 0  or is_growing == nil or is_growing == 0 then
 					end
 				end
 				if ground_y and ground_y >= 2 then
@@ -88,6 +95,11 @@ minetest.register_on_generated(function(minp, maxp, seed)
 					local node_name = minetest.get_node(p).name
 
 					if ground_name == "lib_materials:liquid_water_source" then
+						return
+					end
+
+--					if (not string.find(ground_name, "dirt")) or (not string.find(ground_name, "sand")) or (not string.find(ground_name, "snow")) or (not string.find(ground_name, "stone")) then
+					if (not string.find(ground_name, "sand")) or (not string.find(ground_name, "snow")) or (not string.find(ground_name, "stone")) then
 						return
 					end
 

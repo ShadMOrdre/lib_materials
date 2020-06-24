@@ -25,7 +25,7 @@ local function read_node_str(node_str)
 	end
 end
 
-for i, ecosystem in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/ecosystems.csv")) do
+for i, ecosystem in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/" .. lib_materials.ecosystem_data_file .. ".csv")) do
 	local oretype, orename, wherein, threshold, ymin, ymax, biome = unpack(ecosystem)
 	--minetest.log(oretype .. ", " .. orename .. ", " .. wherein .. ", " .. threshold .. ", " .. ymin .. ", " .. ymax .. ", " .. biome)
 
