@@ -39,7 +39,7 @@ lib_materials_enable_waterfalls (Enable to let rushing water erode terrain.  tru
 #If enabled, will use lib_shapes to register nodebox shaped nodes.  Use this for stairs, slabs, walls, doors, fences, and furniture.
 lib_materials_enable_lib_shapes_support (Enable to register shaped nodes.  true / false) bool true
 
-#If enabled, will use lib_shapes to register nodebox shaped nodes.  Use this for stairs, slabs, walls, doors, fences, and furniture.
-lib_materials_enable_mapgen_aliases (Enable to register mapgen aliases.  true / false) bool true
+#If enabled, will register all required mgv6 mapgen aliases.  Will only register stone, water, river water for all other mapgens.
+lib_materials_enable_mapgen_aliases (Enable to register mapgen aliases.  true / false) bool false
 
 

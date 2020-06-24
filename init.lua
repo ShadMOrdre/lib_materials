@@ -2,37 +2,45 @@
 
 lib_materials = {}
 lib_materials.name = "lib_materials"
-lib_materials.ver_max = 5
-lib_materials.ver_min = 0
-lib_materials.ver_rev = 2
+lib_materials.ver_max = 0
+lib_materials.ver_min = 1
+lib_materials.ver_rev = 0
+lib_materials.ver_str = lib_materials.ver_max .. "." .. lib_materials.ver_min .. "." .. lib_materials.ver_rev
+lib_materials.authorship = "ShadMOrdre.  Tenplus1, Gail de Sailly, VannessaE, runs, and numerous others."
+lib_materials.license = "LGLv2.1"
+lib_materials.copyright = "2019"
 lib_materials.path_mod = minetest.get_modpath(minetest.get_current_modname())
 lib_materials.path_world = minetest.get_worldpath()
 lib_materials.path = lib_materials.path_mod
 
 
 
--- Intllib
---local S = minetest.get_translator(lib_materials.name)
 local S
 local NS
---if minetest.get_modpath("game") then
---	S = game.intllib
---else
---	if minetest.get_modpath("intllib") then
---		S = intllib.Getter()
---	else
-		S, NS = dofile(lib_materials.path.."/intllib.lua")
---	end
---end
-lib_materials.intllib = S or minetest.get_translator(lib_materials.name)
+	if minetest.get_modpath("intllib") then
+		S = intllib.Getter()
+	else
+		-- S = function(s) return s end
+		-- internationalization boilerplate
+		S, NS = dofile(lib_materials.path_mod.."/intllib.lua")
+	end
 
-lib_materials.mgv7_mapgen_scale_factor = minetest.setting_get("lib_materials_mgv7_mapgen_scale_factor") or 8
-lib_materials.biome_altitude_range = minetest.setting_get("lib_materials_biome_altitude_range") or 40
+lib_mg_continental.intllib = S
+
+minetest.log(S("[MOD] lib_materials:  Loading..."))
+minetest.log(S("[MOD] lib_materials:  Version:") .. S(lib_materials.ver_str))
+minetest.log(S("[MOD] lib_materials:  Legal Info: Copyright ") .. S(lib_materials.copyright) .. " " .. S(lib_materials.authorship) .. "")
+minetest.log(S("[MOD] lib_materials:  License: ") .. S(lib_materials.license) .. "")
+
+
+--lib_materials.mgv7_mapgen_scale_factor = minetest.setting_get("lib_materials_mgv7_mapgen_scale_factor") or 8
+lib_materials.mapgen_scale_factor = minetest.setting_get("lib_materials_mgv7_mapgen_scale_factor") or 8
+lib_materials.biome_altitude_range = minetest.setting_get("lib_materials_biome_altitude_range") or 40				--10, 20, 30, 40
 lib_materials.clear_biomes = minetest.setting_get("lib_materials_clear_biomes") or true
 lib_materials.clear_decos = minetest.setting_get("lib_materials_clear_decos") or true
 lib_materials.clear_ores = minetest.setting_get("lib_materials_clear_ores") or true
 
-lib_materials.color_grass_reg = minetest.setting_get("lib_materials_color_grass_reg") or false
+lib_materials.color_grass_reg = minetest.setting_get("lib_materials_color_grass_reg") or true
 lib_materials.color_grass_use = minetest.setting_get("lib_materials_color_grass_use") or false
 
 lib_materials.enable_lakes = minetest.setting_get("lib_materials_enable_lakes") or false
@@ -40,7 +48,38 @@ lib_materials.enable_rivers = minetest.setting_get("lib_materials_enable_rivers"
 lib_materials.enable_waterdynamics = minetest.setting_get("lib_materials_enable_waterdynamics") or false
 lib_materials.enable_waterfalls = minetest.setting_get("lib_materials_enable_waterfalls") or false
 lib_materials.enable_lib_shapes = minetest.setting_get("lib_materials_enable_lib_shapes_support") or true
-lib_materials.enable_mapgen_aliases = minetest.setting_get("lib_materials_enable_mapgen_aliases") or true
+lib_materials.enable_mapgen_aliases = minetest.setting_get("lib_materials_enable_mapgen_aliases") or false
+
+--lite, lm, default, civ
+lib_materials.mode = "lite"
+
+if lib_materials.mode == "civ" then
+	lib_materials.enable_lib_shapes = true
+	lib_materials.enable_mapgen_aliases = false
+	lib_materials.config = "default"	--default, lib_materials, mcl?
+	lib_materials.biome_data_file = "biomes_civ"			--"biomes_default"
+	lib_materials.ecosystem_data_file = "ecosystems_default"		--"ecosystems_default"
+elseif lib_materials.mode == "default" then
+	lib_materials.enable_lib_shapes = true
+	lib_materials.enable_mapgen_aliases = false
+	lib_materials.config = "default"	--default, lib_materials, mcl?
+	lib_materials.biome_data_file = "biomes_default"			--"biomes_default"
+	lib_materials.ecosystem_data_file = "ecosystems_default"		--"ecosystems_default"
+elseif lib_materials.mode == "lite" then
+	lib_materials.enable_lib_shapes = true
+	lib_materials.enable_mapgen_aliases = false
+	lib_materials.config = "default"	--default, lib_materials, mcl?
+	lib_materials.biome_data_file = "biomes_lite"
+	lib_materials.ecosystem_data_file = "ecosystems_lite"
+	lib_materials.nodes_data_file = "nodes_lite"
+else
+	lib_materials.enable_lib_shapes = true
+	lib_materials.enable_mapgen_aliases = false
+	lib_materials.config = "default"	--default, lib_materials, mcl?
+	lib_materials.biome_data_file = "biomes_lm"
+	lib_materials.ecosystem_data_file = "ecosystems_lm"
+	lib_materials.nodes_data_file = "nodes_lm"
+end
 
 
 lib_materials.mg_params = minetest.get_mapgen_params()
@@ -51,8 +90,9 @@ lib_materials.mg_seed = lib_materials.mg_params.seed
 -- -192, -4, 0, 4, 40, 80, 120, 160, 200, 380, 780, 1800
 lib_materials.ocean_depth = -192
 lib_materials.beach_depth = -4
-lib_materials.sea_level = 0
 lib_materials.maxheight_beach = 4
+lib_materials.sea_level = 0
+lib_materials.water_level = 1
 
 lib_materials.maxheight_coastal = lib_materials.sea_level + lib_materials.biome_altitude_range
 lib_materials.maxheight_lowland = lib_materials.maxheight_coastal + lib_materials.biome_altitude_range
@@ -61,7 +101,7 @@ lib_materials.maxheight_highland = lib_materials.maxheight_shelf + lib_materials
 lib_materials.maxheight_mountain = lib_materials.maxheight_highland + lib_materials.biome_altitude_range
 lib_materials.minheight_snow = lib_materials.maxheight_mountain + lib_materials.biome_altitude_range
 lib_materials.maxheight_snow = lib_materials.minheight_snow  + (lib_materials.biome_altitude_range * 2)
-lib_materials.maxheight_strato = lib_materials.maxheight_snow  + (lib_materials.biome_altitude_range * (lib_materials.mgv7_mapgen_scale_factor / 2))
+lib_materials.maxheight_strato = lib_materials.maxheight_mountain  + (lib_materials.biome_altitude_range * (lib_materials.mapgen_scale_factor / 2))
 
 -- 100, 75, 50, 25, 0
 -- 90, 75, 50, 25, 10
@@ -106,13 +146,11 @@ minetest.log(S("[MOD] lib_materials:  Loading..."))
 
 	dofile(lib_materials.path.."/lib_materials_node_registration.lua")
 
+	dofile(lib_materials.path.."/lib_materials_caves.lua")
+
 	dofile(lib_materials.path.."/lib_materials_liquid_containers.lua")
 
 	dofile(lib_materials.path.."/lib_materials_vessels.lua")
-
-	if lib_materials.enable_waterdynamics == true then
-		dofile(lib_materials.path.."/lib_materials_water_dynamics.lua")
-	end
 
 	dofile(lib_materials.path.."/lib_materials_fire.lua")
 
@@ -128,53 +166,35 @@ minetest.log(S("[MOD] lib_materials:  Loading..."))
 
 	dofile(lib_materials.path.."/lib_materials_ecosystems.lua")
 
-	if lib_materials.enable_lakes == true then
-		dofile(lib_materials.path.."/lib_materials_lakes.lua")
-	end
-
-		--dofile(lib_materials.path.."/lvm_voxel.lua")
-		--dofile(lib_materials.path.."/burli_voxel.lua")
-		--dofile(lib_materials.path.."/lib_materials_lakes.lua")
-
-	dofile(lib_materials.path.."/lib_materials_caves.lua")
-
-		--dofile(lib_materials.path.."/lib_materials_ravines.lua")
-
-	if lib_materials.enable_waterfalls == true then
-		dofile(lib_materials.path.."/lib_materials_waterfalls.lua")
-	end
+	dofile(lib_materials.path.."/lib_materials_decorations.lua")
 
 	dofile(lib_materials.path.."/lib_materials_abms.lua")
 
-	--	minetest.register_ore({
-	--		ore_type         = "blob",
-	--		ore              = "air",
-	--		wherein          = {"group:dirt", "group:soil", "group:sand"},
-	--		clust_scarcity   = 4 * 4 * 4,
-	--		clust_num_ores = 64,
-	--		clust_size       = 6,
-	--		y_min            = 1,
-	--		y_max            = 50,
-	--		noise_params     = {
-	--			offset = 100.0,
-	--			scale = -20000.0,
-	--			spread = {x = 256, y = 256, z = 256},
-	--			seed = 5934,
-	--			octaves = 1,
-	--			persist = 0.5,
-	--			lacunarity = 2.22,
-	--			flags = "defaults, noeased, absvalue",
-	--		},
-	--		random_factor = 1.0,
-	--	})
+	dofile(lib_materials.path.."/lib_materials_chatcommands.lua")
+
+	--dofile(lib_materials.path.."/lib_materials_roads.lua")
+	-- --dofile(lib_materials.path.."/road_network.lua")
+	-- --dofile(lib_materials.path.."/lib_materials_voxel_paths.lua")
+	-- --dofile(lib_materials.path.."/lib_materials_voxel_roads.lua")
+
+	if lib_materials.enable_waterdynamics == true then
+		--dofile(lib_materials.path.."/lib_materials_water_dynamics.lua")
+	end
+
+	if lib_materials.enable_waterfalls == true then
+		--dofile(lib_materials.path.."/lib_materials_waterfalls.lua")
+	end
 
 	if lib_materials.enable_rivers == true then
+		--dofile(lib_materials.path.."/lib_materials_ravines.lua")
 		dofile(lib_materials.path.."/lib_materials_rivers.lua")
 	end
 
-	dofile(lib_materials.path.."/lib_materials_utils.lua")
+	if lib_materials.enable_lakes == true then
+		--dofile(lib_materials.path.."/lib_materials_lakes.lua")
+		dofile(lib_materials.path.."/lakes_init.lua")
+	end
 
-	dofile(lib_materials.path.."/lib_materials_chatcommands.lua")
 
 
 --

@@ -202,7 +202,7 @@ minetest.register_tool("lib_materials:tool_flint_and_steel", {
 })
 
 minetest.register_craft({
-	output = "lib_materials:fire_flint_and_steel",
+	output = "lib_materials:tool_flint_and_steel",
 	recipe = {
 		{"default:flint", "default:steel_ingot"}
 	}
@@ -211,7 +211,7 @@ minetest.register_craft({
 
 minetest.register_alias("fire:basic_flame", "lib_materials:fire_flame_basic")
 minetest.register_alias("fire:permanent_flame", "lib_materials:fire_flame_permanent")
-minetest.register_alias("fire:flint_and_steel", "lib_materials:fire_flint_and_steel")
+minetest.register_alias("fire:flint_and_steel", "lib_materials:tool_flint_and_steel")
 
 
 

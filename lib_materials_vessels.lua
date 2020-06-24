@@ -223,7 +223,7 @@ lib_materials.vessels.register_vessel({
 	vessel_name        = "vessel_vial_glass",
 	vessel_description = "Glass Vial Vessel",
 	capacity          = 1000,
-	textures             = {"lib_materials_vessel_vial_glass.png", "lib_materials_vessel_vial_mask.png"}
+	textures             = {"lib_materials_vessel_vial_glass.png", "lib_materials_vessel_vial_glass_mask.png"}
 })
 lib_materials.vessels.register_vessel({
 	vessel_name        = "vessel_cup_glass",
@@ -274,6 +274,20 @@ lib_materials.vessels.register_vessel({
 	textures             = {"lib_materials_vessel_bottle_obsidian.png", "lib_materials_vessel_bottle_obsidian_mask.png"}
 })
 
+lib_materials.vessels.register_vessel({
+	vessel_name        = "vessel_bottle_crystal",
+	vessel_description = "Crystal Bottle Vessel",
+	capacity          = 1000,
+	textures             = {"lib_materials_vessel_bottle_crystal.png", "lib_materials_vessel_bottle_crystal.png"}
+})
+
+lib_materials.vessels.register_vessel({
+	vessel_name        = "vessel_bottle_steel",
+	vessel_description = "Steel Bottle Vessel",
+	capacity          = 1000,
+	textures             = {"lib_materials_vessel_bottle_steel.png", "lib_materials_vessel_bottle_steel.png"}
+})
+
 
 
 fluidity = {}
@@ -287,6 +301,8 @@ fluidity.florbs.add_fluid = lib_materials.vessels.add_fluid
 fluidity.florbs.take_fluid = lib_materials.vessels.take_fluid
 fluidity.florbs.register_vessel = lib_materials.vessels.register_vessel
 
-
+minetest.register_alias("vessels:glass_bottle",		"lib_materials:vessel_bottle_glass")
+minetest.register_alias("vessels:drinking_glass",	"lib_materials:vessel_glass_glass")
+minetest.register_alias("vessels:steel_bottle",		"lib_materials:vessel_bottle_steel")
 
 

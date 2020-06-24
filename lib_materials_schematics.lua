@@ -3,10 +3,11 @@
 local S = lib_materials.intllib
 
 local __ = {name = "air",param2 = 0,prob = 254}
+local aa = {name = "air",param2 = 0,prob = 0}
 local S0 = {name = "lib_materials:stone_desert", param2 = 0, prob = 254}
 local S1 = {name = "lib_materials:stone_desert", param2 = 0, prob = 192}
 local S2 = {name = "lib_materials:stone_desert", param2 = 0, prob = 128}
-local S0 = {name = "lib_materials:stone_desert", param2 = 0, prob = 96}
+local S3 = {name = "lib_materials:stone_desert", param2 = 0, prob = 96}
 local D0 = {name = "lib_materials:dirt", param2 = 0, prob = 254}
 
 
@@ -101,16 +102,28 @@ local D0 = {name = "lib_materials:dirt", param2 = 0, prob = 254}
 	}
 
 	lib_materials.schem_rock_desert_05 = {
-		size = {x = 3,y = 3,z = 3},
+		size = {x = 3,y = 7,z = 3},
 		data = {
+			aa, aa, aa,
+			S0, S0, aa,
+			S0, S0, S0,
+			S0, S0, S0,
 			S0, S0, S0,
 			__, S0, S0,
 			__, __, S0,
 
+			aa, D0, D0,
+			aa, S0, S0,
+			S0, S0, S0,
+			S0, S0, S0,
 			S0, S0, S0,
 			S0, S0, S0,
 			S0, S0, S0,
 
+			D0, D0, aa,
+			S0, S0, aa,
+			S0, S0, S0,
+			S0, S0, S0,
 			S0, S0, S0,
 			S0, S0, S0,
 			__, S0, __
@@ -118,26 +131,33 @@ local D0 = {name = "lib_materials:dirt", param2 = 0, prob = 254}
 		yslice_prob = {
 			{prob = 254, ypos = 0},
 			{prob = 254, ypos = 1},
-			{prob = 254, ypos = 2}
+			{prob = 254, ypos = 2},
+			{prob = 254, ypos = 3},
+			{prob = 254, ypos = 4},
+			{prob = 254, ypos = 5},
+			{prob = 254, ypos = 6}
 		}
 	}
 	
 	
 	lib_materials.schem_rock_desert_02_01 = {
-		size = {x = 4,y = 5,z = 3},
+		size = {x = 4,y = 6,z = 3},
 		data = {
+			D0, D0, D0, D0,
 			S0, S0, __, __,
 			__, S0, __, __,
 			__, __, __, __,
 			__, __, __, __,
 			__, __, __, __,
 
+			D0, D0, D0, D0,
 			S0, S0, S0, S0,
 			S0, S0, S0, __,
 			S0, S0, __, __,
 			__, S0, __, __,
 			__, S0, __, __,
 
+			D0, D0, D0, D0,
 			__, S0, __, __,
 			__, S0, __, __,
 			__, __, __, __,
@@ -149,7 +169,8 @@ local D0 = {name = "lib_materials:dirt", param2 = 0, prob = 254}
 			{prob = 254, ypos = 1},
 			{prob = 254, ypos = 2},
 			{prob = 254, ypos = 3},
-			{prob = 254, ypos = 4}
+			{prob = 254, ypos = 4},
+			{prob = 254, ypos = 5}
 		}
 	}
 
@@ -390,7 +411,7 @@ local D0 = {name = "lib_materials:dirt", param2 = 0, prob = 254}
 	S0 = {name = "lib_materials:stone", param2 = 0, prob = 254}
 	S1 = {name = "lib_materials:stone", param2 = 0, prob = 192}
 	S2 = {name = "lib_materials:stone", param2 = 0, prob = 128}
-	S0 = {name = "lib_materials:stone", param2 = 0, prob = 96}
+	S3 = {name = "lib_materials:stone", param2 = 0, prob = 96}
 	D0 = {name = "lib_materials:dirt", param2 = 0, prob = 254}
 
 
@@ -615,10 +636,65 @@ local D0 = {name = "lib_materials:dirt", param2 = 0, prob = 254}
 		}
 	}
 	
+	lib_materials.schem_erratic_01 = {
+		size = {x = 11,y = 7,z = 5},
+		data = {
+			aa, aa, S0, S0, aa, S0, S0, S0, S0, aa, aa,
+			aa, S0, S0, S0, S0, S0, S0, S0, S0, S0, S0,
+			aa, S0, S0, S0, S0, S0, S0, S0, S0, aa, aa,
+			S0, S0, S0, S0, aa, S0, S0, S0, S0, S0, S0,
+			S0, S0, S0, S0, S0, S0, S0, S0, S0, S0, S0,
+			__, S0, S0, S0, S0, S0, S0, S0, S0, aa, aa,
+			__, __, S0, S0, S0, S0, S0, S0, S0, aa, aa,
+
+			aa, S0, S0, S0, S0, S0, S0, S0, aa, aa, aa,
+			aa, S0, S0, S0, S0, S0, S0, S0, S0, S0, S0,
+			aa, S0, S0, S0, S0, S0, S0, S0, S0, S0, S0,
+			S0, S0, S0, S0, S0, S0, S0, S0, S0, S0, S0,
+			S0, S0, S0, S0, S0, S0, S0, S0, S0, aa, aa,
+			S0, S0, S0, S0, S0, S0, S0, S0, S0, aa, aa,
+			aa, S0, S0, S0, S0, S0, S0, S0, S0, aa, aa,
+
+			aa, S0, S0, S0, S0, S0, S0, S0, S0, aa, aa,
+			aa, S0, S0, S0, S0, S0, S0, S0, S0, S0, S0,
+			S0, S0, S0, S0, S0, S0, S0, S0, S0, S0, S0,
+			S0, S0, S0, S0, S0, S0, S0, S0, S0, S0, S0,
+			S0, S0, S0, S0, S0, S0, S0, S0, S0, S0, S0,
+			S0, S0, S0, S0, S0, S0, S0, S0, S0, S0, S0,
+			S0, S0, S0, S0, S0, S0, S0, S0, S0, S0, aa,
+
+			aa, S0, S0, S0, S0, S0, S0, S0, S0, aa, aa,
+			aa, S0, S0, S0, S0, S0, S0, S0, S0, S0, aa,
+			aa, S0, S0, S0, S0, S0, S0, S0, S0, S0, S0,
+			aa, S0, S0, S0, S0, S0, S0, S0, S0, S0, S0,
+			S0, S0, S0, S0, S0, S0, S0, S0, S0, S0, S0,
+			S0, S0, S0, S0, S0, S0, S0, S0, S0, S0, S0,
+			aa, S0, S0, S0, S0, S0, S0, S0, S0, aa, aa,
+
+			aa, aa, aa, aa, S0, S0, S0, S0, aa, aa, aa,
+			aa, S0, S0, S0, S0, S0, S0, S0, S0, S0, aa, 
+			aa, S0, S0, S0, S0, S0, S0, S0, S0, S0, S0,
+			aa, S0, S0, S0, S0, S0, S0, S0, S0, S0, S0,
+			aa, S0, S0, S0, S0, S0, S0, S0, S0, S0, S0,
+			aa, S0, S0, S0, S0, S0, S0, S0, aa, aa, aa,
+			__, S0, __, __, __, __, __, __, __, __, __
+		},
+		yslice_prob = {
+			{prob = 254, ypos = 0},
+			{prob = 254, ypos = 1},
+			{prob = 254, ypos = 2},
+			{prob = 254, ypos = 3},
+			{prob = 254, ypos = 4},
+			{prob = 254, ypos = 5},
+			{prob = 254, ypos = 6}
+		}
+	}
 	
 	
-	
-	
-	
-	
+
+
+
+
+
+
 	

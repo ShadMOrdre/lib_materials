@@ -45,7 +45,7 @@ local function read_node_str(node_str)
 	end
 end
 
-for i, biome in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/biomes.csv")) do
+for i, biome in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/" .. lib_materials.biome_data_file .. ".csv")) do
 
 	--#Name|Dust|NodeTop|NodeTopDepth|Filler|FillerDepth|Stone|WaterTop|WaterTopDepth|Water|River water|RiverBed|RiverBedDepth|CaveLiquid|DungeonNode|DungeonAlt|DungeonStair|Y-min|Y-max|Temperature|Humidity|MaxPos|MinPos|VerticalBlend
 	local a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x = unpack(biome)
@@ -78,10 +78,10 @@ for i, biome in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/biome
 		node_dungeon = o or nil,
 		node_dungeon_alt = p or nil,
 		node_dungeon_stair = q or nil,
-		y_min = tonumber(i) or heights[r],
-		y_max = tonumber(j) or heights[s],
-		heat_point = tonumber(k) or temperatures[t],
-		humidity_point = tonumber(l) or humidities[u],
+		y_min = tonumber(r) or heights[r],
+		y_max = tonumber(s) or heights[s],
+		heat_point = tonumber(t) or temperatures[t],
+		humidity_point = tonumber(u) or humidities[u],
 		max_pos = tonumber(v),
 		min_pos = tonumber(w),
 		vertical_blend = x or lib_materials.biome_vertical_blend,

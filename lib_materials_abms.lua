@@ -95,12 +95,12 @@ end
 
 minetest.register_abm({
 	label = "Grass spread",
-	nodenames = {"default:dirt"},
+	nodenames = {"lib_materials:dirt"},
 	neighbors = {
 		"air",
 		"group:grass",
 		"group:dry_grass",
-		"default:snow",
+		"lib_materials:snow",
 	},
 	interval = 6,
 	chance = 50,
@@ -124,13 +124,13 @@ minetest.register_abm({
 		-- Else, any seeding nodes on top?
 		local name = minetest.get_node(above).name
 		-- Snow check is cheapest, so comes first
-		if name == "default:snow" then
-			minetest.set_node(pos, {name = "default:dirt_with_snow"})
+		if name == "lib_materials:snow" then
+			minetest.set_node(pos, {name = "lib_materials:dirt_with_snow"})
 		-- Most likely case first
 		elseif minetest.get_item_group(name, "grass") ~= 0 then
-			minetest.set_node(pos, {name = "default:dirt_with_grass"})
+			minetest.set_node(pos, {name = "lib_materials:dirt_with_grass"})
 		elseif minetest.get_item_group(name, "dry_grass") ~= 0 then
-			minetest.set_node(pos, {name = "default:dirt_with_dry_grass"})
+			minetest.set_node(pos, {name = "lib_materials:dirt_with_grass_dry"})
 		end
 	end
 })
@@ -153,7 +153,7 @@ minetest.register_abm({
 		if name ~= "ignore" and nodedef and not ((nodedef.sunlight_propagates or
 				nodedef.paramtype == "light") and
 				nodedef.liquidtype == "none") then
-			minetest.set_node(pos, {name = "default:dirt"})
+			minetest.set_node(pos, {name = "lib_materials:dirt"})
 		end
 	end
 })
@@ -165,20 +165,20 @@ minetest.register_abm({
 
 minetest.register_abm({
 	label = "Moss growth",
-	nodenames = {"default:cobble", "stairs:slab_cobble", "stairs:stair_cobble", "walls:cobble"},
+	nodenames = {"lib_materials:stone_cobble", "lib_materials:stone_cobble_slab", "lib_materials:stone_cobble_stairs", "lib_materials:stone_cobble_wall_centered"},
 	neighbors = {"group:water"},
 	interval = 16,
 	chance = 200,
 	catch_up = false,
 	action = function(pos, node)
-		if node.name == "default:cobble" then
-			minetest.set_node(pos, {name = "default:mossycobble"})
-		elseif node.name == "stairs:slab_cobble" then
-			minetest.set_node(pos, {name = "stairs:slab_mossycobble", param2 = node.param2})
-		elseif node.name == "stairs:stair_cobble" then
-			minetest.set_node(pos, {name = "stairs:stair_mossycobble", param2 = node.param2})
-		elseif node.name == "walls:cobble" then
-			minetest.set_node(pos, {name = "walls:mossycobble", param2 = node.param2})
+		if node.name == "lib_materials:stone_cobble" then
+			minetest.set_node(pos, {name = "lib_materials:stone_cobble_mossy"})
+		elseif node.name == "lib_materials:stone_cobble_slab" then
+			minetest.set_node(pos, {name = "lib_materials:stone_cobble_mossy_slab", param2 = node.param2})
+		elseif node.name == "lib_materials:stone_cobble_stairs" then
+			minetest.set_node(pos, {name = "lib_materials:stone_cobble_mossy_stairs", param2 = node.param2})
+		elseif node.name == "lib_materials:stone_cobble_wall_centered" then
+			minetest.set_node(pos, {name = "lib_materials:stone_cobble_mossy_wall_centered", param2 = node.param2})
 		end
 	end
 })

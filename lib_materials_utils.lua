@@ -11,7 +11,7 @@ local S = lib_materials.intllib
 	local W0 = {name = "lib_materials:liquid_water_rushing_source", param2 = 0, prob = 254, force_place = true}
 	local M0 = {name = "lib_materials:dirt_mud_01", param2 = 0, prob = 254}
 
-
+--[[
 	le_temp_schem = {
 		size = {x = 3, y = 2, z = 3},
 		data = {
@@ -49,14 +49,14 @@ local S = lib_materials.intllib
 	   flags = "force_placement, place_center_x, place_center_z",
 	   schematic = le_temp_schem,
 	})
-
+--]]
 	minetest.register_decoration({
 	   deco_type = "simple",
 	   place_on = {"group:soil"},
-	   sidelen = 1,
+	   sidelen = 2,
 	   noise_params = {
 	      offset = 100.0,
-	      scale = -22000.0,
+	      scale = -30000.0,
 	      spread = {x = 256, y = 256, z = 256},
 	      seed = 513337,
 	      octaves = 1,
@@ -64,11 +64,11 @@ local S = lib_materials.intllib
 	      lacunarity = 2.22,
 	      flags = "defaults, noeased, absvalue"
 	   },
-	   y_max = 60,
-	   y_min = 30,
+	   y_max = 40,
+	   y_min = 5,
 	   place_offset_y = -1,
 	   flags = "force_placement",
-	   decoration = "lib_materials:stone_cobble",
+	   decoration = "lib_materials:dirt_with_stone_cobble",
 	})
 	minetest.register_decoration({
 	   deco_type = "simple",
@@ -76,7 +76,7 @@ local S = lib_materials.intllib
 	   sidelen = 1,
 	   noise_params = {
 	      offset = 100.0,
-	      scale = -24000.0,
+	      scale = -30000.0,
 	      spread = {x = 256, y = 256, z = 256},
 	      seed = 733315,
 	      octaves = 1,
@@ -96,7 +96,7 @@ local S = lib_materials.intllib
 	   sidelen = 1,
 	   noise_params = {
 	      offset = 100.0,
-	      scale = -26000.0,
+	      scale = -30000.0,
 	      spread = {x = 256, y = 256, z = 256},
 	      seed = -513337,
 	      octaves = 1,
@@ -368,7 +368,7 @@ for grid_count = 1,6 do
 		selection_box = { type = "fixed", 
 											fixed = {-0.5, -0.5, -0.5, 0.5, -5/16, 0.5},
 										},
-		groups = {rock=1, oddly_breakable_by_hand=3},
+		groups = {rock=1, oddly_breakable_by_hand=3, not_in_creative_inventory=1},
 		drop = "lib_materials:litter_small_rocks",
 		sounds = lib_materials.node_sound_stone_defaults(),
 	})
@@ -431,7 +431,7 @@ for count = 1,9 do
 			},
 		},
 		selection_box = {type="fixed", fixed=sel[math.ceil(count / 3)]},
-		groups = {rock=1, cracky=3},
+		groups = {rock=1, cracky=3, not_in_creative_inventory=1},
 		drop = "lib_materials:stone_cobble",
 		sounds = lib_materials.node_sound_stone_defaults(),
 	})

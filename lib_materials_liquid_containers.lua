@@ -7,16 +7,6 @@ local napi = minetest.get_modpath("node_io")
 
 
 
-minetest.register_alias("bucket",       "lib_materials:tool_bucket_empty")
-minetest.register_alias("bucket_water", "lib_materials:tool_bucket_water")
-minetest.register_alias("bucket_lava",  "lib_materials:tool_bucket_lava")
-
-
-
-
-
-
-
 --Register empty bucket
 minetest.register_craft({
 	output = 'lib_materials:tool_bucket_empty 1',
@@ -1104,131 +1094,40 @@ end
 
 	--minetest.log(S("[MOD] lib_materials:  dump lib_materials.liquids: " .. dump(lib_materials.liquids)))
 
-
---lib_materials.register_liquid(
---	"lib_materials:fluid_water_source",
---	"lib_materials:fluid_water_flowing",
---	"lib_materials:bukitowarter",
---	"lib_materials:tool_bucket_water",
---	"lib_materials:tool_pot_clay_water",
---	"lib_materials_fluid_water.png",
---	"Warter Bukit (lib_mat)",
---	"Default Water Bucket (lib_mat)",
---	"Water Clay Pot (lib_mat)",
---	{water_bucket = 1}
---)
-
---lib_materials.register_liquid(
---	"lib_materials:fluid_water_river_source",
---	"lib_materials:fluid_water_river_flowing",
---	"lib_materials:bukit_o_water_river",
---	"lib_materials:tool_bucket_water_river",
---	"lib_materials:tool_pot_clay_water_river",
---	"lib_materials_fluid_water_river.png",
---	"River Water Bukit (lib_mat)",
---	"Default River Water Bucket (lib_mat)",
---	"River Water Clay Pot (lib_mat)",
---	{water_bucket = 1},
---	true
---)
-
---lib_materials.register_liquid(
---	"lib_materials:lava_source",
---	"lib_materials:lava_flowing",
---	"lib_materials:bukit_o_lava",
---	"lib_materials:tool_bucket_lava",
---	"lib_materials:tool_pot_clay_lava",
---	"lib_materials_fluid_lava.png",
---	"Holy shit thats hawt!",
---	"Default Lava Bucket (lib_mat)",
---	"Clay Pot Lava (lib_mat)"
---)
-
+--Register lava buckets as a fuel source
 minetest.register_craft({
 	type = "fuel",
 	recipe = "lib_materials:tool_bucket_lava",
 	burntime = 60,
 	replacements = {{"lib_materials:tool_bucket_lava", "lib_materials:tool_bucket_empty"}},
 })
-
-
---Register the liquids the pot can be used for
-
---lib_materials.register_liquid(
---	"lib_materials:fluid_water_source",
---	"lib_materials:fluid_water_flowing",
---	"lib_materials:tool_pot_clay_water",
---	"lib_materials_fluid_water.png",
---	"Water Clay Pot (lib_mat)",
---	{water_bucket = 1}
---)
-
---lib_materials.register_liquid(
---	"lib_materials:fluid_water_river_source",
---	"lib_materials:fluid_water_river_flowing",
---	"lib_materials:tool_pot_clay_water_river",
---	"lib_materials_fluid_water_river.png",
---	"River Water Clay Pot (lib_mat)",
---	{water_bucket = 1},
---	true
---)
-
---lib_materials.register_liquid(
---	"lib_materials:lava_source",
---	"lib_materials:lava_flowing",
---	"lib_materials:tool_pot_clay_lava",
---	"lib_materials_fluid_lava.png",
---	"Clay Pot Lava (lib_mat)"
---)
-
---Register lava as a fuel source
 minetest.register_craft({
 	type = "fuel",
 	recipe = "lib_materials:tool_pot_clay_lava",
 	burntime = 60,
-	replacements = {{"lib_materials:tool_pot_clay_lava", "lib_materials:tool_pot_clay"}},
+	replacements = {{"lib_materials:tool_pot_clay_lava", "lib_materials:tool_pot_clay_empty"}},
+})
+minetest.register_craft({
+	type = "fuel",
+	recipe = "lib_materials:tool_bucket_steel_lava",
+	burntime = 60,
+	replacements = {{"lib_materials:tool_bucket_steel_lava", "lib_materials:tool_bucket_steel_empty"}},
 })
 
---lib_materials.register_liquid(
---	"lib_materials:fluid_oil_source",
---	"lib_materials:fluid_oil_flowing",
---	"lib_materials:bukit_o_oil",
---	"lib_materials:tool_bucket_oil",
---	"lib_materials:tool_pot_clay_oil",
---	"lib_materials_fluid_oil_source.png",
---	"Pot a Oil",
---	"Bucket of Oil",
---	"Clay Pot Oil (lib_mat)"
---)
 
---lib_materials.register_liquid(
---	"lib_materials:fluid_water_river_muddy_source",
---	"lib_materials:fluid_water_river_muddy_flowing",
---	nil,
---	"lib_materials:tool_bucket_water_river_muddy",
---	nil,
---	"lib_materials_fluid_water_river_muddy_source.png",
---	nil,
---	"Default Muddy River Water Bucket (lib_mat)",
---	nil,
---	{water_bucket = 1}
---)
-
---lib_materials.register_liquid(
---	"lib_materials:fluid_metal_mercury_source",
---	"lib_materials:fluid_metal_mercury_flowing",
---	nil,
---	nil,
---	"lib_materials:tool_pot_clay_mercury",
---	"lib_materials_fluid_mercury_source.png",
---	nil,
---	nil,
---	"Clay Pot Mercury (lib_mat)"
---)
 
 
 bucket = {}
 bucket.liquids = lib_materials.liquids
+
+minetest.register_alias("bucket",       "lib_materials:tool_bucket_empty")
+minetest.register_alias("bucket_water", "lib_materials:tool_bucket_water")
+minetest.register_alias("bucket_lava",  "lib_materials:tool_bucket_lava")
+
+minetest.register_alias("bucket:bucket_empty", "lib_materials:tool_bucket_empty")
+minetest.register_alias("bucket:bucket_water", "lib_materials:tool_bucket_water")
+minetest.register_alias("bucket:bucket_lava",  "lib_materials:tool_bucket_lava")
+
 
 
 
