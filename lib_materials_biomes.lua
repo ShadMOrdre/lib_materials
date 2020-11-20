@@ -84,7 +84,7 @@ for i, biome in ipairs(lib_materials.read_csv("|", lib_materials.path .. "/" .. 
 		humidity_point = tonumber(u) or humidities[u],
 		max_pos = tonumber(v),
 		min_pos = tonumber(w),
-		vertical_blend = x or lib_materials.biome_vertical_blend,
+		vertical_blend = tonumber(x) or lib_materials.biome_vertical_blend,
 	})
 end
 

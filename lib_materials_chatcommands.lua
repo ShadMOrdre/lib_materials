@@ -23,6 +23,7 @@ minetest.register_chatcommand("emerge_area", {
 		local info = "(mapgen-"..remaining.."-"..dt.."ms) "
 		if action==core.EMERGE_GENERATED then
 			minetest.chat_send_player(name, info.."Generated new block at "..block)
+			--minetest.get_player_by_name(name):send_mapblock({x=(blockpos.x * 16),y=(blockpos.y * 16),z=(blockpos.z * 16)})
 		elseif (action==core.EMERGE_CANCELLED) or (action==core.EMERGE_ERRORED) then
 			minetest.chat_send_player(name, info.."Block at "..block.." did not emerge")
 		else

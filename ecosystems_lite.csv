@@ -2,6 +2,7 @@
 ##||||||
 #HOT HUMID||||||
 dirt|dirt_silt_01|sand|0.8|beach_depth|beach|hot_humid_beach
+dirt|dirt_mud_01|dirt_with_litter_rainforest|0.8|beach|lowland|hot_humid
 dirt|dirt_with_grass_hot_humid|dirt_with_litter_rainforest|0.8|beach|highland|hot_humid
 fungi|dirt_with_litter_fungi|dirt_with_litter_rainforest|0.8|beach|highland|hot_humid
 dirt|dirt_black_with_grass_hot_humid|dirt_with_litter_rainforest|0.8|beach|highland|hot_humid
@@ -69,9 +70,9 @@ dirt|stone_granite_brown|stone_gabbro|0.8|highland|mountain|hot_temperate_mounta
 dirt|stone_granite_brown_02|stone_gabbro|0.8|highland|mountain|hot_temperate_mountain
 dirt|stone_granite_01|stone_gabbro|0.8|highland|mountain|hot_temperate_mountain
 dirt|stone_brown|stone_gabbro|0.8|highland|mountain|hot_temperate_mountain
-dirt|ice|stone_gabbro|0.8|mountain|strato|hot_semihumid_strato
-dirt|ice_2|stone_gabbro|0.8|mountain|strato|hot_semihumid_strato
-dirt|snow_block|stone_gabbro|0.8|mountain|strato|hot_semihumid_strato
+dirt|ice|stone_gabbro|0.8|mountain|strato|hot_temperate_strato
+dirt|ice_2|stone_gabbro|0.8|mountain|strato|hot_temperate_strato
+dirt|snow_block|stone_gabbro|0.8|mountain|strato|hot_temperate_strato
 dirt|stone_granite_black|stone_brown|0.8|mountain|strato|hot_temperate_strato
 dirt|stone_granite_brown|stone_brown|0.8|mountain|strato|hot_temperate_strato
 dirt|stone_granite_brown_02|stone_brown|0.8|mountain|strato|hot_temperate_strato
@@ -117,6 +118,7 @@ dirt|stone_sand|stone_sandstone_desert|0.8|mountain|strato|hot_arid_strato
 ##||||||
 #WARM HUMID||||||
 dirt|dirt_silt_01|sand_white|0.8|beach_depth|beach|warm_humid_beach
+dirt|dirt_mud_01|dirt_with_grass_warm_humid|0.8|beach|lowland|warm_humid
 dirt|dirt_black_with_grass_warm_humid|dirt_with_grass_warm_humid|0.8|beach|highland|warm_humid
 dirt|dirt_brown_with_grass_warm_humid|dirt_with_grass_warm_humid|0.8|beach|highland|warm_humid
 dirt|dirt_clayey_with_grass_warm_humid|dirt_with_grass_warm_humid|0.8|beach|highland|warm_humid

@@ -1,4 +1,8 @@
 
+-------------------------------------------------------------
+-- lib_materials  ©2019 Shad MOrdre (shadmordre@minetest.net)--
+-------------------------------------------------------------
+
 
 lib_materials = {}
 lib_materials.name = "lib_materials"
@@ -6,7 +10,7 @@ lib_materials.ver_max = 0
 lib_materials.ver_min = 1
 lib_materials.ver_rev = 0
 lib_materials.ver_str = lib_materials.ver_max .. "." .. lib_materials.ver_min .. "." .. lib_materials.ver_rev
-lib_materials.authorship = "ShadMOrdre.  Tenplus1, Gail de Sailly, VannessaE, runs, and numerous others."
+lib_materials.authorship = "ShadMOrdre.  Additional credits to Tenplus1, Gail de Sailly, VannessaE, runs, and numerous others."
 lib_materials.license = "LGLv2.1"
 lib_materials.copyright = "2019"
 lib_materials.path_mod = minetest.get_modpath(minetest.get_current_modname())
@@ -17,15 +21,14 @@ lib_materials.path = lib_materials.path_mod
 
 local S
 local NS
-	if minetest.get_modpath("intllib") then
-		S = intllib.Getter()
-	else
-		-- S = function(s) return s end
-		-- internationalization boilerplate
-		S, NS = dofile(lib_materials.path_mod.."/intllib.lua")
-	end
-
-lib_mg_continental.intllib = S
+if minetest.get_modpath("intllib") then
+	S = intllib.Getter()
+else
+	-- S = function(s) return s end
+	-- internationalization boilerplate
+	S, NS = dofile(lib_materials.path_mod.."/intllib.lua")
+end
+lib_materials.intllib = S
 
 minetest.log(S("[MOD] lib_materials:  Loading..."))
 minetest.log(S("[MOD] lib_materials:  Version:") .. S(lib_materials.ver_str))
@@ -50,36 +53,12 @@ lib_materials.enable_waterfalls = minetest.setting_get("lib_materials_enable_wat
 lib_materials.enable_lib_shapes = minetest.setting_get("lib_materials_enable_lib_shapes_support") or true
 lib_materials.enable_mapgen_aliases = minetest.setting_get("lib_materials_enable_mapgen_aliases") or false
 
---lite, lm, default, civ
-lib_materials.mode = "lite"
-
-if lib_materials.mode == "civ" then
-	lib_materials.enable_lib_shapes = true
-	lib_materials.enable_mapgen_aliases = false
-	lib_materials.config = "default"	--default, lib_materials, mcl?
-	lib_materials.biome_data_file = "biomes_civ"			--"biomes_default"
-	lib_materials.ecosystem_data_file = "ecosystems_default"		--"ecosystems_default"
-elseif lib_materials.mode == "default" then
-	lib_materials.enable_lib_shapes = true
-	lib_materials.enable_mapgen_aliases = false
-	lib_materials.config = "default"	--default, lib_materials, mcl?
-	lib_materials.biome_data_file = "biomes_default"			--"biomes_default"
-	lib_materials.ecosystem_data_file = "ecosystems_default"		--"ecosystems_default"
-elseif lib_materials.mode == "lite" then
 	lib_materials.enable_lib_shapes = true
 	lib_materials.enable_mapgen_aliases = false
 	lib_materials.config = "default"	--default, lib_materials, mcl?
 	lib_materials.biome_data_file = "biomes_lite"
 	lib_materials.ecosystem_data_file = "ecosystems_lite"
 	lib_materials.nodes_data_file = "nodes_lite"
-else
-	lib_materials.enable_lib_shapes = true
-	lib_materials.enable_mapgen_aliases = false
-	lib_materials.config = "default"	--default, lib_materials, mcl?
-	lib_materials.biome_data_file = "biomes_lm"
-	lib_materials.ecosystem_data_file = "ecosystems_lm"
-	lib_materials.nodes_data_file = "nodes_lm"
-end
 
 
 lib_materials.mg_params = minetest.get_mapgen_params()
@@ -172,73 +151,6 @@ minetest.log(S("[MOD] lib_materials:  Loading..."))
 
 	dofile(lib_materials.path.."/lib_materials_chatcommands.lua")
 
-	--dofile(lib_materials.path.."/lib_materials_roads.lua")
-	-- --dofile(lib_materials.path.."/road_network.lua")
-	-- --dofile(lib_materials.path.."/lib_materials_voxel_paths.lua")
-	-- --dofile(lib_materials.path.."/lib_materials_voxel_roads.lua")
-
-	if lib_materials.enable_waterdynamics == true then
-		--dofile(lib_materials.path.."/lib_materials_water_dynamics.lua")
-	end
-
-	if lib_materials.enable_waterfalls == true then
-		--dofile(lib_materials.path.."/lib_materials_waterfalls.lua")
-	end
-
-	if lib_materials.enable_rivers == true then
-		--dofile(lib_materials.path.."/lib_materials_ravines.lua")
-		dofile(lib_materials.path.."/lib_materials_rivers.lua")
-	end
-
-	if lib_materials.enable_lakes == true then
-		--dofile(lib_materials.path.."/lib_materials_lakes.lua")
-		dofile(lib_materials.path.."/lakes_init.lua")
-	end
-
-
-
---
--- Aliases for map generators
---
-	if lib_materials.enable_mapgen_aliases == true then
-		minetest.register_alias("mapgen_stone", "lib_materials:stone")
-		minetest.register_alias("mapgen_dirt", "lib_materials:dirt")
-		minetest.register_alias("mapgen_dirt_with_grass", "lib_materials:dirt_with_grass")
-		minetest.register_alias("mapgen_sand", "lib_materials:sand")
-		minetest.register_alias("mapgen_water_source", "lib_materials:liquid_water_source")
-		minetest.register_alias("mapgen_river_water_source", "lib_materials:liquid_water_river_source")
-		minetest.register_alias("mapgen_lava_source", "lib_materials:liquid_lava_source")
-		minetest.register_alias("mapgen_gravel", "lib_materials:stone_gravel")
-		minetest.register_alias("mapgen_desert_stone", "lib_materials:stone_desert")
-		minetest.register_alias("mapgen_desert_sand", "lib_materials:sand_desert")
-		minetest.register_alias("mapgen_dirt_with_snow", "lib_materials:dirt_with_snow")
-		minetest.register_alias("mapgen_snowblock", "lib_materials:snowblock")
-		minetest.register_alias("mapgen_snow", "lib_materials:snow")
-		minetest.register_alias("mapgen_ice", "lib_materials:ice")
-		minetest.register_alias("mapgen_sandstone", "lib_materials:stone_sandstone")
-		
-		-- Flora
-		
-		--minetest.register_alias("mapgen_tree", "default:tree")
-		--minetest.register_alias("mapgen_leaves", "default:leaves")
-		--minetest.register_alias("mapgen_apple", "default:apple")
-		--minetest.register_alias("mapgen_jungletree", "default:jungletree")
-		--minetest.register_alias("mapgen_jungleleaves", "default:jungleleaves")
-		--minetest.register_alias("mapgen_junglegrass", "default:junglegrass")
-		--minetest.register_alias("mapgen_pine_tree", "default:pine_tree")
-		--minetest.register_alias("mapgen_pine_needles", "default:pine_needles")
-		
-		-- Dungeons
-		
-		minetest.register_alias("mapgen_cobble", "lib_materials:stone_cobble")
-		minetest.register_alias("mapgen_stair_cobble", "lib_materials:stone_cobble_stairs")
-		minetest.register_alias("mapgen_mossycobble", "lib_materials:stone_cobble_mossy")
-		minetest.register_alias("mapgen_stair_desert_stone", "lib_materials:stone_desert_stairs")
-		minetest.register_alias("mapgen_sandstonebrick", "lib_materials:stone_sandstone_brick")
-		minetest.register_alias("mapgen_stair_sandstone_block", "lib_materials:stone_sandstone_block_stairs")
-	end
-
-
 	if not minetest.global_exists("default") then
 		default = {}
 	end
@@ -257,11 +169,9 @@ minetest.log(S("[MOD] lib_materials:  Loading..."))
 	default.node_sound_glass_defaults = lib_materials.node_sound_glass_defaults
 	default.node_sound_water_defaults = lib_materials.node_sound_water_defaults
 
-
-
-
-
-
+	minetest.register_alias("mapgen_stone", "lib_materials:stone")
+	minetest.register_alias("mapgen_water_source", "lib_materials:liquid_water_source")
+	minetest.register_alias("mapgen_river_water_source", "lib_materials:liquid_water_river_source")
 
 
 minetest.log(S("[MOD] lib_materials:  Successfully loaded."))
